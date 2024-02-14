@@ -21,6 +21,41 @@ namespace Staticaly.Server.ModelsMigrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Staticaly.Server.Models.Rol", b =>
+                {
+                    b.Property<int>("RolID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RolID"));
+
+                    b.Property<string>("RolName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("RolID");
+
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            RolID = 1,
+                            RolName = "Admin"
+                        },
+                        new
+                        {
+                            RolID = 2,
+                            RolName = "Estudiante"
+                        },
+                        new
+                        {
+                            RolID = 3,
+                            RolName = "Docente"
+                        });
+                });
+
             modelBuilder.Entity("Staticaly.Server.Models.User", b =>
                 {
                     b.Property<int>("UsuarioID")

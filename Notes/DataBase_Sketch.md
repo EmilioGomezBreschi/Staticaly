@@ -19,7 +19,7 @@
 | Campo  | Tipo de dato | Descripción                       |
 | ------ | ------------ | --------------------------------- |
 | RolID  | INT          | Identificador único para cada rol |
-| Nombre | VARCHAR(50)  | Nombre del rol                    |
+| Rol | VARCHAR(50)  | Nombre del rol                    |
 
 ### Tabla: EquiposEstudiantes
 

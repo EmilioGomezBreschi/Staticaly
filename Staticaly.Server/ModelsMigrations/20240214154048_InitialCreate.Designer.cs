@@ -11,7 +11,7 @@ using Staticaly.Server.Models;
 namespace Staticaly.Server.ModelsMigrations
 {
     [DbContext(typeof(StaticalyContext))]
-    [Migration("20240213223853_InitialCreate")]
+    [Migration("20240214154048_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -23,6 +23,41 @@ namespace Staticaly.Server.ModelsMigrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Staticaly.Server.Models.Rol", b =>
+                {
+                    b.Property<int>("RolID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RolID"));
+
+                    b.Property<string>("RolName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("RolID");
+
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            RolID = 1,
+                            RolName = "Admin"
+                        },
+                        new
+                        {
+                            RolID = 2,
+                            RolName = "Estudiante"
+                        },
+                        new
+                        {
+                            RolID = 3,
+                            RolName = "Docente"
+                        });
+                });
 
             modelBuilder.Entity("Staticaly.Server.Models.User", b =>
                 {
