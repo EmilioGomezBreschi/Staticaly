@@ -3,23 +3,26 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options => options.AddDefaultPolicy(
-  builder =>
-  {
-    builder.WithOrigins("http://localhost:5289")
-      .AllowAnyHeader()
-      .AllowAnyMethod();
-  }));
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    builder =>
+    {
+      builder.WithOrigins("http://localhost:5289")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    }));
+
+var connectionString = builder.Configuration.GetConnectionString("StaticalyContext");
 builder.Services.AddSqlServer<StaticalyContext>(connectionString);
+
 var app = builder.Build();
 app.UseCors();
+
 var userGroup = app.MapGroup("/users").WithParameterValidation();
 
 #region Entry Points Users
 
 // Get all users
 userGroup.MapGet("/", async (StaticalyContext context) =>
-  await context.Usuarios.AsNoTracking().ToListAsync()
+    await context.Usuarios.AsNoTracking().ToListAsync()
 );
 
 // Get user by id
@@ -45,13 +48,13 @@ userGroup.MapPost("/", async (StaticalyContext context, User user) =>
 userGroup.MapPut("/{id}", async (StaticalyContext context, int id, User Updateduser) =>
 {
   var RowsAffected = await context.Usuarios.Where(
-    user => user.UsuarioID == id).ExecuteUpdateAsync(updates =>
-    updates.SetProperty(user => user.Nombre, Updateduser.Nombre)
-      .SetProperty(user => user.Apellido, Updateduser.Apellido)
-      .SetProperty(user => user.Email, Updateduser.Email)
-      .SetProperty(user => user.Password, Updateduser.Password)
-      .SetProperty(user => user.RolID, Updateduser.RolID)
-      .SetProperty(user => user.Imagen, Updateduser.Imagen)
+      user => user.UsuarioID == id).ExecuteUpdateAsync(updates =>
+      updates.SetProperty(user => user.Nombre, Updateduser.Nombre)
+            .SetProperty(user => user.Apellido, Updateduser.Apellido)
+            .SetProperty(user => user.Email, Updateduser.Email)
+            .SetProperty(user => user.Password, Updateduser.Password)
+            .SetProperty(user => user.RolID, Updateduser.RolID)
+            .SetProperty(user => user.Imagen, Updateduser.Imagen)
   );
   return RowsAffected == 0 ? Results.NotFound() : Results.NoContent();
 });
@@ -60,7 +63,7 @@ userGroup.MapPut("/{id}", async (StaticalyContext context, int id, User Updatedu
 userGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
 {
   var RowsAffected = await context.Usuarios.Where(
-    user => user.UsuarioID == id).ExecuteDeleteAsync();
+      user => user.UsuarioID == id).ExecuteDeleteAsync();
   return RowsAffected == 0 ? Results.NotFound() : Results.NoContent();
 });
 
