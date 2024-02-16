@@ -1,1 +1,24 @@
-{}
+{
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": false,
+  "quoteProps": "as-needed",
+  "arrowParens": "avoid",
+  "jsxSingleQuote": false,
+  "endOfLine": "auto",
+  "overrides": [
+    {
+      "files": "*.cs",
+      "options": {
+        "singleQuote": true
+      }
+    },
+    {
+      "files": "*.razor",
+      "options": {
+        "parser": "html",
+        "singleQuote": true
+      }
+    }
+  ]
+}

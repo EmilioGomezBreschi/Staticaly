@@ -25,6 +25,29 @@ userGroup.MapGet("/", async (StaticalyContext context) =>
     await context.Usuarios.AsNoTracking().ToListAsync()
 );
 
+//Get user email
+userGroup.MapGet("/ByEmail/{id}/email", async (int id, StaticalyContext context) =>
+{
+  User? user = await context.Usuarios.FindAsync(id);
+  if (user is null)
+  {
+    return Results.NotFound();
+  }
+
+  return Results.Ok(user.Email);
+});
+
+// Get user by email
+userGroup.MapGet("/ByEmail/{email}", async (string email, StaticalyContext context) =>
+{
+  User? user = await context.Usuarios.FirstOrDefaultAsync(user => user.Email == email);
+  if (user is null)
+  {
+    return Results.NotFound();
+  }
+  return Results.Ok(user);
+});
+
 // Get user by id
 userGroup.MapGet("/{id}", async (StaticalyContext context, int id) =>
 {

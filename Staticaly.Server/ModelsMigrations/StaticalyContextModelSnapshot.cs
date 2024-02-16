@@ -64,6 +64,9 @@ namespace Staticaly.Server.ModelsMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UsuarioID"));
 
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Apellido")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -93,7 +96,20 @@ namespace Staticaly.Server.ModelsMigrations
 
                     b.HasKey("UsuarioID");
 
+                    b.HasIndex("RolID");
+
                     b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.User", b =>
+                {
+                    b.HasOne("Staticaly.Server.Models.Rol", "Rol")
+                        .WithMany()
+                        .HasForeignKey("RolID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rol");
                 });
 #pragma warning restore 612, 618
         }

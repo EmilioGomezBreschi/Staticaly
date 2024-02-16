@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,9 +24,13 @@ namespace Staticaly.Server.Models
     [MaxLength(100)]
     public string? Password { get; set; }
     [Required]
+    [ForeignKey("RolID")]
     public int RolID { get; set; }
+    public Rol? Rol { get; set; }
     [MaxLength(100)]
     public string? Imagen { get; set; }
+    [Required]
+    public bool Activo { get; set; }
 
   }
 }
