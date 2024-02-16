@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "58dMBq6Fij6tgdTEGQ7y4Oimvr/yicbZj9/WNmHYkAaDvsiOah1ScAbpmuRUZUz1J5ivCkvt3idfIrhnZRdKlQ==",
+  "dgSpecHash": "2FvhZEMpvCS7epcIWFL06tmqRKVEkYBnz5Pi6OP6oN41SvJ+ht0DEaCZBOy98DZdrKlqVsGKgTfgPdbpgqBT+w==",
   "success": true,
   "projectFilePath": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\lime1\\.nuget\\packages\\blazored.toast\\4.1.0\\blazored.toast.4.1.0.nupkg.sha512",
     "C:\\Users\\lime1\\.nuget\\packages\\microsoft.aspnetcore.authorization\\7.0.16\\microsoft.aspnetcore.authorization.7.0.16.nupkg.sha512",
     "C:\\Users\\lime1\\.nuget\\packages\\microsoft.aspnetcore.components\\7.0.16\\microsoft.aspnetcore.components.7.0.16.nupkg.sha512",
     "C:\\Users\\lime1\\.nuget\\packages\\microsoft.aspnetcore.components.analyzers\\7.0.16\\microsoft.aspnetcore.components.analyzers.7.0.16.nupkg.sha512",

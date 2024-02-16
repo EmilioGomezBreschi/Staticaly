@@ -1,0 +1,19 @@
+{
+  "name": "staticaly.client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tailwindcss -i wwwroot/css/app.css -o wwwroot/css/app.min.css --watch"
+  },
+  "dependencies": {
+    "postcss-cli": "^11.0.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1"
+  }
+}
