@@ -26,8 +26,8 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/Pages/Home.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
+[C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/_Imports.razor]
@@ -37,3 +37,7 @@ build_metadata.AdditionalFiles.CssScope =
 [C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/Shared/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-88ats3pnyw
+
+[C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/Pages/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 

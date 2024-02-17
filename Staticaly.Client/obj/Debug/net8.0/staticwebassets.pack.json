@@ -49,16 +49,16 @@
       "PackagePath": "staticwebassets\\Images\\matemáticas.svg"
     },
     {
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\ojo-abierto.svg",
+      "PackagePath": "staticwebassets\\Images\\ojo-abierto.svg"
+    },
+    {
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\ojo-cerrado.svg",
       "PackagePath": "staticwebassets\\Images\\ojo-cerrado.svg"
     },
     {
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\usuario.svg",
       "PackagePath": "staticwebassets\\Images\\usuario.svg"
-    },
-    {
-      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\visible.svg",
-      "PackagePath": "staticwebassets\\Images\\visible.svg"
     },
     {
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\css\\app.css",

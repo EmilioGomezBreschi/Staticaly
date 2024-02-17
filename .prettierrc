@@ -1,0 +1,49 @@
+{
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "useTabs": false,
+  "trailingComma": "none",
+  "printWidth": 80,
+  "plugins": [
+    "prettier-plugin-tailwindcss"
+  ],
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "html",
+        "tabWidth": 2,
+        "singleQuote": false,
+        "semi": true
+      }
+    },
+    {
+      "files": "*.razor",
+      "options": {
+        "parser": "html",
+        "tabWidth": 2,
+        "singleQuote": false,
+        "semi": true
+      }
+    },
+    {
+      "files": "*.cs",
+      "options": {
+        "parser": "babel",
+        "semi": false,
+        "singleQuote": true,
+        "tabWidth": 4
+      }
+    },
+    {
+      "files": "*.csproj",
+      "options": {
+        "parser": "xml",
+        "tabWidth": 2,
+        "semi": true
+      }
+    }
+  ]
+}
+

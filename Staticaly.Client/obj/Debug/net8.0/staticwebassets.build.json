@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "IkBtR5RZqYD1wrJLOPD2LyO9MY4MTbWouwAIcWtzpRQ=",
+  "Hash": "IVqD5/SOVQVWwOfKzn5hxROAq0sPeYvFmvDGnfcVe5Y=",
   "Source": "Staticaly.Client",
   "BasePath": "/",
   "Mode": "Root",
@@ -8016,6 +8016,25 @@
       "OriginalItemSpec": "wwwroot\\Images\\matemáticas.svg"
     },
     {
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\ojo-abierto.svg",
+      "SourceId": "Staticaly.Client",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "Images/ojo-abierto.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\ojo-abierto.svg"
+    },
+    {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\ojo-cerrado.svg",
       "SourceId": "Staticaly.Client",
       "SourceType": "Discovered",
@@ -8052,25 +8071,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Images\\usuario.svg"
-    },
-    {
-      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\visible.svg",
-      "SourceId": "Staticaly.Client",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\",
-      "BasePath": "/",
-      "RelativePath": "Images/visible.svg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Images\\visible.svg"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\index.html",
