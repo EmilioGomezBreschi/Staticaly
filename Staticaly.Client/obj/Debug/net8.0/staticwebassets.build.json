@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "IVqD5/SOVQVWwOfKzn5hxROAq0sPeYvFmvDGnfcVe5Y=",
+  "Hash": "zt//ni+FTXZ2/FWKA+qzfm1XeUMaoULDmkgkibSUymg=",
   "Source": "Staticaly.Client",
   "BasePath": "/",
   "Mode": "Root",
@@ -7862,6 +7862,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Images\\burbuja-de-diálogo.svg"
+    },
+    {
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\email.svg",
+      "SourceId": "Staticaly.Client",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "Images/email.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\email.svg"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\encuesta.svg",

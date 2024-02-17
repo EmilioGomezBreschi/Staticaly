@@ -1,0 +1,156 @@
+@page "/registro"
+@using Staticaly.Client.Models;
+@using Staticaly.Client.Data;
+@inject UsuariosClient client
+@inject NavigationManager NavigationManager
+@using System;
+
+<PageTitle>Registro - Staticaly</PageTitle>
+
+<div class="h-screen w-screen bg-Primary-Background text-white font-Montserrat flex flex-col justify-center md:justify-normal items-center">
+    <div class="w-full max-w-[610px] px-6 md:flex md:flex-col md:justify-evenly md:items-center">
+        <div id="logo" class="text-center md:mt-8 mb-4">
+            <img src="images/heart.svg" class="w-24 h-24 mx-auto" alt="Logo de Statica.ly" />
+            <h1 class="text-3xl font-Montserrat text-logo-text">Statica.ly</h1>
+        </div>
+        <div class="bg-primary-300 rounded-lg p-8">
+            <EditForm Model="@user" OnValidSubmit="RegistrarUsuario" class="flex flex-col space-y-4 text-primary-400">
+                <div class="relative my-3 bg-primary-100 rounded-md font-bold">
+                    <InputText @bind-Value="@user.Nombre" id="nombre"
+                              class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-4 placeholder-primary-400 bg-transparent"
+                              placeholder="Nombre" />
+                    <ValidationMessage For="@(() => user.Nombre)" class="text-red-500" />
+                    <img src="images/usuario.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
+                        alt="Icono de Usuario" />
+                </div>
+                <div class="relative my-3 bg-primary-100 rounded-md font-bold">
+                    <InputText @bind-Value="@user.Apellido" id="apellido"
+                              class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-4 placeholder-primary-400 bg-transparent"
+                              placeholder="Apellido" />
+                    <ValidationMessage For="@(() => user.Apellido)" class="text-red-500" />
+                    <img src="images/usuario.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
+                        alt="Icono de Usuario" />
+                </div>
+                <div class="relative my-3 bg-primary-100 rounded-md font-bold">
+                    <InputText @bind-Value="@user.Email" type="email" id="email"
+                              class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-4 placeholder-primary-400 bg-transparent"
+                              placeholder="Email" />
+                    <img src="images/email.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
+                        alt="Icono de Usuario" />
+                    <ValidationMessage For="@(() => user.Email)" class="text-red-500" />
+                </div>
+                <div class="relative my-3 bg-primary-100 rounded-md font-bold">
+                    <div class="relative">
+                        <InputText @bind-Value="@user.Password" type="@GetPasswordType()" id="password"
+                                  class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-12 placeholder-primary-400 bg-transparent"
+                                  placeholder="Contraseña" />
+                        <img src="images/llave.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
+                            alt="Icono de llave" />
+                        <img src="images/ojo-abierto.svg" @onclick="TogglePasswordVisibility"
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 cursor-pointer @(showPassword ? "visible" : "hidden")"
+                            alt="Icono de ojo abierto" id="eyeOpen" />
+                        <img src="images/ojo-cerrado.svg" @onclick="TogglePasswordVisibility"
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 cursor-pointer @(showPassword ? "hidden" : "visible")"
+                            alt="Icono de ojo cerrado" id="eyeClosed" />
+                    </div>
+                    <ValidationMessage For="@(() => user.Password)" class="text-red-500" />
+                    @if (submitted && !ValidatePassword(user.Password))
+                    {
+                        <div class="relative mt-1 max-w-[200px] text-xs text-red-500 text-center">
+                            La contraseña debe tener al menos una mayúscula, una minúscula, un número y seis caracteres como mínimo.
+                        </div>
+                    }
+                </div>
+                <button type="submit" class="w-full h-12 my-3 bg-primary-500 rounded-md text-primary-100">Registrarse</button>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private User user = new User();
+    private bool showPassword = false;
+    private bool submitted = false;
+    private string smtpServer = "smtp-relay.brevo.com";
+    private int smtpPort = 587;
+    private string smtpUsername = "lime121804@gmail.com";
+    private string smtpPassword = "Em_G0br3";
+
+    private async Task RegistrarUsuario()
+    {
+        submitted = true;
+
+        if (!ValidatePassword(user.Password))
+        {
+            Console.WriteLine("La contraseña debe tener al menos una mayúscula, una minúscula, un número y seis caracteres como mínimo.");
+            return;
+        }
+
+        user.RolID = 2;
+        await client.CreateUsuarioAsync(user);
+
+        string verificationToken = GenerateVerificationToken(user);
+
+        await SendVerificationEmail(user.Email, verificationToken);
+
+        NavigationManager.NavigateTo("/");
+    }
+
+    private string GenerateVerificationToken(User user)
+    {
+        // Aquí puedes utilizar alguna lógica para generar un token único
+        // Esto podría ser un GUID, un token JWT, o cualquier otro método que prefieras
+        // Por simplicidad, aquí generamos un GUID
+        return Guid.NewGuid().ToString();
+    }
+
+    private async Task SendVerificationEmail(string email, string verificationToken)
+    {
+        string subject = "Verificación de correo electrónico";
+        string body = $"Estimado usuario,<br/><br/>Por favor, haga clic en el siguiente enlace para verificar su correo electrónico:<br/><br/>https://tuapp.com/verificar?token={verificationToken}";
+
+        var emailService = new SmtpEmailService(smtpServer, smtpPort, smtpUsername, smtpPassword);
+        await emailService.SendEmailAsync(email, subject, body);
+    }
+
+    private bool ValidatePassword(string password)
+    {
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            return false;
+        }
+
+        bool hasUpperCase = false;
+        bool hasLowerCase = false;
+        bool hasDigit = false;
+
+        foreach (char c in password)
+        {
+            if (char.IsUpper(c))
+            {
+                hasUpperCase = true;
+            }
+            else if (char.IsLower(c))
+            {
+                hasLowerCase = true;
+            }
+            else if (char.IsDigit(c))
+            {
+                hasDigit = true;
+            }
+        }
+
+        return hasUpperCase && hasLowerCase && hasDigit && password.Length >= 6;
+    }
+
+    private void TogglePasswordVisibility()
+    {
+        showPassword = !showPassword;
+    }
+
+    private string GetPasswordType()
+    {
+        return showPassword ? "text" : "password";
+    }
+}
+
