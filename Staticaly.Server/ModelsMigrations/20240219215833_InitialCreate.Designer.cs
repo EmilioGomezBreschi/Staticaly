@@ -11,7 +11,7 @@ using Staticaly.Server.Models;
 namespace Staticaly.Server.ModelsMigrations
 {
     [DbContext(typeof(StaticalyContext))]
-    [Migration("20240216012113_InitialCreate")]
+    [Migration("20240219215833_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -67,9 +67,6 @@ namespace Staticaly.Server.ModelsMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UsuarioID"));
 
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Apellido")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -79,6 +76,9 @@ namespace Staticaly.Server.ModelsMigrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("EmailVerified")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Imagen")
                         .HasMaxLength(100)
@@ -91,11 +91,14 @@ namespace Staticaly.Server.ModelsMigrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RolID")
                         .HasColumnType("int");
+
+                    b.Property<string>("VerificationToken")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("UsuarioID");
 

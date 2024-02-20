@@ -1,5 +1,8 @@
 using Staticaly.Server.Models;
+using Staticaly.Server.Services;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore;
+using System.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options => options.AddDefaultPolicy(
@@ -12,21 +15,38 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(
 
 var connectionString = builder.Configuration.GetConnectionString("StaticalyContext");
 builder.Services.AddSqlServer<StaticalyContext>(connectionString);
+builder.Services.AddScoped<IEmailService, EmailService>(); // Registro de EmailService como un servicio
+builder.Services.AddSwaggerGen(c =>
+{
+  c.SwaggerDoc("v1", new() { Title = "Staticaly.Server", Version = "v1" });
+});
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 app.UseCors();
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Staticaly.Server v1"));
+
+app.MapPost("/Email", (EmailDTO request, IEmailService emailService) =>
+{
+  emailService.SendEmail(request);
+  return Results.Ok();
+});
 
 var userGroup = app.MapGroup("/users").WithParameterValidation();
+
 
 #region Entry Points Users
 
 // Get all users
 userGroup.MapGet("/", async (StaticalyContext context) =>
-    await context.Usuarios.AsNoTracking().ToListAsync()
+    await context.Usuarios.Include(u => u.Rol)
+                          .AsNoTracking()
+                          .ToListAsync()
 );
 
 //Get user email
-userGroup.MapGet("/ByEmail/{id}/email", async (int id, StaticalyContext context) =>
+userGroup.MapGet("/byEmail/{id}/email", async (int id, StaticalyContext context) =>
 {
   User? user = await context.Usuarios.FindAsync(id);
   if (user is null)
@@ -38,9 +58,10 @@ userGroup.MapGet("/ByEmail/{id}/email", async (int id, StaticalyContext context)
 });
 
 // Get user by email
-userGroup.MapGet("/ByEmail/{email}", async (string email, StaticalyContext context) =>
+userGroup.MapGet("/byEmail/{email}", async (string email, StaticalyContext context) =>
 {
-  User? user = await context.Usuarios.FirstOrDefaultAsync(user => user.Email == email);
+  User? user = await context.Usuarios.Include(u => u.Rol)
+                                    .FirstOrDefaultAsync(user => user.Email == email);
   if (user is null)
   {
     return Results.NotFound();
@@ -51,7 +72,8 @@ userGroup.MapGet("/ByEmail/{email}", async (string email, StaticalyContext conte
 // Get user by id
 userGroup.MapGet("/{id}", async (StaticalyContext context, int id) =>
 {
-  User? user = await context.Usuarios.FindAsync(id);
+  User? user = await context.Usuarios.Include(u => u.Rol)
+                                      .FirstOrDefaultAsync(user => user.UsuarioID == id);
   if (user is null)
   {
     return Results.NotFound();
@@ -82,6 +104,31 @@ userGroup.MapPut("/{id}", async (StaticalyContext context, int id, User Updatedu
   return RowsAffected == 0 ? Results.NotFound() : Results.NoContent();
 });
 
+//Update user email verification
+userGroup.MapPut("/verificar/{rawtoken}", async (string rawtoken, StaticalyContext context) =>
+{
+  try
+  {
+    string token = HttpUtility.UrlDecode(rawtoken);
+    User? user = await context.Usuarios.FirstOrDefaultAsync(user => user.VerificationToken == token);
+    if (user is null)
+    {
+      return Results.NotFound();
+    }
+    user.EmailVerified = true;
+    user.VerificationToken = null;
+    await context.SaveChangesAsync();
+
+    return Results.NoContent();
+  }
+  catch (Exception ex)
+  {
+    Console.WriteLine("Error al verificar el correo electrónico: " + ex.Message);
+    return Results.StatusCode(StatusCodes.Status500InternalServerError);
+  }
+});
+
+
 // Delete user
 userGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
 {
@@ -91,5 +138,6 @@ userGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
 });
 
 #endregion
+
 
 app.Run();

@@ -14,6 +14,10 @@
       <h1 class="text-3xl font-Montserrat text-logo-text">Statica.ly</h1>
     </div>
     <div class="bg-primary-300 rounded-lg p-8">
+      @if (loginError)
+      {
+        <div class="text-red-500 mb-4">Usuario o contraseña incorrectos</div>
+      }
       <EditForm Model="@user" OnValidSubmit="Ingreso" class="flex flex-col space-y-4 text-primary-400">
         <div class="relative my-3 bg-primary-100 rounded-md font-bold">
           <InputText @bind-Value="@user.Email" type="email" id="email"
@@ -53,6 +57,7 @@
 @code {
   private User user = new User();
   private bool showPassword = false;
+  private bool loginError = false;
 
   private string GetPasswordType()
   {
@@ -67,15 +72,24 @@
   private async Task Ingreso()
   {
     var users = await client.GetUsuariosAsync();
-    var foundUser = users.FirstOrDefault(u => u.Email == user.Email && u.Password == user.Password);
-    if (foundUser != null)
+    if (users != null)
     {
-      NavigationManager.NavigateTo("/");
+      var foundUser = users.FirstOrDefault(u => u.Email == user.Email && u.Password == user.Password);
+      if (foundUser != null)
+      {
+        NavigationManager.NavigateTo("/");
+      }
+      else
+      {
+        loginError = true;
+        NavigationManager.NavigateTo("/login");
+        Console.WriteLine("Usuario o contraseña incorrectos");
+      }
     }
     else
     {
-      NavigationManager.NavigateTo("/login");
-      Console.WriteLine("Usuario o contraseña incorrectos");
+      Console.WriteLine("La lista de usuarios es nula.");
     }
   }
+
 }

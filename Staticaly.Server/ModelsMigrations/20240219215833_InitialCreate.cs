@@ -34,10 +34,11 @@ namespace Staticaly.Server.ModelsMigrations
                     Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Apellido = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RolID = table.Column<int>(type: "int", nullable: false),
                     Imagen = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Activo = table.Column<bool>(type: "bit", nullable: false)
+                    VerificationToken = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    EmailVerified = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

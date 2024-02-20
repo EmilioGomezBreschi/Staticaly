@@ -31,7 +31,9 @@ namespace Staticaly.Client.Models
     [MaxLength(100)]
     public string? Imagen { get; set; }
 
-    [Required]
-    public bool Activo { get; set; }
+    [MaxLength(100)]
+    public string? VerificationToken { get; set; }
+
+    public bool EmailVerified { get; set; }
   }
 }

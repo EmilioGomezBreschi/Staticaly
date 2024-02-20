@@ -2,8 +2,10 @@
 @using Staticaly.Client.Models;
 @using Staticaly.Client.Data;
 @inject UsuariosClient client
+@inject EmailServiceClient emailServiceClient
 @inject NavigationManager NavigationManager
-@using System;
+
+
 
 <PageTitle>Registro - Staticaly</PageTitle>
 
@@ -14,6 +16,12 @@
             <h1 class="text-3xl font-Montserrat text-logo-text">Statica.ly</h1>
         </div>
         <div class="bg-primary-300 rounded-lg p-8">
+          @if (showEmailExistsError)
+    {
+        <div class="bg-red-500 font-bold text-white px-4 py-2 rounded-md mb-4">
+            El correo electrónico ya está registrado.
+        </div>
+    }
             <EditForm Model="@user" OnValidSubmit="RegistrarUsuario" class="flex flex-col space-y-4 text-primary-400">
                 <div class="relative my-3 bg-primary-100 rounded-md font-bold">
                     <InputText @bind-Value="@user.Nombre" id="nombre"
@@ -69,16 +77,21 @@
 
 @code {
     private User user = new User();
+    private EmailDTO email = new EmailDTO();
     private bool showPassword = false;
     private bool submitted = false;
-    private string smtpServer = "smtp-relay.brevo.com";
-    private int smtpPort = 587;
-    private string smtpUsername = "lime121804@gmail.com";
-    private string smtpPassword = "Em_G0br3";
+    private bool showEmailExistsError = false;
 
     private async Task RegistrarUsuario()
     {
         submitted = true;
+        var existingUser = await client.GetUsuarioByEmailAsync(user.Email);
+        if (existingUser != null)
+        {
+            Console.WriteLine("El correo electrónico ya ha sido registrado.");
+            showEmailExistsError = true;
+            return;
+        }
 
         if (!ValidatePassword(user.Password))
         {
@@ -88,32 +101,80 @@
 
         user.RolID = 2;
         await client.CreateUsuarioAsync(user);
-
-        string verificationToken = GenerateVerificationToken(user);
-
-        await SendVerificationEmail(user.Email, verificationToken);
+        string body = HacerBody(user.Nombre, user.Apellido, user.VerificationToken);
+        await emailServiceClient.SendEmailAsync(new EmailDTO
+        {
+            Para = user.Email,
+            Asunto = "Verificación de correo electrónico",
+            Contenido = body
+        });
 
         NavigationManager.NavigateTo("/");
     }
 
-    private string GenerateVerificationToken(User user)
+    public string HacerBody(string? nombre, string? apellido, string? verificationToken)
     {
-        // Aquí puedes utilizar alguna lógica para generar un token único
-        // Esto podría ser un GUID, un token JWT, o cualquier otro método que prefieras
-        // Por simplicidad, aquí generamos un GUID
-        return Guid.NewGuid().ToString();
+        return $@"<!DOCTYPE html>
+                  <html lang='en'>
+                  <head>
+                      <meta charset='UTF-8'>
+                      <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                      <title>Verificación de correo electrónico</title>
+                      <style>
+                          body {{
+                              font-family: Montserrat, sans-serif;
+                              background-color: #000a23;
+                              margin: 0;
+                              padding: 0;
+                              display: flex;
+                              justify-content: center;
+                              align-items: center;
+                              height: 100vh;
+                          }}
+                          .container {{
+                              max-width: 600px;
+                              background-color: #557996;
+                              border-radius: 10px;
+                              padding: 20px;
+                              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                              text-align: center;
+                          }}
+                          h1 {{
+                              color: #02253d;
+                              margin-bottom: 20px;
+                          }}
+                          p {{
+                              color: #d2e3f1;
+                              margin-bottom: 10px;
+                          }}
+                          a {{
+                              color: #007bff;
+                              text-decoration: none;
+                          }}
+                          a:hover {{
+                              text-decoration: underline;
+                          }}
+                          .logo {{
+                              width: 100px;
+                              height: auto;
+                              margin-bottom: 20px;
+                          }}
+                      </style>
+                  </head>
+                  <body>
+                      <div class='container'>
+                          <img src='./wwwroot/images/heart.svg' alt='Statica.ly Logo' class='logo'>
+                          <h1>¡Hola {nombre} {apellido}!</h1>
+                          <p>Gracias por registrarte en Statica.ly. Por favor, haz clic en el siguiente enlace para verificar tu correo electrónico:</p>
+                          <p><a href='http://localhost:5197/verificar'>Verificar correo</a></p>
+                          <p>El código de verificación es: {verificationToken}</p>
+                      </div>
+                  </body>
+                  </html>"
+                  ;
     }
 
-    private async Task SendVerificationEmail(string email, string verificationToken)
-    {
-        string subject = "Verificación de correo electrónico";
-        string body = $"Estimado usuario,<br/><br/>Por favor, haga clic en el siguiente enlace para verificar su correo electrónico:<br/><br/>https://tuapp.com/verificar?token={verificationToken}";
-
-        var emailService = new SmtpEmailService(smtpServer, smtpPort, smtpUsername, smtpPassword);
-        await emailService.SendEmailAsync(email, subject, body);
-    }
-
-    private bool ValidatePassword(string password)
+    private bool ValidatePassword(string? password)
     {
         if (string.IsNullOrWhiteSpace(password))
         {
@@ -153,4 +214,3 @@
         return showPassword ? "text" : "password";
     }
 }
-
