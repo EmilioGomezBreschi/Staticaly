@@ -48,7 +48,7 @@
         contraseña?</a>
       <hr class="w-11/12 border-t-2 border-Primary-Background my-4 mx-auto">
       <div class="text-center mb-3">
-        <button class="w-3/4 h-12 bg-primary-500 rounded-md text-primary-100 mx-auto">Registrarse</button>
+        <button class="w-3/4 h-12 bg-primary-500 rounded-md text-primary-100 mx-auto" @onclick="NavigateToRegisterPage">Registrarse</button>
       </div>
     </div>
   </div>
@@ -67,6 +67,11 @@
   private void TogglePasswordVisibility()
   {
     showPassword = !showPassword;
+  }
+
+  private void NavigateToRegisterPage()
+  {
+    NavigationManager.NavigateTo("/registro");
   }
 
   private async Task Ingreso()
