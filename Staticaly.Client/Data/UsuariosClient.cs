@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
-using System.Net.Http.Json;
+using System.Threading.Tasks;
 using Staticaly.Client.Models;
-using System.Net;
-using System.Text.Json;
-
 
 namespace Staticaly.Client.Data
 {
@@ -33,23 +30,21 @@ namespace Staticaly.Client.Data
 
     public async Task<HttpResponseMessage> CreateUsuarioAsync(User usuario)
     {
-      string verificationToken = GenerateVerificationToken(usuario);
+      string verificationToken = GenerateVerificationToken();
       usuario.VerificationToken = verificationToken;
       usuario.EmailVerified = false;
 
       return await httpClient.PostAsJsonAsync("users", usuario);
     }
 
-    private string GenerateVerificationToken(User user)
+    private string GenerateVerificationToken()
     {
-      string tokenContent = $"{user.Nombre}-{user.Apellido}-{user.Email}-{DateTime.UtcNow}";
-
-      using (var sha256 = SHA256.Create())
+      byte[] randomBytes = new byte[32];
+      using (var rng = RandomNumberGenerator.Create())
       {
-        byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(tokenContent));
-        string hashedToken = BitConverter.ToString(hashedBytes).Replace("-", string.Empty);
-        return hashedToken;
+        rng.GetBytes(randomBytes);
       }
+      return BitConverter.ToString(randomBytes).Replace("-", string.Empty);
     }
 
     public async Task<HttpResponseMessage> UpdateUsuarioAsync(int id, User usuario)
@@ -68,17 +63,9 @@ namespace Staticaly.Client.Data
       {
         return await httpClient.GetFromJsonAsync<User>($"users/byemail/{email}");
       }
-      catch (HttpRequestException ex)
+      catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
       {
-        if (ex.StatusCode == HttpStatusCode.NotFound)
-        {
-          return null;
-        }
-        else
-        {
-          Console.WriteLine("Error al obtener el usuario por correo electrónico: " + ex.Message);
-          throw;
-        }
+        return null;
       }
       catch (Exception ex)
       {

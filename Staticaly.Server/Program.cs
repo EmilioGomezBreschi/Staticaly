@@ -128,6 +128,30 @@ userGroup.MapPut("/verificar/{rawtoken}", async (string rawtoken, StaticalyConte
   }
 });
 
+//Update user password
+userGroup.MapPut("/cambiarcontrasena/{id}/{contrasenanueva}", async (string contrasenanueva, int id, StaticalyContext context) =>
+{
+  try
+  {
+    var user = await context.Usuarios.FindAsync(id);
+    if (user == null)
+    {
+      return Results.NotFound();
+    }
+
+    user.Password = contrasenanueva;
+    await context.SaveChangesAsync();
+
+    return Results.Ok();
+  }
+  catch (Exception ex)
+  {
+    Console.WriteLine("Error al cambiar la contraseña: " + ex.Message);
+    return Results.StatusCode(StatusCodes.Status500InternalServerError);
+  }
+});
+
+
 
 // Delete user
 userGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>

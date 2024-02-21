@@ -26,6 +26,10 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/Pages/ContrasenaOlvidada.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29udHJhc2VuYU9sdmlkYWRhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/Pages/Login.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
@@ -34,8 +38,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXIucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/Pages/Register.Verificar.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXIuVmVyaWZpY2FyLnJhem9y
+[C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/Pages/VerificarCorreo.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVmVyaWZpY2FyQ29ycmVvLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/_Imports.razor]

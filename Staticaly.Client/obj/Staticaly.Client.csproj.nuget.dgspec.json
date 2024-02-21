@@ -43,6 +43,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "CryptSharpStandard": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
             "MailKit": {
               "target": "Package",
               "version": "[4.3.0, )"

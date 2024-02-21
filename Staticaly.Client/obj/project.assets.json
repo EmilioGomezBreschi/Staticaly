@@ -15,6 +15,15 @@
           }
         }
       },
+      "CryptSharpStandard/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/CryptSharp.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/CryptSharp.dll": {}
+        }
+      },
       "MailKit/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -634,6 +643,15 @@
           }
         }
       },
+      "CryptSharpStandard/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/CryptSharp.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/CryptSharp.dll": {}
+        }
+      },
       "MailKit/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -1241,6 +1259,19 @@
         "lib/netstandard2.0/BouncyCastle.Cryptography.dll",
         "lib/netstandard2.0/BouncyCastle.Cryptography.xml",
         "packageIcon.png"
+      ]
+    },
+    "CryptSharpStandard/1.0.0": {
+      "sha512": "akj9OBARl2RYOkle562FRM672oMe+pf95fYBqX4MkRL3wx3nQubhP/dvTBxxkgwiTB3OP2vxa1xm4Vilvq11uw==",
+      "type": "package",
+      "path": "cryptsharpstandard/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "cryptsharpstandard.1.0.0.nupkg.sha512",
+        "cryptsharpstandard.nuspec",
+        "lib/netstandard2.0/CryptSharp.dll"
       ]
     },
     "MailKit/4.3.0": {
@@ -2512,6 +2543,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "CryptSharpStandard >= 1.0.0",
       "MailKit >= 4.3.0",
       "Microsoft.AspNetCore.Components.WebAssembly >= 8.0.2",
       "Microsoft.AspNetCore.Components.WebAssembly.DevServer >= 8.0.2",
@@ -2561,6 +2593,10 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "CryptSharpStandard": {
+            "target": "Package",
+            "version": "[1.0.0, )"
+          },
           "MailKit": {
             "target": "Package",
             "version": "[4.3.0, )"

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "3fMzifOStV88KS2OVBwSZ7PRPzebYIUtR5nPZ8Skok8=",
+  "Hash": "JAWuuuYxkl+W5echGdOTSyfZFTUpvNQ+sZjgam8lIvs=",
   "Source": "Staticaly.Client",
   "BasePath": "/",
   "Mode": "Root",
@@ -72,6 +72,25 @@
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\webcil\\BouncyCastle.Cryptography.wasm"
+    },
+    {
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\CryptSharp.wasm",
+      "SourceId": "Staticaly.Client",
+      "SourceType": "Computed",
+      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "_framework/CryptSharp.wasm",
+      "AssetKind": "Build",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "WasmResource",
+      "AssetTraitValue": "runtime",
+      "CopyToOutputDirectory": "PreserveNewest",
+      "CopyToPublishDirectory": "Never",
+      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\webcil\\CryptSharp.wasm"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.js",
@@ -5506,6 +5525,25 @@
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Linq.Queryable.wasm"
+    },
+    {
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\c3l6biqkal.gz",
+      "SourceId": "Staticaly.Client",
+      "SourceType": "Computed",
+      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "_framework/CryptSharp.wasm.gz",
+      "AssetKind": "Build",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\CryptSharp.wasm",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "CopyToOutputDirectory": "PreserveNewest",
+      "CopyToPublishDirectory": "Never",
+      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\CryptSharp.wasm"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\c84tl050t8.gz",

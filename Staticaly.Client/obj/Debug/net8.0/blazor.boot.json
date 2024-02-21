@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "Staticaly.Client",
   "resources": {
-    "hash": "sha256-fMlWRF52UtLMvzNRfryeea3MyYCMvlvTKDlA8Sth4Fc=",
+    "hash": "sha256-r56ctWTE7YALYwXPB08rvKErss6i4+3xaMEe48VYfvM=",
     "jsModuleNative": {
       "dotnet.native.8.0.2.gy7g3ke90s.js": "sha256-gPMK16QWoJSTxorlZJqcVtbBRTniIQWlLsJN2O4cJHg="
     },
@@ -18,6 +18,7 @@
     },
     "assembly": {
       "BouncyCastle.Cryptography.wasm": "sha256-tZxUz5R8To9wugB18BSeGE89A5lQ0IsnaCl5AkgKfnY=",
+      "CryptSharp.wasm": "sha256-lgvijfP1z+enEn/X+00kLuyISv+EefK9QRAGiuNv+Zo=",
       "MailKit.wasm": "sha256-/9u++sBPINSOh4er1EelW0i4u500HaCK7UShUTZzM7c=",
       "Microsoft.AspNetCore.Authorization.wasm": "sha256-xpsdU9uDJz5t2/e+ZH5CkB8nfZeCmSo9PqwquQX4B2U=",
       "Microsoft.AspNetCore.Components.wasm": "sha256-buD5cBBc62HWdCjvn6Z3Zo39W90qvd5Wk6QfHoBzWqw=",
@@ -212,10 +213,10 @@
       "mscorlib.wasm": "sha256-OH3kXneWqQMz6CUSo6POZqIeMqn9+5RR+IgHn5TnIwA=",
       "netstandard.wasm": "sha256-ZOswxXEbR2TmqjpbaBEdgr85Bv1NC4GwOwoJ+oxXM3M=",
       "System.Private.CoreLib.wasm": "sha256-I2w0iHf5nvSQyF1YE1VbgdTzmmz6a4OE6J7vo5wFa/4=",
-      "Staticaly.Client.wasm": "sha256-NH89m1LU++76lC4ch58V86Q0HbExPZwAcmSW4N9e44I="
+      "Staticaly.Client.wasm": "sha256-Suxfsr31irXjV5vU9D/6EfwuiCg1MbXJ0ooZGcgbwio="
     },
     "pdb": {
-      "Staticaly.Client.pdb": "sha256-JY6rvK/4DCJ7qtd8JBi4dWDjwiffNxaVxx4LWNv/0bE="
+      "Staticaly.Client.pdb": "sha256-SaaHBveGwC+9v8ZVeae2lHxqAm8P+aLfChmhhMk7REU="
     }
   },
   "cacheBootResources": true,

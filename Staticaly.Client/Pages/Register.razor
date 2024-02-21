@@ -1,6 +1,6 @@
 @page "/registro"
-@using Staticaly.Client.Models;
-@using Staticaly.Client.Data;
+@using Models;
+@using Data;
 @inject UsuariosClient client
 @inject EmailServiceClient emailServiceClient
 @inject NavigationManager NavigationManager
@@ -22,7 +22,7 @@
             El correo electrónico ya está registrado.
         </div>
     }
-            <EditForm Model="@user" OnValidSubmit="RegistrarUsuario" class="flex flex-col space-y-4 text-primary-400">
+            <EditForm Model="@user" OnValidSubmit="RegistrarUsuario" class="flex flex-col text-primary-400">
                 <div class="relative my-3 bg-primary-100 rounded-md font-bold">
                     <InputText @bind-Value="@user.Nombre" id="nombre"
                               class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-4 placeholder-primary-400 bg-transparent"
@@ -43,15 +43,16 @@
                     <InputText @bind-Value="@user.Email" type="email" id="email"
                               class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-4 placeholder-primary-400 bg-transparent"
                               placeholder="Email" />
+                    <ValidationMessage For="@(() => user.Email)" class="text-red-500" />
                     <img src="images/email.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
                         alt="Icono de Usuario" />
-                    <ValidationMessage For="@(() => user.Email)" class="text-red-500" />
                 </div>
                 <div class="relative my-3 bg-primary-100 rounded-md font-bold">
                     <div class="relative">
                         <InputText @bind-Value="@user.Password" type="@GetPasswordType()" id="password"
                                   class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-12 placeholder-primary-400 bg-transparent"
                                   placeholder="Contraseña" />
+                    <ValidationMessage For="@(() => user.Password)" class="text-red-500" />
                         <img src="images/llave.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
                             alt="Icono de llave" />
                         <img src="images/ojo-abierto.svg" @onclick="TogglePasswordVisibility"
@@ -61,7 +62,6 @@
                             class="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 cursor-pointer @(showPassword ? "hidden" : "visible")"
                             alt="Icono de ojo cerrado" id="eyeClosed" />
                     </div>
-                    <ValidationMessage For="@(() => user.Password)" class="text-red-500" />
                     @if (submitted && !ValidatePassword(user.Password))
                     {
                         <div class="relative mt-1 max-w-[200px] text-xs text-red-500 text-center">
@@ -71,6 +71,7 @@
                 </div>
                 <button type="submit" class="w-full h-12 my-3 bg-primary-500 rounded-md text-primary-100">Registrarse</button>
             </EditForm>
+                  <a href="/login" class="text-sm text-primary-700 text-center mt-4 block mx-auto font-bold">¿Ya tienes cuenta?</a>
         </div>
     </div>
 </div>
@@ -85,6 +86,8 @@
     private async Task RegistrarUsuario()
     {
         submitted = true;
+
+        // Verificar si el correo electrónico ya existe
         var existingUser = await client.GetUsuarioByEmailAsync(user.Email);
         if (existingUser != null)
         {
@@ -93,33 +96,47 @@
             return;
         }
 
+        // Validar la contraseña
         if (!ValidatePassword(user.Password))
         {
             Console.WriteLine("La contraseña debe tener al menos una mayúscula, una minúscula, un número y seis caracteres como mínimo.");
             return;
         }
 
+        // Asignar el rol y crear el usuario
         user.RolID = 2;
         await client.CreateUsuarioAsync(user);
-        string body = HacerBody(user.Nombre, user.Apellido, user.VerificationToken);
-        await emailServiceClient.SendEmailAsync(new EmailDTO
-        {
-            Para = user.Email,
-            Asunto = "Verificación de correo electrónico",
-            Contenido = body
-        });
 
+        // Enviar correo electrónico de verificación
+        string body = HacerBody(user.Nombre, user.Apellido, user.VerificationToken);
+        if (!string.IsNullOrEmpty(user.Email))
+        {
+            await emailServiceClient.SendEmailAsync(new EmailDTO
+            {
+                Para = user.Email,
+                Asunto = "Verificación de correo electrónico",
+                Contenido = body
+            });
+        }
+        else
+        {
+            Console.WriteLine("No se puede enviar el correo electrónico porque el usuario o el correo electrónico es nulo.");
+            return;
+        }
+
+        // Redirigir al usuario a la página principal
         NavigationManager.NavigateTo("/");
     }
 
     public string HacerBody(string? nombre, string? apellido, string? verificationToken)
     {
+        // Crear el cuerpo del correo electrónico de verificación
         return $@"<!DOCTYPE html>
                   <html lang='en'>
                   <head>
                       <meta charset='UTF-8'>
                       <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                      <title>Verificación de correo electrónico</title>
+                      <title>Verificación de correo electrónico - Staticaly</title>
                       <style>
                           body {{
                               font-family: Montserrat, sans-serif;
@@ -163,20 +180,19 @@
                   </head>
                   <body>
                       <div class='container'>
-                          <img src='./wwwroot/images/heart.svg' alt='Statica.ly Logo' class='logo'>
                           <h1>¡Hola {nombre} {apellido}!</h1>
                           <p>Gracias por registrarte en Statica.ly. Por favor, haz clic en el siguiente enlace para verificar tu correo electrónico:</p>
                           <p><a href='http://localhost:5197/verificar'>Verificar correo</a></p>
                           <p>El código de verificación es: {verificationToken}</p>
                       </div>
                   </body>
-                  </html>"
-                  ;
+                  </html>";
     }
 
     private bool ValidatePassword(string? password)
     {
-        if (string.IsNullOrWhiteSpace(password))
+        // Validar la contraseña
+        if (string.IsNullOrWhiteSpace(password) || password.Length < 6)
         {
             return false;
         }
@@ -201,16 +217,18 @@
             }
         }
 
-        return hasUpperCase && hasLowerCase && hasDigit && password.Length >= 6;
+        return hasUpperCase && hasLowerCase && hasDigit;
     }
 
     private void TogglePasswordVisibility()
     {
+        // Alternar la visibilidad de la contraseña
         showPassword = !showPassword;
     }
 
     private string GetPasswordType()
     {
+        // Obtener el tipo de entrada de la contraseña (texto o contraseña)
         return showPassword ? "text" : "password";
     }
 }
