@@ -8,7 +8,7 @@
 
 <div
   class="h-screen w-screen bg-Primary-Background text-white font-Montserrat flex flex-col justify-center md:justify-normal items-center">
-  <div class="w-full max-w-[250px] px-6 md:flex md:flex-col md:justify-evenly md:items-center">
+  <div class="w-full max-w-[610px] px-6 md:flex md:flex-col md:justify-evenly md:items-center">
     <div id="logo" class="text-center md:mt-8 mb-4">
       <img src="images/heart.svg" class="w-24 h-24 mx-auto" alt="Logo de Statica.ly" />
       <h1 class="text-3xl font-Montserrat text-logo-text">Statica.ly</h1>
@@ -17,18 +17,17 @@
       <EditForm Model="@user" OnValidSubmit="Ingreso" class="flex flex-col text-primary-400">
         @if (loginError)
         {
-          <div
-            class="relative mt-1 text-xs text-center bg-red-500 font-bold text-white px-4 py-2 rounded-md mb-4">
+          <div class="relative mt-1 text-xs text-center bg-red-500 font-bold text-white px-4 py-2 rounded-md mb-4">
             Las credenciales son incorrectas.
           </div>
         }
         <div class="relative my-3 bg-primary-100 rounded-md font-bold">
           <InputText @bind-Value="@user.Email" type="email" id="email"
             class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-4 placeholder-primary-400 bg-transparent"
-            placeholder="Usuario" />
+            placeholder="Correo" />
           <ValidationMessage For="@(() => user.Email)" class="text-red-500" />
-          <img src="images/usuario.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
-            alt="Icono de usuario" />
+          <img src="images/email.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
+            alt="Icono de Correo" />
         </div>
         <div class="relative my-3 bg-primary-100 rounded-md font-bold">
           <InputText @bind-Value="@user.Password" type="@GetPasswordType()" id="password"
@@ -49,7 +48,7 @@
       </EditForm>
       <a href="/olvidada" class="text-sm font-bold text-primary-700 text-center mt-4 block mx-auto">¿Has olvidado tu
         contraseña?</a>
-      <hr class="w-11/12 border-t-2 border-Primary-Background my-4 mx-auto">
+      <hr class="w-11/12 border-t-2 border-Primary-Background my-4 mx-auto" />
       <div class="text-center mb-3">
         <button class="w-3/4 h-12 bg-primary-500 rounded-md text-primary-100 mx-auto"
           @onclick="NavigateToRegisterPage">Registrarse</button>
@@ -82,7 +81,7 @@
     true);
     if (foundUser != null)
     {
-      NavigationManager.NavigateTo("/");
+      NavigationManager.NavigateTo($"/{foundUser.UsuarioID}");
     }
     else
     {

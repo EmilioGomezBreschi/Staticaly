@@ -2,26 +2,38 @@
 @using Models;
 @using Data;
 @inject UsuariosClient client
+@using SixLabors.ImageSharp
+@using System.IO;
+@using System.Diagnostics;
+@using SixLabors.ImageSharp.Processing;
 @inject EmailServiceClient emailServiceClient
 @inject NavigationManager NavigationManager
 
 
 
 <PageTitle>Registro - Staticaly</PageTitle>
-
-<div class="h-screen w-screen bg-Primary-Background text-white font-Montserrat flex flex-col justify-center md:justify-normal items-center">
-    <div class="w-full max-w-[610px] px-6 md:flex md:flex-col md:justify-evenly md:items-center">
+<div class="h-screen bg-Primary-Background text-white font-Montserrat flex flex-col justify-center md:justify-normal items-center">
+  @if (isLoading)
+    {
+        <div class="h-full absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+            <svg class="animate-spin h-8 w-8 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647zM20 12a8 8 0 01-8 8v4c6.627 0 12-5.373 12-12h-4zm-2-5.291A7.962 7.962 0 0120 12h4c0-3.042-1.135-5.824-3-7.938l-3 2.647z"></path>
+            </svg>
+        </div>
+    }
+    <div class="flex flex-col max-w-[610px] justify-center md:justify-normal items-center">
         <div id="logo" class="text-center md:mt-8 mb-4">
             <img src="images/heart.svg" class="w-24 h-24 mx-auto" alt="Logo de Statica.ly" />
             <h1 class="text-3xl font-Montserrat text-logo-text">Statica.ly</h1>
         </div>
-        <div class="bg-primary-300 rounded-lg p-8">
-          @if (showEmailExistsError)
-    {
-        <div class="bg-red-500 font-bold text-white px-4 py-2 rounded-md mb-4">
-            El correo electrónico ya está registrado.
-        </div>
-    }
+        <div class="bg-primary-300 rounded-lg p-8 flex flex-col items-center">
+            @if (showEmailExistsError)
+            {
+                <div class="bg-red-500 font-bold text-white px-4 py-2 rounded-md mb-4">
+                    El correo electrónico ya está registrado.
+                </div>
+            }
             <EditForm Model="@user" OnValidSubmit="RegistrarUsuario" class="flex flex-col text-primary-400">
                 <div class="relative my-3 bg-primary-100 rounded-md font-bold">
                     <InputText @bind-Value="@user.Nombre" id="nombre"
@@ -47,12 +59,12 @@
                     <img src="images/email.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
                         alt="Icono de Usuario" />
                 </div>
-                <div class="relative my-3 bg-primary-100 rounded-md font-bold">
+                <div class="relative mt-3 bg-primary-100 rounded-md font-bold">
                     <div class="relative">
                         <InputText @bind-Value="@user.Password" type="@GetPasswordType()" id="password"
                                   class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-12 placeholder-primary-400 bg-transparent"
                                   placeholder="Contraseña" />
-                    <ValidationMessage For="@(() => user.Password)" class="text-red-500" />
+                        <ValidationMessage For="@(() => user.Password)" class="text-red-500" />
                         <img src="images/llave.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
                             alt="Icono de llave" />
                         <img src="images/ojo-abierto.svg" @onclick="TogglePasswordVisibility"
@@ -62,16 +74,72 @@
                             class="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 cursor-pointer @(showPassword ? "hidden" : "visible")"
                             alt="Icono de ojo cerrado" id="eyeClosed" />
                     </div>
-                    @if (submitted && !ValidatePassword(user.Password))
+                </div>
+                @if (submitted && !ValidatePassword(user.Password))
+                {
+                    <div class="px-5 py-2 bg-red-500 rounded-md font-bold text-xs text-white text-left max-w-full">
+                        <p class="mb-1">La contraseña debe contener al menos:</p>
+                        <ul class="list-disc">
+                          <li>Una mayúscula</li>
+                          <li>Una minúscula</li>
+                          <li>Un número</li>
+                          <li>Seis caracteres como mínimo</li>
+                        </ul>
+                    </div>
+                }
+                <div class="flex items-center mt-6 text-primary-50">
+                    <label for="esDocente" class="mr-2 font-bold">¿Eres Docente?</label>
+                    <input type="checkbox" id="esDocente" @bind="@esDocente" class="form-checkbox h-5 w-5 text-primary-600" />
+                </div>
+                @if (esDocente == true)
+                {
+                    <div class="relative my-3 bg-primary-100 rounded-md font-bold">
+                      <div class="relative">
+                        <InputText @bind-Value="@InstitucionDocente" id="InstitucionDocente"
+                                  class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-4 placeholder-primary-400 bg-transparent"
+                                  placeholder="Institucion de Docente" />
+                                  <img src="images/school.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"/>
+                      </div>
+                    </div>
+                    <div class="relative my-3 bg-primary-100 rounded-md font-bold">
+                      <div class="relative">
+                        <InputSelect TValue="int" @bind-Value="@Semestre"
+                                    class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-4 placeholder-primary-400 bg-transparent">
+                            <option value="0" selected>Selecciona un semestre</option>
+                            @for (int i = 1; i <= 8; i++)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </InputSelect>
+                        <img src="images/semestre.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"/>
+                      </div>
+                    </div>
+                    <div class="relative my-3 bg-primary-100 rounded-md font-bold flex items-center justify-center text-center">
+                        <label for="fotoDocente" class="absolute left-3">
+                            <img src="images/camera.svg" alt="Icono de cámara" class="h-6 w-6" />
+                        </label>
+                        <InputFile id="fotoDocente" class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-4 placeholder-primary-400 bg-transparent" accept=".jpg,.jpeg,.png" OnChange="HandleFileSelected" />
+                    </div>
+                    @if (FotoDocente != null)
                     {
-                        <div class="relative mt-1 max-w-[200px] text-xs text-red-500 text-center">
-                            La contraseña debe tener al menos una mayúscula, una minúscula, un número y seis caracteres como mínimo.
+                        <div class="flex justify-center items-center">
+                          <img src="data:image;base64,@(Convert.ToBase64String(FotoDocente))" alt="Foto seleccionada" class="my-3 max-w-24 max-h-24 hover:max-w-[430px] hover:max-h-[430px]" />
                         </div>
                     }
-                </div>
+                    @if (submitted && ValidateFoto == false)
+                    {
+                      <div class="px-5 py-2 bg-red-500 rounded-md font-bold text-xs text-white text-left max-w-full">
+                        <p class="mb-1">La Imagen debe ser:</p>
+                        <ul class="list-decimal">
+                          <li>Archivo ".jpg .png .jpeg"</li>
+                          <li>Archivo menor a 480x480px</li>
+                        </ul>
+                      </div>
+                    }
+                }
                 <button type="submit" class="w-full h-12 my-3 bg-primary-500 rounded-md text-primary-100">Registrarse</button>
             </EditForm>
-                  <a href="/login" class="text-sm text-primary-700 text-center mt-4 block mx-auto font-bold">¿Ya tienes cuenta?</a>
+            <a href="/login" class="text-sm text-primary-700 text-center mt-4 block mx-auto font-bold">¿Ya tienes cuenta?</a>
         </div>
     </div>
 </div>
@@ -79,56 +147,103 @@
 @code {
     private User user = new User();
     private EmailDTO email = new EmailDTO();
+    private string InstitucionDocente = "";
+    private int Semestre = 0;
+    private byte[]? FotoDocente;
     private bool showPassword = false;
     private bool submitted = false;
     private bool showEmailExistsError = false;
+    private bool ValidateFoto = true;
+    private bool esDocente = false;
+    private bool isLoading = false;
 
-    private async Task RegistrarUsuario()
-    {
-        submitted = true;
+  private async Task RegistrarUsuario()
+  {
+      string body = "";
+      submitted = true;
 
-        // Verificar si el correo electrónico ya existe
-        var existingUser = await client.GetUsuarioByEmailAsync(user.Email);
-        if (existingUser != null)
-        {
-            Console.WriteLine("El correo electrónico ya ha sido registrado.");
-            showEmailExistsError = true;
-            return;
-        }
+      // Validar si hay campos requeridos vacíos
+      if (string.IsNullOrWhiteSpace(user.Nombre) || string.IsNullOrWhiteSpace(user.Apellido) ||
+          string.IsNullOrWhiteSpace(user.Email) || string.IsNullOrWhiteSpace(user.Password))
+      {
+          isLoading = false;
+          return;
+      }
+      try
+      {
+          isLoading = true;
+          await Task.Delay(2000);
+      // Verificar si el correo electrónico ya existe
+      var existingUser = await client.GetUsuarioByEmailAsync(user.Email);
+      if (existingUser != null)
+      {
+          Console.WriteLine("El correo electrónico ya ha sido registrado.");
+          showEmailExistsError = true;
+          isLoading = false;
+          return;
+      }
 
-        // Validar la contraseña
-        if (!ValidatePassword(user.Password))
-        {
-            Console.WriteLine("La contraseña debe tener al menos una mayúscula, una minúscula, un número y seis caracteres como mínimo.");
-            return;
-        }
+      // Validar la contraseña
+      if (!ValidatePassword(user.Password))
+      {
+          Console.WriteLine("La contraseña debe tener al menos una mayúscula, una minúscula, un número y seis caracteres como mínimo.");
+          isLoading = false;
+          return;
+      }
 
-        // Asignar el rol y crear el usuario
-        user.RolID = 2;
-        await client.CreateUsuarioAsync(user);
+      // Asignar el rol según si es docente o usuario normal
+      if (esDocente == true)
+      {
+          if (Semestre == 0 || string.IsNullOrWhiteSpace(InstitucionDocente) || FotoDocente == null)
+          {
+              isLoading = false;
+              // No hacer nada si hay campos requeridos vacíos
+              return;
+          }
 
-        // Enviar correo electrónico de verificación
-        string body = HacerBody(user.Nombre, user.Apellido, user.VerificationToken);
-        if (!string.IsNullOrEmpty(user.Email))
-        {
-            await emailServiceClient.SendEmailAsync(new EmailDTO
-            {
-                Para = user.Email,
-                Asunto = "Verificación de correo electrónico",
-                Contenido = body
-            });
-        }
-        else
-        {
-            Console.WriteLine("No se puede enviar el correo electrónico porque el usuario o el correo electrónico es nulo.");
-            return;
-        }
+          user.Imagen = FotoDocente;
+          body = HacerBodyDocente(user.Nombre, user.Apellido, InstitucionDocente, Semestre, FotoDocente);
+          await emailServiceClient.SendEmailAsync(new EmailDTO
+          {
+              Para = "staticaly.services@gmail.com",
+              Asunto = "Nuevo Docente registrado",
+              Contenido = body
+          });
+      }
+      // Rol para usuario normal
+      user.RolID = 2;
+      // Crear el usuario
+      await client.CreateUsuarioAsync(user);
 
-        // Redirigir al usuario a la página principal
-        NavigationManager.NavigateTo("/");
-    }
+      // Enviar correo electrónico de verificación
+      body = HacerBodyVerificacion(user.Nombre, user.Apellido, user.VerificationToken);
+      if (!string.IsNullOrEmpty(user.Email))
+      {
+          await emailServiceClient.SendEmailAsync(new EmailDTO
+          {
+              Para = user.Email,
+              Asunto = "Verificación de correo electrónico",
+              Contenido = body
+          });
+      }
+      else
+      {
+          Console.WriteLine("No se puede enviar el correo electrónico porque el usuario o el correo electrónico es nulo.");
+          isLoading = false;
+          return;
+      }
+      // Redirigir al usuario a la página principal
+      NavigationManager.NavigateTo("/login");
+      isLoading = false;
+      }
+      catch (Exception ex)
+      {
+          isLoading = false;
+          Console.WriteLine(ex.Message);
+      }
+  }
 
-    public string HacerBody(string? nombre, string? apellido, string? verificationToken)
+    public string HacerBodyVerificacion(string? nombre, string? apellido, string? verificationToken)
     {
         // Crear el cuerpo del correo electrónico de verificación
         return $@"<!DOCTYPE html>
@@ -136,11 +251,12 @@
                   <head>
                       <meta charset='UTF-8'>
                       <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                      <title>Verificación de correo electrónico - Staticaly</title>
+                      <title>Nuevo docente registrado - Staticaly</title>
                       <style>
                           body {{
                               font-family: Montserrat, sans-serif;
                               background-color: #000a23;
+                              font-size: 1rem;
                               margin: 0;
                               padding: 0;
                               display: flex;
@@ -165,16 +281,16 @@
                               margin-bottom: 10px;
                           }}
                           a {{
+                            font-size: 1.2rem;
                               color: #007bff;
                               text-decoration: none;
                           }}
                           a:hover {{
                               text-decoration: underline;
                           }}
-                          .logo {{
-                              width: 100px;
-                              height: auto;
-                              margin-bottom: 20px;
+                          #token {{
+                              font-size: 1.5rem;
+                              font-weight: bold;
                           }}
                       </style>
                   </head>
@@ -183,11 +299,70 @@
                           <h1>¡Hola {nombre} {apellido}!</h1>
                           <p>Gracias por registrarte en Statica.ly. Por favor, haz clic en el siguiente enlace para verificar tu correo electrónico:</p>
                           <p><a href='http://localhost:5197/verificar'>Verificar correo</a></p>
-                          <p>El código de verificación es: {verificationToken}</p>
+                          <p>El código de verificación es: </p>
+                          <p id='token'> {verificationToken}</p>
                       </div>
                   </body>
                   </html>";
     }
+
+  private string HacerBodyDocente(string? nombre, string? apellido, string? institucion, int? semestre, byte[]? foto)
+  {
+
+      // Construye el cuerpo del correo electrónico
+return $@"<!DOCTYPE html>
+          <html lang='en'>
+          <head>
+              <meta charset='UTF-8'>
+              <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+              <title>Verificación de correo electrónico - Staticaly</title>
+              <style>
+                  body {{
+                      font-family: Montserrat, sans-serif;
+                      background-color: #000a23;
+                      font-size: 1rem;
+                      margin: 0;
+                      padding: 0;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      height: 100vh;
+                  }}
+                  .container {{
+                      max-width: 600px;
+                      background-color: #557996;
+                      border-radius: 10px;
+                      padding: 20px;
+                      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                      text-align: center;
+                  }}
+                  h2 {{
+                      font-size: 24px;
+                      color: #02253d;
+                      margin-bottom: 20px;
+                  }}
+                  p {{
+                      font-size: 16px;
+                      margin-bottom: 10px;
+                      color: #d2e3f1;
+                      margin-bottom: 10px;
+                  }}
+                  strong {{
+                      font-weight: bold;
+                  }}
+              </style>
+          </head>
+          <body>
+            <div class='container'>
+            <h2>Información del Docente</h2>
+              <p><strong>Nombre:</strong> {nombre}</p>
+              <p><strong>Apellido:</strong> {apellido}</p>
+              <p><strong>Institución:</strong> {institucion}</p>
+              <p><strong>Semestre:</strong> {semestre}</p>
+            </div>
+          </body>
+          </html>";
+  }
 
     private bool ValidatePassword(string? password)
     {
@@ -231,4 +406,40 @@
         // Obtener el tipo de entrada de la contraseña (texto o contraseña)
         return showPassword ? "text" : "password";
     }
+
+private async Task HandleFileSelected(InputFileChangeEventArgs e)
+{
+    var file = e.File;
+
+    // Verificar la extensión del archivo
+    var extension = Path.GetExtension(file.Name).ToLowerInvariant();
+    if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
+    {
+        ValidateFoto = false;
+        // Mostrar un mensaje de error o manejar de otra forma
+        Debug.WriteLine("El archivo debe ser una imagen JPG o PNG.");
+        return;
+    }
+
+    // Leer el archivo en un buffer de bytes
+    var buffer = new byte[file.Size];
+    await file.OpenReadStream().ReadAsync(buffer);
+
+    // Validar la resolución de la imagen (opcional)
+    using (var imageStream = new MemoryStream(buffer))
+    using (var image = Image.Load(imageStream))
+    {
+        if (image.Width > 480 || image.Height > 480)
+        {
+            // Mostrar un mensaje de error o manejar de otra forma
+            ValidateFoto = false;
+            Debug.WriteLine("La imagen debe tener una resolución máxima de 480p.");
+            return;
+        }
+    }
+
+    // Asignar el buffer de bytes a la propiedad FotoDocente
+    FotoDocente = buffer;
+}
+
 }

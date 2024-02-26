@@ -1056,3 +1056,8 @@ C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\w
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\CryptSharp.dll
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\webcil\CryptSharp.wasm
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\c3l6biqkal.gz
+C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\SixLabors.ImageSharp.wasm
+C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\SixLabors.ImageSharp.wasm.gz
+C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\SixLabors.ImageSharp.dll
+C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\webcil\SixLabors.ImageSharp.wasm
+C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\780zgw9osu.gz

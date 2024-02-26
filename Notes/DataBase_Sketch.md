@@ -16,10 +16,10 @@
 
 ### Tabla: Roles
 
-| Campo  | Tipo de dato | Descripción                       |
-| ------ | ------------ | --------------------------------- |
-| RolID  | INT          | Identificador único para cada rol |
-| Rol | VARCHAR(50)  | Nombre del rol                    |
+| Campo | Tipo de dato | Descripción                       |
+| ----- | ------------ | --------------------------------- |
+| RolID | INT          | Identificador único para cada rol |
+| Rol   | VARCHAR(50)  | Nombre del rol                    |
 
 ### Tabla: EquiposEstudiantes
 
@@ -48,23 +48,23 @@
 
 ### Tabla: Foros
 
-| Campo         | Tipo de dato | Descripción                                                          |
-| ------------- | ------------ | -------------------------------------------------------------------- |
-| ForoID        | INT          | Identificador único para cada foro                                   |
-| Titulo        | VARCHAR(100) | Título del foro                                                      |
-| Descripcion   | VARCHAR(200) | Descripción del foro                                                 |
-| GrupoID     | INT          | Referencia al ID del Grupo en el que esta el foro |
-| FechaCreacion | DATE         | Fecha de creación del foro                                           |
+| Campo         | Tipo de dato | Descripción                                       |
+| ------------- | ------------ | ------------------------------------------------- |
+| ForoID        | INT          | Identificador único para cada foro                |
+| Titulo        | VARCHAR(100) | Título del foro                                   |
+| Descripcion   | VARCHAR(200) | Descripción del foro                              |
+| GrupoID       | INT          | Referencia al ID del Grupo en el que esta el foro |
+| FechaCreacion | DATE         | Fecha de creación del foro                        |
 
 ### Tabla: Publicaciones
 
-| Campo         | Tipo de dato | Descripción                                                                   |
-| ------------- | ------------ | ----------------------------------------------------------------------------- |
-| PublicacionID | INT          | Identificador único para cada publicación                                     |
-| ForoID        | INT          | Referencia al ID del foro al que pertenece la publicación en la tabla "Foros" |
+| Campo         | Tipo de dato | Descripción                                                                    |
+| ------------- | ------------ | ------------------------------------------------------------------------------ |
+| PublicacionID | INT          | Identificador único para cada publicación                                      |
+| ForoID        | INT          | Referencia al ID del foro al que pertenece la publicación en la tabla "Foros"  |
 | UsuarioID     | INT          | Referencia al ID del usuario que realizó la publicación en la tabla "Usuarios" |
-| Contenido | TEXT | Contenido de la publicación |
-| Imagen | VARCHAR(100) | Ruta de la imagen relacionada con la publicación |
+| Contenido     | TEXT         | Contenido de la publicación                                                    |
+| Imagen        | VARCHAR(100) | Ruta de la imagen relacionada con la publicación                               |
 
 ### Tabla: Comentarios
 
@@ -124,7 +124,7 @@
 | ---------- | ------------ | -------------------------------------------------------------------------------------- |
 | PreguntaID | INT          | Identificador único para cada pregunta                                                 |
 | EncuestaID | INT          | Referencia al ID de la encuesta a la que pertenece la pregunta en la tabla "Encuestas" |
-| Contenido  | TEXT         | Contenido de la pregunta |
+| Contenido  | TEXT         | Contenido de la pregunta                                                               |
 
 ### Tabla: Respuestas
 

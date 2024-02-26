@@ -29,9 +29,12 @@ namespace Staticaly.Server.Models
     public int RolID { get; set; }
 
     public Rol? Rol { get; set; }
+    [Required]
+    public int RangoID { get; set;}
+    public Rango? Rango { get; set; }
+    public int Puntos { get; set; }
 
-    [MaxLength(100)]
-    public string? Imagen { get; set; }
+    public byte[]? Imagen { get; set; }
 
     [MaxLength(100)]
     public string? VerificationToken { get; set; }

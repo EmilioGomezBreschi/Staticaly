@@ -11,7 +11,7 @@ using Staticaly.Server.Models;
 namespace Staticaly.Server.ModelsMigrations
 {
     [DbContext(typeof(StaticalyContext))]
-    [Migration("20240219215833_InitialCreate")]
+    [Migration("20240226025845_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -80,9 +80,8 @@ namespace Staticaly.Server.ModelsMigrations
                     b.Property<bool>("EmailVerified")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Imagen")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<byte[]>("Imagen")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()

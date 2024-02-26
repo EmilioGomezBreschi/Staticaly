@@ -83,5 +83,10 @@ namespace Staticaly.Client.Data
     {
       return await httpClient.PutAsync($"users/verificar/{token}", null);
     }
+
+    public async Task<HttpResponseMessage> PasswordResetAsync(string? password, int id)
+    {
+      return await httpClient.PutAsync($"users/cambiarcontrasena/{id}/{password}", null);
+    }
   }
 }

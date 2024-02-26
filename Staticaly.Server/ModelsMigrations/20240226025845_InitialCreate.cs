@@ -36,7 +36,7 @@ namespace Staticaly.Server.ModelsMigrations
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RolID = table.Column<int>(type: "int", nullable: false),
-                    Imagen = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Imagen = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     VerificationToken = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     EmailVerified = table.Column<bool>(type: "bit", nullable: false)
                 },

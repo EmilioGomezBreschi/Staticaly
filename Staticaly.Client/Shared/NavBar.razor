@@ -1,0 +1,166 @@
+@inject NavigationManager NavigationManager
+@using Models;
+@using Data;
+@inject UsuariosClient usuariosClient
+
+<nav
+  class="navbar fixed top-0 left-0 w-full lg:w-16 h-auto lg:h-screen bg-primary-800 transition-all duration-300 lg:hover:w-32 flex flex-col lg:justify-center lg:items-center"
+  id="menu-nav">
+  <div
+    class="flex lg:flex-col justify-center lg:justify-evenly items-center w-full transform transition-all duration-300">
+    <img src="images/heart.svg" alt="Logo" class="h-9 w-9 rounded object-contain mt-2" />
+    <span id="texto-logo" class="text-logo-text text-md opacity-1 mx-2 lg:mx-0 relative lg:opacity-0 lg:absolute">Staticaly</span>
+  </div>
+  <div class="hidden container mb-2 lg:mb-0 h-full w-full lg:flex flex-col justify-evenly items-center" id="menu-links">
+    <hr class="w-7/12 border-t-0 lg:border-t-2 border-Primary-Background my-4 mx-auto" />
+    <div
+      class="flex justify-start lg:justify-evenly items-center group w-full cursor-pointer transform transition-all duration-300 hover:rounded-r"
+      data-link="/">
+      <img src="images/foro.svg" alt="Foro" class="h-9 w-9 rounded object-contain" />
+      <div class="flex flex-col ml-5 relative lg:absolute">
+        <span id="texto-Foro" class="text-primary-800 text-md lg:text-xs opacity-1 lg:opacity-0 font-bold">
+          Foro
+        </span>
+      </div>
+    </div>
+    <div
+      class="flex justify-start lg:justify-evenly items-center group w-full cursor-pointer transform transition-all duration-300 hover:rounded-r"
+      data-link="/grupos">
+      <img src="images/grupos.svg" alt="Grupos" class="h-9 w-9 rounded" />
+      <div class="flex flex-col ml-5 relative lg:absolute">
+        <span id="texto-Grupos" class="text-primary-800 text-md lg:text-xs opacity-1 lg:opacity-0 font-bold">
+          Grupos
+        </span>
+      </div>
+    </div>
+    <div
+      class="flex justify-start lg:justify-evenly items-center group w-full cursor-pointer transform transition-all duration-300 hover:rounded-r"
+      data-link="/estadisticas">
+      <img src="images/estadisticas.svg" alt="Estadistica" class="h-9 w-9 rounded" />
+      <div class="flex flex-col ml-5 relative lg:absolute">
+        <span id="texto-Estadisticas" class="text-primary-800 text-md lg:text-xs opacity-1 lg:opacity-0 font-bold">
+          Estadisticas
+        </span>
+      </div>
+    </div>
+    <div
+      class="flex justify-start lg:justify-evenly items-center group w-full cursor-pointer transform transition-all duration-300 hover:rounded-r"
+      data-link="/encuestas">
+      <img src="images/encuesta.svg" alt="Encuestas" class="h-9 w-9 rounded object-contain" />
+      <div class="flex flex-col ml-5 relative lg:absolute">
+        <span id="texto-Encuestas" class="text-primary-800 text-md lg:text-xs opacity-1 lg:opacity-0 font-bold">Encuestas</span>
+      </div>
+    </div>
+    <div
+      class="flex justify-start lg:justify-evenly items-center group w-full cursor-pointer transform transition-all duration-300 hover:rounded-r"
+      data-link="/ejercicios">
+      <img src="images/ejercicios.svg" alt="Ejercicios" class="h-9 w-9 rounded object-contain" />
+      <div class="flex flex-col ml-5 relative lg:absolute">
+        <span id="texto-Ejercicios"
+          class="text-primary-800 text-md lg:text-xs opacity-1 lg:opacity-0 font-bold">Ejercicios</span>
+      </div>
+    </div>
+    <hr class="w-7/12 border-t-0 lg:border-t-2 border-Primary-Background my-4 mx-auto" />
+    <div
+      class="flex lg:flex-col justify-center lg:justify-evenly items-center w-full transform transition-all duration-300 cursor-pointer"
+      id="usuario">
+      <img src="images/perfil.svg" alt="Logo" class="h-9 w-9 rounded object-contain mt-2" />
+      <div
+        class="text-primary-100 font-bold text-md lg:text-xs opacity-1 relative lg:opacity-0 lg:absolute flex flex-col items-center justify-center"
+        id="texto-usuario">
+        <span>@(usuario != null ? $"{usuario.Nombre} {usuario.Apellido}": "Usuario")</span>
+        <span>@(usuario != null ? usuario.Rango : "Rango")</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+@code {
+  [Parameter] public string? Id { get; set; }
+  private User usuario;
+
+  protected async Task OnInitializedAsync()
+  {
+    if (!string.IsNullOrEmpty(Id) && int.TryParse(Id, out int userId))
+    {
+      usuario = await usuariosClient.GetUsuarioAsync(userId);
+    }
+  }
+}
+
+<script>
+  const isMediumScreen = window.matchMedia('(max-width: 768px)').matches
+  const menuNav = document.querySelector('#menu-nav')
+  const menulinks = document.querySelector('#menu-links')
+  const logoElement = menuNav.querySelector('#texto-logo')
+  const elements = menuNav.querySelectorAll('.group')
+  const usuarioelement = menuNav.querySelector('#texto-usuario')
+  const usuario = menuNav.querySelector('#usuario')
+
+  usuario.addEventListener('click', () => {
+    window.location.href = '/login';
+  })
+
+  if (isMediumScreen) {
+    menuNav.addEventListener('click', () => {
+      menulinks.classList.toggle('hidden')
+      menulinks.classList.toggle('flex')
+    })
+
+    elements.forEach((element) => {
+      element.addEventListener('click', () => {
+        const link = element.dataset.link
+        window.location.href = link;
+      })
+    })
+  } else {
+    // Mostrar automáticamente el contenido del logo al ingresar al área del menú
+    menuNav.addEventListener('mouseenter', () => {
+      logoElement.style.opacity = '1'
+      logoElement.classList.add('lg:relative')
+      logoElement.classList.remove('lg:absolute')
+      usuarioelement.style.opacity = '1'
+      usuarioelement.classList.add('lg:relative')
+      usuarioelement.classList.remove('lg:absolute')
+    })
+
+    // Ocultar el contenido del logo al salir del área del menú
+    menuNav.addEventListener('mouseleave', () => {
+      logoElement.style.opacity = '0'
+      logoElement.classList.remove('lg:relative')
+      logoElement.classList.add('lg:absolute')
+      usuarioelement.style.opacity = '0'
+      usuarioelement.classList.remove('lg:relative')
+      usuarioelement.classList.add('lg:absolute')
+    })
+
+    // Agregar eventos a los demás elementos del menú
+    elements.forEach((element) => {
+      const img = element.querySelector('img')
+      const text = element.querySelector('span')
+      const div = element.querySelector('div')
+
+      element.addEventListener('mouseenter', () => {
+        element.classList.add('bg-primary-300', 'hover:h-auto', 'hover:py-1', 'hover:translate-x-0', 'hover:scale-110')
+        text.style.opacity = '1'
+        div.classList.add('lg:relative')
+        div.classList.remove('lg:absolute')
+        img.classList.add('group-hover:h-8', 'group-hover:w-8', 'group-hover:translate-x-2')
+      })
+
+      element.addEventListener('mouseleave', () => {
+        element.classList.remove('bg-primary-300', 'hover:h-auto', 'hover:py-1', 'hover:translate-x-0', 'hover:scale-110')
+        text.style.opacity = '0'
+        div.classList.remove('lg:relative')
+        div.classList.add('lg:absolute')
+        img.classList.remove('group-hover:h-8', 'group-hover:w-8', 'group-hover:translate-x-2')
+      })
+
+      element.addEventListener('click', () => {
+        const link = element.dataset.link
+        window.location.href = link;
+      })
+    })
+  }
+
+</script>
