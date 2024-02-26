@@ -276,3 +276,9 @@ C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Server\bin\Debug\net8.0\M
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\lime1\Documents\Staticaly-1\Staticaly.Server\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+C:\Users\lime1\Documents\Staticaly-1\Staticaly.Server\bin\Debug\net8.0\MailKit.dll
+C:\Users\lime1\Documents\Staticaly-1\Staticaly.Server\bin\Debug\net8.0\MimeKit.dll
+C:\Users\lime1\Documents\Staticaly-1\Staticaly.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\lime1\Documents\Staticaly-1\Staticaly.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\lime1\Documents\Staticaly-1\Staticaly.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll

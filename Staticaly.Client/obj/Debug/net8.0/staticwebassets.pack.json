@@ -1,18 +1,19 @@
 {
   "Files": [
     {
-      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js",
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js",
       "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js"
     },
     {
-      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\i2k0oitj5b.gz",
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\i2k0oitj5b.gz",
       "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js.gz"
     },
     {
-      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Staticaly.Client.styles.css",
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Staticaly.Client.styles.css",
       "PackagePath": "staticwebassets\\Staticaly.Client.styles.css"
     },
     {
+<<<<<<< HEAD
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\Semestre.svg",
       "PackagePath": "staticwebassets\\Images\\Semestre.svg"
     },
@@ -27,16 +28,21 @@
     {
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\ejercicios.svg",
       "PackagePath": "staticwebassets\\Images\\ejercicios.svg"
+=======
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\Images\\burbuja-de-diálogo.svg",
+      "PackagePath": "staticwebassets\\Images\\burbuja-de-diálogo.svg"
+>>>>>>> d1d22c638478e8682961ae50d10380b27261f18e
     },
     {
-      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\email.svg",
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\Images\\email.svg",
       "PackagePath": "staticwebassets\\Images\\email.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\encuesta.svg",
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\Images\\encuesta.svg",
       "PackagePath": "staticwebassets\\Images\\encuesta.svg"
     },
     {
+<<<<<<< HEAD
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\estadisticas.svg",
       "PackagePath": "staticwebassets\\Images\\estadisticas.svg"
     },
@@ -47,28 +53,49 @@
     {
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\grupos.svg",
       "PackagePath": "staticwebassets\\Images\\grupos.svg"
+=======
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\Images\\grupo-de-primer-plano-seleccionado.svg",
+      "PackagePath": "staticwebassets\\Images\\grupo-de-primer-plano-seleccionado.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\heart.svg",
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\Images\\grupos-de-usuarios.svg",
+      "PackagePath": "staticwebassets\\Images\\grupos-de-usuarios.svg"
+    },
+    {
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\Images\\gráfico-de-barras.svg",
+      "PackagePath": "staticwebassets\\Images\\gráfico-de-barras.svg"
+>>>>>>> d1d22c638478e8682961ae50d10380b27261f18e
+    },
+    {
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\Images\\heart.svg",
       "PackagePath": "staticwebassets\\Images\\heart.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\llave.svg",
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\Images\\llave.svg",
       "PackagePath": "staticwebassets\\Images\\llave.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\lupa.svg",
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\Images\\lupa.svg",
       "PackagePath": "staticwebassets\\Images\\lupa.svg"
     },
     {
+<<<<<<< HEAD
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\ojo-abierto.svg",
+=======
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\Images\\matemáticas.svg",
+      "PackagePath": "staticwebassets\\Images\\matemáticas.svg"
+    },
+    {
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\Images\\ojo-abierto.svg",
+>>>>>>> d1d22c638478e8682961ae50d10380b27261f18e
       "PackagePath": "staticwebassets\\Images\\ojo-abierto.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\ojo-cerrado.svg",
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\Images\\ojo-cerrado.svg",
       "PackagePath": "staticwebassets\\Images\\ojo-cerrado.svg"
     },
     {
+<<<<<<< HEAD
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\perfil.svg",
       "PackagePath": "staticwebassets\\Images\\perfil.svg"
     },
@@ -78,18 +105,21 @@
     },
     {
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\usuario.svg",
+=======
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\Images\\usuario.svg",
+>>>>>>> d1d22c638478e8682961ae50d10380b27261f18e
       "PackagePath": "staticwebassets\\Images\\usuario.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\css\\app.css",
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\css\\app.css",
       "PackagePath": "staticwebassets\\css\\app.css"
     },
     {
-      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\css\\app.min.css",
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\css\\app.min.css",
       "PackagePath": "staticwebassets\\css\\app.min.css"
     },
     {
-      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\index.html",
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly-1\\Staticaly.Client\\wwwroot\\index.html",
       "PackagePath": "staticwebassets\\index.html"
     },
     {
