@@ -9,13 +9,14 @@
   <div
     class="flex lg:flex-col justify-center lg:justify-evenly items-center w-full transform transition-all duration-300">
     <img src="images/heart.svg" alt="Logo" class="h-9 w-9 rounded object-contain mt-2" />
-    <span id="texto-logo" class="text-logo-text text-md opacity-1 mx-2 lg:mx-0 relative lg:opacity-0 lg:absolute">Staticaly</span>
+    <span id="texto-logo"
+      class="text-logo-text text-md opacity-1 mx-2 lg:mx-0 relative lg:opacity-0 lg:absolute">Staticaly</span>
   </div>
   <div class="hidden container mb-2 lg:mb-0 h-full w-full lg:flex flex-col justify-evenly items-center" id="menu-links">
     <hr class="w-7/12 border-t-0 lg:border-t-2 border-Primary-Background my-4 mx-auto" />
     <div
       class="flex justify-start lg:justify-evenly items-center group w-full cursor-pointer transform transition-all duration-300 hover:rounded-r"
-      data-link="/">
+      data-link="@(!string.IsNullOrEmpty(Id) ? $"/{Id}" : "/")">
       <img src="images/foro.svg" alt="Foro" class="h-9 w-9 rounded object-contain" />
       <div class="flex flex-col ml-5 relative lg:absolute">
         <span id="texto-Foro" class="text-primary-800 text-md lg:text-xs opacity-1 lg:opacity-0 font-bold">
@@ -25,7 +26,7 @@
     </div>
     <div
       class="flex justify-start lg:justify-evenly items-center group w-full cursor-pointer transform transition-all duration-300 hover:rounded-r"
-      data-link="/grupos">
+      data-link="@(!string.IsNullOrEmpty(Id) ? $"/grupos/{Id}" : "/grupos")">
       <img src="images/grupos.svg" alt="Grupos" class="h-9 w-9 rounded" />
       <div class="flex flex-col ml-5 relative lg:absolute">
         <span id="texto-Grupos" class="text-primary-800 text-md lg:text-xs opacity-1 lg:opacity-0 font-bold">
@@ -35,7 +36,7 @@
     </div>
     <div
       class="flex justify-start lg:justify-evenly items-center group w-full cursor-pointer transform transition-all duration-300 hover:rounded-r"
-      data-link="/estadisticas">
+      data-link="@(!string.IsNullOrEmpty(Id) ? $"/estadisticas/{Id}" : "/estadisticas")">
       <img src="images/estadisticas.svg" alt="Estadistica" class="h-9 w-9 rounded" />
       <div class="flex flex-col ml-5 relative lg:absolute">
         <span id="texto-Estadisticas" class="text-primary-800 text-md lg:text-xs opacity-1 lg:opacity-0 font-bold">
@@ -45,15 +46,16 @@
     </div>
     <div
       class="flex justify-start lg:justify-evenly items-center group w-full cursor-pointer transform transition-all duration-300 hover:rounded-r"
-      data-link="/encuestas">
+      data-link="@(!string.IsNullOrEmpty(Id) ? $"/encuestas/{Id}" : "/encuestas")">
       <img src="images/encuesta.svg" alt="Encuestas" class="h-9 w-9 rounded object-contain" />
       <div class="flex flex-col ml-5 relative lg:absolute">
-        <span id="texto-Encuestas" class="text-primary-800 text-md lg:text-xs opacity-1 lg:opacity-0 font-bold">Encuestas</span>
+        <span id="texto-Encuestas"
+          class="text-primary-800 text-md lg:text-xs opacity-1 lg:opacity-0 font-bold">Encuestas</span>
       </div>
     </div>
     <div
       class="flex justify-start lg:justify-evenly items-center group w-full cursor-pointer transform transition-all duration-300 hover:rounded-r"
-      data-link="/ejercicios">
+      data-link="@(!string.IsNullOrEmpty(Id) ? $"/ejercicios/{Id}" : "/ejercicios")">
       <img src="images/ejercicios.svg" alt="Ejercicios" class="h-9 w-9 rounded object-contain" />
       <div class="flex flex-col ml-5 relative lg:absolute">
         <span id="texto-Ejercicios"
@@ -68,8 +70,9 @@
       <div
         class="text-primary-100 font-bold text-md lg:text-xs opacity-1 relative lg:opacity-0 lg:absolute flex flex-col items-center justify-center"
         id="texto-usuario">
-        <span>@(usuario != null ? $"{usuario.Nombre} {usuario.Apellido}": "Usuario")</span>
-        <span>@(usuario != null ? usuario.Rango : "Rango")</span>
+        <span>@(usuario != null ? $"{usuario.Nombre} {usuario.Apellido}" : "Usuario")</span>
+        <span>@(usuario != null && usuario.Rango != null ? usuario.Rango.NombreRango : "Rango")</span>
+
       </div>
     </div>
   </div>
@@ -77,9 +80,9 @@
 
 @code {
   [Parameter] public string? Id { get; set; }
-  private User usuario;
+  private User? usuario;
 
-  protected async Task OnInitializedAsync()
+  protected override async Task OnInitializedAsync()
   {
     if (!string.IsNullOrEmpty(Id) && int.TryParse(Id, out int userId))
     {

@@ -25,7 +25,7 @@ namespace Staticaly.Client.Data
 
     public async Task<User?> GetUsuarioAsync(int id)
     {
-      return await httpClient.GetFromJsonAsync<User>($"users/{id}?include=rol");
+      return await httpClient.GetFromJsonAsync<User>($"users/{id}?expand=Rol,Rango");
     }
 
     public async Task<HttpResponseMessage> CreateUsuarioAsync(User usuario)
@@ -45,16 +45,6 @@ namespace Staticaly.Client.Data
         rng.GetBytes(randomBytes);
       }
       return BitConverter.ToString(randomBytes).Replace("-", string.Empty);
-    }
-
-    public async Task<HttpResponseMessage> UpdateUsuarioAsync(int id, User usuario)
-    {
-      return await httpClient.PutAsJsonAsync($"users/{id}", usuario);
-    }
-
-    public async Task<HttpResponseMessage> DeleteUsuarioAsync(int id)
-    {
-      return await httpClient.DeleteAsync($"users/{id}");
     }
 
     public async Task<User?> GetUsuarioByEmailAsync(string? email)

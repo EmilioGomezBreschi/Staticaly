@@ -7,8 +7,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Staticaly.Client.Models
 {
-    public class Rango
-    {
+  public class Rango
+  {
     [Key]
     public int RangoID { get; set; }
     [Required]

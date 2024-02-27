@@ -35,12 +35,12 @@ app.MapPost("/Email", (EmailDTO request, IEmailService emailService) =>
 
 var userGroup = app.MapGroup("/users").WithParameterValidation();
 
-
 #region Entry Points Users
 
 // Get all users
 userGroup.MapGet("/", async (StaticalyContext context) =>
     await context.Usuarios.Include(u => u.Rol)
+                          .Include(u => u.Rango)
                           .AsNoTracking()
                           .ToListAsync()
 );
@@ -61,7 +61,7 @@ userGroup.MapGet("/byEmail/{id}/email", async (int id, StaticalyContext context)
 userGroup.MapGet("/byEmail/{email}", async (string email, StaticalyContext context) =>
 {
   User? user = await context.Usuarios.Include(u => u.Rol)
-                                    .FirstOrDefaultAsync(user => user.Email == email);
+                                      .FirstOrDefaultAsync(user => user.Email == email);
   if (user is null)
   {
     return Results.NotFound();
@@ -73,6 +73,7 @@ userGroup.MapGet("/byEmail/{email}", async (string email, StaticalyContext conte
 userGroup.MapGet("/{id}", async (StaticalyContext context, int id) =>
 {
   User? user = await context.Usuarios.Include(u => u.Rol)
+                                      .Include(u => u.Rango)
                                       .FirstOrDefaultAsync(user => user.UsuarioID == id);
   if (user is null)
   {
@@ -151,7 +152,30 @@ userGroup.MapPut("/cambiarcontrasena/{id}/{contrasenanueva}", async (string cont
   }
 });
 
+//Update user Rango
+userGroup.MapPut("/rango/{id}/{puntos}", async (int id, int puntos, StaticalyContext context) =>
+{
+  try
+  {
+    var user = await context.Usuarios.FindAsync(id);
+    if (user == null)
+    {
+      return Results.NotFound();
+    }
 
+    user.RangoID = await context.Rangos.Where(rango => rango.PuntosMin <= puntos && rango.PuntosMax >= puntos)
+                                      .Select(rango => rango.RangoID)
+                                      .FirstOrDefaultAsync();
+    await context.SaveChangesAsync();
+
+    return Results.Ok();
+  }
+  catch (Exception ex)
+  {
+    Console.WriteLine("Error al cambiar el rango: " + ex.Message);
+    return Results.StatusCode(StatusCodes.Status500InternalServerError);
+  }
+});
 
 // Delete user
 userGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>

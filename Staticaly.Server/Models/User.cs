@@ -30,6 +30,7 @@ namespace Staticaly.Server.Models
 
     public Rol? Rol { get; set; }
     [Required]
+    [ForeignKey("RangoID")]
     public int RangoID { get; set;}
     public Rango? Rango { get; set; }
     public int Puntos { get; set; }

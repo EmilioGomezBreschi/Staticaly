@@ -21,40 +21,48 @@
 | RolID | INT          | Identificador único para cada rol |
 | Rol   | VARCHAR(50)  | Nombre del rol                    |
 
-### Tabla: EquiposEstudiantes
+### Tabla: RangoUsuarios
 
-| Campo               | Tipo de dato | Descripción                                         |
-| ------------------- | ------------ | --------------------------------------------------- |
-| EquipoEstudiantesID | INT          | Identificador único para cada equipo de estudiantes |
-| Nombre              | VARCHAR(50)  | Nombre del equipo de estudiantes                    |
-| Descripcion         | VARCHAR(100) | Descripción del equipo de estudiantes               |
+| Campo      | Tipo de dato | Descripción                           |
+| ---------- | ------------ | ------------------------------------- |
+| RangoID    | INT          | Identificador único para cada rango   |
+| Rango      | VARCHAR(50)  | Nombre del rango                      |
+| PuntajeMin | INT          | Puntaje mínimo para alcanzar el rango |
+| PuntajeMax | INT          | Puntaje máximo para alcanzar el rango |
 
-### Tabla: EquiposDocentes
+### Tabla: Equipos
 
-| Campo            | Tipo de dato | Descripción                                      |
-| ---------------- | ------------ | ------------------------------------------------ |
-| EquipoDocentesID | INT          | Identificador único para cada equipo de docentes |
-| Nombre           | VARCHAR(50)  | Nombre del equipo de docentes                    |
-| Descripcion      | VARCHAR(100) | Descripción del equipo de docentes               |
+| Campo        | Tipo de dato | Descripción                                                    |
+| ------------ | ------------ | -------------------------------------------------------------- |
+| EquipoID     | INT          | Identificador único para cada equipo                           |
+| Nombre       | VARCHAR(50)  | Nombre del equipo                                              |
+| Descripcion  | VARCHAR(100) | Descripción del equipo                                         |
+| TipoEquipoID | INT          | Referencia al ID del tipo de equipo en la tabla "TiposEquipos" |
+
+### Tabla: TiposEquipos
+
+| Campo        | Tipo de dato | Descripción                                  |
+| ------------ | ------------ | -------------------------------------------- |
+| TipoEquipoID | INT          | Identificador único para cada tipo de equipo |
+| Tipo         | VARCHAR(50)  | Nombre del tipo de equipo                    |
 
 ### Tabla: UsuariosEquipos
 
-| Campo               | Tipo de dato | Descripción                                                                 |
-| ------------------- | ------------ | --------------------------------------------------------------------------- |
-| UsuarioEquipoID     | INT          | Identificador único para cada relación usuario-equipo                       |
-| UsuarioID           | INT          | Referencia al ID del usuario en la tabla "Usuarios"                         |
-| EquipoEstudiantesID | INT          | Referencia al ID del equipo de estudiantes en la tabla "EquiposEstudiantes" |
-| EquipoDocentesID    | INT          | Referencia al ID del equipo de docentes en la tabla "EquiposDocentes"       |
+| Campo           | Tipo de dato | Descripción                                           |
+| --------------- | ------------ | ----------------------------------------------------- |
+| UsuarioEquipoID | INT          | Identificador único para cada relación usuario-equipo |
+| UsuarioID       | INT          | Referencia al ID del usuario en la tabla "Usuarios"   |
+| PermisoID       | INT          | Referencia al ID del permiso en la tabla "Permisos"   |
 
 ### Tabla: Foros
 
-| Campo         | Tipo de dato | Descripción                                       |
-| ------------- | ------------ | ------------------------------------------------- |
-| ForoID        | INT          | Identificador único para cada foro                |
-| Titulo        | VARCHAR(100) | Título del foro                                   |
-| Descripcion   | VARCHAR(200) | Descripción del foro                              |
-| GrupoID       | INT          | Referencia al ID del Grupo en el que esta el foro |
-| FechaCreacion | DATE         | Fecha de creación del foro                        |
+| Campo         | Tipo de dato | Descripción                                        |
+| ------------- | ------------ | -------------------------------------------------- |
+| ForoID        | INT          | Identificador único para cada foro                 |
+| Titulo        | VARCHAR(100) | Título del foro                                    |
+| Descripcion   | VARCHAR(200) | Descripción del foro                               |
+| EquipoID      | INT          | Referencia al ID del Equipo en el que esta el foro |
+| FechaCreacion | DATE         | Fecha de creación del foro                         |
 
 ### Tabla: Publicaciones
 

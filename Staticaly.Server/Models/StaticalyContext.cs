@@ -20,6 +20,12 @@ namespace Staticaly.Server.Models
           .WithMany()
           .HasForeignKey(u => u.RolID);
 
+      modelBuilder.Entity<User>()
+          .HasOne(u => u.Rango)
+          .WithMany()
+          .HasForeignKey(u => u.RangoID)
+          .OnDelete(DeleteBehavior.Restrict);
+
       SeedData.Initialize(modelBuilder);
     }
   }

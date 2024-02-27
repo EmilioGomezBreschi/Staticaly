@@ -13,6 +13,21 @@ namespace Staticaly.Server.ModelsMigrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Rangos",
+                columns: table => new
+                {
+                    RangoID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NombreRango = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    PuntosMin = table.Column<int>(type: "int", nullable: false),
+                    PuntosMax = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rangos", x => x.RangoID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -36,6 +51,8 @@ namespace Staticaly.Server.ModelsMigrations
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RolID = table.Column<int>(type: "int", nullable: false),
+                    RangoID = table.Column<int>(type: "int", nullable: false),
+                    Puntos = table.Column<int>(type: "int", nullable: false),
                     Imagen = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     VerificationToken = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     EmailVerified = table.Column<bool>(type: "bit", nullable: false)
@@ -44,11 +61,34 @@ namespace Staticaly.Server.ModelsMigrations
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.UsuarioID);
                     table.ForeignKey(
+                        name: "FK_Usuarios_Rangos_RangoID",
+                        column: x => x.RangoID,
+                        principalTable: "Rangos",
+                        principalColumn: "RangoID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Usuarios_Roles_RolID",
                         column: x => x.RolID,
                         principalTable: "Roles",
                         principalColumn: "RolID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Rangos",
+                columns: new[] { "RangoID", "NombreRango", "PuntosMax", "PuntosMin" },
+                values: new object[,]
+                {
+                    { 1, "Nuevo", 99, 0 },
+                    { 2, "Viajero", 5000, 100 },
+                    { 3, "Explorador", 10000, 5001 },
+                    { 4, "Navegante", 15000, 10001 },
+                    { 5, "Analista", 20000, 15001 },
+                    { 6, "Estadistico", 25000, 20001 },
+                    { 7, "Coordinador", 30000, 25001 },
+                    { 8, "Arquitecto", 35000, 30001 },
+                    { 9, "Maestro", 40000, 35001 },
+                    { 10, "Guardian", 100000, 40001 }
                 });
 
             migrationBuilder.InsertData(
@@ -62,6 +102,11 @@ namespace Staticaly.Server.ModelsMigrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_RangoID",
+                table: "Usuarios",
+                column: "RangoID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_RolID",
                 table: "Usuarios",
                 column: "RolID");
@@ -72,6 +117,9 @@ namespace Staticaly.Server.ModelsMigrations
         {
             migrationBuilder.DropTable(
                 name: "Usuarios");
+
+            migrationBuilder.DropTable(
+                name: "Rangos");
 
             migrationBuilder.DropTable(
                 name: "Roles");
