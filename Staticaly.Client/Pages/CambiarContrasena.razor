@@ -1,17 +1,18 @@
 @page "/cambiarcontrasena/{id}"
 @using Models;
 @using Data;
+@using BCrypt.Net;
 @inject NavigationManager NavigationManager
 @inject UsuariosClient client
 
 <PageTitle>Cambiar Contraseña - Staticaly</PageTitle>
 
 <div
-  class="h-screen w-screen bg-Primary-Background text-white font-Montserrat flex flex-col justify-center md:justify-normal items-center">
+  class="h-screen w-screen bg-Primary-Background text-white flex flex-col justify-center md:justify-normal items-center">
   <div class="w-full max-w-[610px] px-6 md:flex md:flex-col md:justify-evenly md:items-center">
     <div id="logo" class="text-center md:mt-8 mb-4">
       <img src="images/heart.svg" class="w-24 h-24 mx-auto" alt="Logo de Statica.ly" />
-      <h1 class="text-3xl font-Montserrat text-logo-text">Statica.ly</h1>
+      <h1 class="text-3xl text-logo-text">Statica.ly</h1>
     </div>
     <div class="bg-primary-300 rounded-lg p-8">
       <EditForm Model="@user" OnValidSubmit="Cambiar" class="flex flex-col space-y-4 text-primary-400">
@@ -30,12 +31,18 @@
             alt="Icono de ojo cerrado" id="eyeClosed" />
         </div>
         @if (submitted && !ValidatePassword(user.Password))
-          {
-              <div class="relative mt-1 max-w-[200px] text-xs text-red-500 text-center">
-                  La contraseña debe tener al menos una mayúscula, una minúscula, un número y seis caracteres como mínimo.
-              </div>
-          }
-        <button type="submit" class="w-full h-12 my-3 bg-primary-500 rounded-md text-primary-100">Confirmar Cambio</button>
+                {
+                    <div class="px-5 py-2 bg-red-500 rounded-md font-bold text-xs text-white text-left max-w-full">
+                        <p class="mb-1">La contraseña debe contener al menos:</p>
+                        <ul class="list-disc">
+                          <li>Una mayúscula</li>
+                          <li>Una minúscula</li>
+                          <li>Un número</li>
+                          <li>Seis caracteres como mínimo</li>
+                        </ul>
+                    </div>
+                }
+        <button type="submit" class="w-full h-12 my-3 bg-primary-500 rounded-md text-primary-100 hover:bg-primary-700">Confirmar Cambio</button>
       </EditForm>
     </div>
   </div>
@@ -54,6 +61,7 @@
   private async Task Cambiar()
   {
     submitted = true;
+    // Validar el id
     if (int.TryParse(id, out int userId))
     {
               if (!ValidatePassword(user.Password))
@@ -61,6 +69,9 @@
             Console.WriteLine("La contraseña debe tener al menos una mayúscula, una minúscula, un número y seis caracteres como mínimo.");
             return;
         }
+        // Encriptar la contraseña
+        user.Password = BCrypt.HashPassword(user.Password);
+        // Cambiar la contraseña
       await client.PasswordResetAsync(user.Password, userId);
       NavigationManager.NavigateTo("/");
     }

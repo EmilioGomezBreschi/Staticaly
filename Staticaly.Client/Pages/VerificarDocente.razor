@@ -1,0 +1,115 @@
+@page "/verificarDocente"
+@using Models
+@using Data
+@inject NavigationManager NavigationManager
+@inject UsuariosClient client
+@inject EmailServiceClient EmailServiceClient
+
+<PageTitle>Verificar Docente - Staticaly</PageTitle>
+
+<div
+  class="h-screen w-screen bg-Primary-Background text-white flex flex-col justify-center md:justify-normal items-center">
+  <div class="w-full max-w-[610px] px-6 md:flex md:flex-col md:justify-evenly md:items-center">
+    <div id="logo" class="text-center md:mt-8 mb-4">
+      <img src="images/heart.svg" class="w-24 h-24 mx-auto" alt="Logo de Statica.ly" />
+      <h1 class="text-3xl text-logo-text">Statica.ly</h1>
+    </div>
+    <div class="bg-primary-300 rounded-lg p-8">
+      @if (ErrorMessage != "")
+      {
+        <div class="bg-red-500 text-white p-4 rounded-md text-center">
+          <p>@ErrorMessage</p>
+        </div>
+      }
+      <EditForm Model="@user" OnValidSubmit="Buscar" class="flex flex-col space-y-4 text-primary-400">
+        <div class="relative my-3 bg-primary-100 rounded-md font-bold">
+          <InputText @bind-Value="@user.Email" id="email" type="email" name="email"
+            class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-12 placeholder-primary-400 bg-transparent"
+            placeholder="Email del Docente" />
+          <img src="images/email.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
+            alt="Icono de Correo" />
+        </div>
+        @if (FotoDocente != null)
+        {
+          <div class="flex justify-center items-center">
+            <img src="data:image;base64,@(Convert.ToBase64String(FotoDocente))" alt="Foto seleccionada"
+              class="my-3 w-480 h-480" />
+          </div>
+        }
+        <button type="submit"
+          class="w-full h-12 my-3 bg-primary-500 rounded-md text-primary-100 hover:bg-primary-700">Buscar
+          Correo</button>
+      </EditForm>
+      <div class="flex- flex-row my-3">
+        <button class="w-full h-12 my-3 bg-gray-700 hover:bg-gray-800 rounded-md text-white"
+          @onclick="() => AceptarDocente()">Aceptar Docente</button>
+        <button class="w-full h-12 my-3 bg-orange-700 hover:bg-orange-900 rounded-md text-white" @onclick="() => RechazarDocente()">Rechazar Docente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@code {
+  private User user = new User();
+  private byte[]? FotoDocente;
+  private string ErrorMessage = "";
+  string body = "";
+
+  private async Task Buscar()
+  {
+    if (user.Email == null)
+    {
+      ErrorMessage = "Favor de ingresar un correo valido";
+      return;
+    }
+    var usuario = await client.GetUsuarioByEmailAsync(user.Email);
+    if (usuario != null)
+    {
+      FotoDocente = usuario.Imagen;
+      StateHasChanged();
+      return;
+    }
+    StateHasChanged();
+    ErrorMessage = "No se encontro el usuario";
+    return;
+  }
+
+  private async Task AceptarDocente()
+  {
+    if (user.Email == null)
+    {
+      ErrorMessage = "Favor de ingresar un correo valido";
+      return;
+    }
+    await client.UpdateRolAsync(user.Email);
+    await client.DeleteFotoUsuarioAsync(user.Email);
+    body = EmailServiceClient.HacerBodyAceptacion();
+    await EmailServiceClient.SendEmailAsync(new EmailDTO
+    {
+      Para = user.Email,
+      Asunto = "Aceptacion de Solicitud Docente Statica.ly",
+      Contenido = body
+    });
+    ErrorMessage = "Docente Aceptado"
+    return;
+  }
+
+  private async Task RechazarDocente()
+  {
+    if (user.Email == null)
+    {
+      ErrorMessage = "Favor de ingresar un correo valido";
+      return;
+    }
+    await client.DeleteFotoUsuarioAsync(user.Email);
+    body = EmailServiceClient.HacerBodyRechazo();
+    await EmailServiceClient.SendEmailAsync(new EmailDTO
+    {
+      Para = user.Email,
+      Asunto = "Rechazo de Solicitud Docente Statica.ly",
+      Contenido = body
+    });
+    ErrorMessage = "Docente Rechazado"
+    return;
+  }
+}

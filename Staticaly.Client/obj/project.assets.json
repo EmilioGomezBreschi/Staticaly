@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     "net8.0": {
+      "BCrypt.Net-Next/4.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/BCrypt.Net-Next.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/BCrypt.Net-Next.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "BouncyCastle.Cryptography/2.2.1": {
         "type": "package",
         "compile": {
@@ -13,15 +26,6 @@
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
             "related": ".xml"
           }
-        }
-      },
-      "CryptSharpStandard/1.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.0/CryptSharp.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/CryptSharp.dll": {}
         }
       },
       "MailKit/4.3.0": {
@@ -646,6 +650,19 @@
       }
     },
     "net8.0/browser-wasm": {
+      "BCrypt.Net-Next/4.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/BCrypt.Net-Next.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/BCrypt.Net-Next.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "BouncyCastle.Cryptography/2.2.1": {
         "type": "package",
         "compile": {
@@ -657,15 +674,6 @@
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
             "related": ".xml"
           }
-        }
-      },
-      "CryptSharpStandard/1.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.0/CryptSharp.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/CryptSharp.dll": {}
         }
       },
       "MailKit/4.3.0": {
@@ -1273,6 +1281,37 @@
     }
   },
   "libraries": {
+    "BCrypt.Net-Next/4.0.3": {
+      "sha512": "W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA==",
+      "type": "package",
+      "path": "bcrypt.net-next/4.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "bcrypt.net-next.4.0.3.nupkg.sha512",
+        "bcrypt.net-next.nuspec",
+        "ico.png",
+        "lib/net20/BCrypt.Net-Next.dll",
+        "lib/net20/BCrypt.Net-Next.xml",
+        "lib/net35/BCrypt.Net-Next.dll",
+        "lib/net35/BCrypt.Net-Next.xml",
+        "lib/net462/BCrypt.Net-Next.dll",
+        "lib/net462/BCrypt.Net-Next.xml",
+        "lib/net472/BCrypt.Net-Next.dll",
+        "lib/net472/BCrypt.Net-Next.xml",
+        "lib/net48/BCrypt.Net-Next.dll",
+        "lib/net48/BCrypt.Net-Next.xml",
+        "lib/net5.0/BCrypt.Net-Next.dll",
+        "lib/net5.0/BCrypt.Net-Next.xml",
+        "lib/net6.0/BCrypt.Net-Next.dll",
+        "lib/net6.0/BCrypt.Net-Next.xml",
+        "lib/netstandard2.0/BCrypt.Net-Next.dll",
+        "lib/netstandard2.0/BCrypt.Net-Next.xml",
+        "lib/netstandard2.1/BCrypt.Net-Next.dll",
+        "lib/netstandard2.1/BCrypt.Net-Next.xml",
+        "readme.md"
+      ]
+    },
     "BouncyCastle.Cryptography/2.2.1": {
       "sha512": "A6Zr52zVqJKt18ZBsTnX0qhG0kwIQftVAjLmszmkiR/trSp8H+xj1gUOzk7XHwaKgyREMSV1v9XaKrBUeIOdvQ==",
       "type": "package",
@@ -1291,19 +1330,6 @@
         "lib/netstandard2.0/BouncyCastle.Cryptography.dll",
         "lib/netstandard2.0/BouncyCastle.Cryptography.xml",
         "packageIcon.png"
-      ]
-    },
-    "CryptSharpStandard/1.0.0": {
-      "sha512": "akj9OBARl2RYOkle562FRM672oMe+pf95fYBqX4MkRL3wx3nQubhP/dvTBxxkgwiTB3OP2vxa1xm4Vilvq11uw==",
-      "type": "package",
-      "path": "cryptsharpstandard/1.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.md",
-        "cryptsharpstandard.1.0.0.nupkg.sha512",
-        "cryptsharpstandard.nuspec",
-        "lib/netstandard2.0/CryptSharp.dll"
       ]
     },
     "MailKit/4.3.0": {
@@ -2591,7 +2617,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "CryptSharpStandard >= 1.0.0",
+      "BCrypt.Net-Next >= 4.0.3",
       "MailKit >= 4.3.0",
       "Microsoft.AspNetCore.Components.WebAssembly >= 8.0.2",
       "Microsoft.AspNetCore.Components.WebAssembly.DevServer >= 8.0.2",
@@ -2606,11 +2632,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj",
+      "projectUniqueName": "c:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj",
       "projectName": "Staticaly.Client",
-      "projectPath": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj",
+      "projectPath": "c:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj",
       "packagesPath": "C:\\Users\\lime1\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\",
+      "outputPath": "c:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\lime1\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -2642,9 +2668,9 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
-          "CryptSharpStandard": {
+          "BCrypt.Net-Next": {
             "target": "Package",
-            "version": "[1.0.0, )"
+            "version": "[4.0.3, )"
           },
           "MailKit": {
             "target": "Package",

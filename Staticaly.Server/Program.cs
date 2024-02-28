@@ -37,52 +37,49 @@ var userGroup = app.MapGroup("/users").WithParameterValidation();
 
 #region Entry Points Users
 
-// Get all users
+// Obtener todos los usuarios
 userGroup.MapGet("/", async (StaticalyContext context) =>
-    await context.Usuarios.Include(u => u.Rol)
-                          .Include(u => u.Rango)
-                          .AsNoTracking()
-                          .ToListAsync()
-);
+{
+  var usuarios = await context.Usuarios
+                              .Include(u => u.Rol)
+                              .Include(u => u.Rango)
+                              .AsNoTracking()
+                              .ToListAsync();
 
-//Get user email
+  return usuarios.Any() ? Results.Ok(usuarios) : Results.NotFound();
+});
+
+// Obtener el correo electrónico del usuario por su ID
 userGroup.MapGet("/byEmail/{id}/email", async (int id, StaticalyContext context) =>
 {
-  User? user = await context.Usuarios.FindAsync(id);
-  if (user is null)
-  {
-    return Results.NotFound();
-  }
-
-  return Results.Ok(user.Email);
+  var user = await context.Usuarios.FindAsync(id);
+  return user != null ? Results.Ok(user.Email) : Results.NotFound();
 });
 
-// Get user by email
+// Obtener usuario por correo electrónico
 userGroup.MapGet("/byEmail/{email}", async (string email, StaticalyContext context) =>
 {
-  User? user = await context.Usuarios.Include(u => u.Rol)
-                                      .FirstOrDefaultAsync(user => user.Email == email);
-  if (user is null)
-  {
-    return Results.NotFound();
-  }
-  return Results.Ok(user);
+  var user = await context.Usuarios
+                          .Include(u => u.Rol)
+                          .Include(u => u.Rango)
+                          .AsNoTracking()
+                          .FirstOrDefaultAsync(u => u.Email == email);
+
+  return user != null ? Results.Ok(user) : Results.NotFound();
 });
 
-// Get user by id
+// Obtener usuario por su ID
 userGroup.MapGet("/{id}", async (StaticalyContext context, int id) =>
 {
-  User? user = await context.Usuarios.Include(u => u.Rol)
-                                      .Include(u => u.Rango)
-                                      .FirstOrDefaultAsync(user => user.UsuarioID == id);
-  if (user is null)
-  {
-    return Results.NotFound();
-  }
-  return Results.Ok(user);
+  var user = await context.Usuarios
+                          .Include(u => u.Rol)
+                          .Include(u => u.Rango)
+                          .FirstOrDefaultAsync(u => u.UsuarioID == id);
+
+  return user != null ? Results.Ok(user) : Results.NotFound();
 });
 
-// Create user
+// Crear usuario
 userGroup.MapPost("/", async (StaticalyContext context, User user) =>
 {
   context.Usuarios.Add(user);
@@ -90,32 +87,33 @@ userGroup.MapPost("/", async (StaticalyContext context, User user) =>
   return Results.CreatedAtRoute("GetUsers", new { id = user.UsuarioID }, user);
 }).WithName("GetUsers");
 
-// Update user
+// Actualizar usuario
 userGroup.MapPut("/{id}", async (StaticalyContext context, int id, User Updateduser) =>
 {
-  var RowsAffected = await context.Usuarios.Where(
-      user => user.UsuarioID == id).ExecuteUpdateAsync(updates =>
-      updates.SetProperty(user => user.Nombre, Updateduser.Nombre)
-            .SetProperty(user => user.Apellido, Updateduser.Apellido)
-            .SetProperty(user => user.Email, Updateduser.Email)
-            .SetProperty(user => user.Password, Updateduser.Password)
-            .SetProperty(user => user.RolID, Updateduser.RolID)
-            .SetProperty(user => user.Imagen, Updateduser.Imagen)
-  );
-  return RowsAffected == 0 ? Results.NotFound() : Results.NoContent();
+  var user = await context.Usuarios.FindAsync(id);
+  if (user == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.Entry(user).CurrentValues.SetValues(Updateduser);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
 });
 
-//Update user email verification
+// Verificar correo electrónico del usuario
 userGroup.MapPut("/verificar/{rawtoken}", async (string rawtoken, StaticalyContext context) =>
 {
   try
   {
     string token = HttpUtility.UrlDecode(rawtoken);
-    User? user = await context.Usuarios.FirstOrDefaultAsync(user => user.VerificationToken == token);
-    if (user is null)
+    var user = await context.Usuarios.FirstOrDefaultAsync(u => u.VerificationToken == token);
+    if (user == null)
     {
       return Results.NotFound();
     }
+
     user.EmailVerified = true;
     user.VerificationToken = null;
     await context.SaveChangesAsync();
@@ -129,7 +127,7 @@ userGroup.MapPut("/verificar/{rawtoken}", async (string rawtoken, StaticalyConte
   }
 });
 
-//Update user password
+// Cambiar contraseña del usuario
 userGroup.MapPut("/cambiarcontrasena/{id}/{contrasenanueva}", async (string contrasenanueva, int id, StaticalyContext context) =>
 {
   try
@@ -152,7 +150,7 @@ userGroup.MapPut("/cambiarcontrasena/{id}/{contrasenanueva}", async (string cont
   }
 });
 
-//Update user Rango
+// Actualizar rango del usuario
 userGroup.MapPut("/rango/{id}/{puntos}", async (int id, int puntos, StaticalyContext context) =>
 {
   try
@@ -163,9 +161,10 @@ userGroup.MapPut("/rango/{id}/{puntos}", async (int id, int puntos, StaticalyCon
       return Results.NotFound();
     }
 
-    user.RangoID = await context.Rangos.Where(rango => rango.PuntosMin <= puntos && rango.PuntosMax >= puntos)
-                                      .Select(rango => rango.RangoID)
-                                      .FirstOrDefaultAsync();
+    user.RangoID = await context.Rangos
+                                .Where(rango => rango.PuntosMin <= puntos && rango.PuntosMax >= puntos)
+                                .Select(rango => rango.RangoID)
+                                .FirstOrDefaultAsync();
     await context.SaveChangesAsync();
 
     return Results.Ok();
@@ -177,13 +176,110 @@ userGroup.MapPut("/rango/{id}/{puntos}", async (int id, int puntos, StaticalyCon
   }
 });
 
-// Delete user
+// Eliminar usuario
 userGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
 {
-  var RowsAffected = await context.Usuarios.Where(
-      user => user.UsuarioID == id).ExecuteDeleteAsync();
-  return RowsAffected == 0 ? Results.NotFound() : Results.NoContent();
+  var user = await context.Usuarios.FindAsync(id);
+  if (user == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.Usuarios.Remove(user);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
 });
+
+// Verificar token de usuario
+userGroup.MapPut("/verifytoken/{token}", async (string token, StaticalyContext context) =>
+{
+  try
+  {
+    var user = await context.Usuarios.FirstOrDefaultAsync(user => user.VerificationToken == token);
+    if (user == null)
+    {
+      return Results.NotFound();
+    }
+
+    user.EmailVerified = true;
+    user.VerificationToken = null;
+    await context.SaveChangesAsync();
+
+    return Results.NoContent();
+  }
+  catch (Exception ex)
+  {
+    Console.WriteLine("Error al verificar el token del correo electrónico: " + ex.Message);
+    return Results.StatusCode(StatusCodes.Status500InternalServerError);
+  }
+});
+
+// Update rol usuario docente
+userGroup.MapPut("/updaterol/{email}", async (string email, StaticalyContext context) =>
+{
+  try
+  {
+    var user = await context.Usuarios.FirstOrDefaultAsync(user => user.Email == email);
+    if (user == null)
+    {
+      return Results.NotFound();
+    }
+    user.RolID = 3;
+    await context.SaveChangesAsync();
+
+    return Results.NoContent();
+  }
+  catch (Exception ex)
+  {
+    Console.WriteLine("Error al actualizar el rol del usuario: " + ex.Message);
+    return Results.StatusCode(StatusCodes.Status500InternalServerError);
+  }
+});
+
+  //Delete foto de usuario
+  userGroup.MapDelete("/foto/{email}", async (string email, StaticalyContext context) =>
+  {
+    try
+    {
+      var user = await context.Usuarios.FirstOrDefaultAsync(user => user.Email == email);
+      if (user == null)
+      {
+        return Results.NotFound();
+      }
+      user.Imagen = null;
+      await context.SaveChangesAsync();
+
+      return Results.NoContent();
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine("Error al eliminar la foto del usuario: " + ex.Message);
+      return Results.StatusCode(StatusCodes.Status500InternalServerError);
+    }
+  });
+
+  //Update foto de usuario
+  userGroup.MapPut("/foto/", async ( StaticalyContext context, User user) =>
+  {
+    try
+    {
+      var userToUpdate = await context.Usuarios.FirstOrDefaultAsync(u => u.UsuarioID == user.UsuarioID);
+      if (userToUpdate == null)
+      {
+        return Results.NotFound();
+      }
+      userToUpdate.Imagen = user.Imagen;
+      await context.SaveChangesAsync();
+
+      return Results.NoContent();
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine("Error al actualizar la foto del usuario: " + ex.Message);
+      return Results.StatusCode(StatusCodes.Status500InternalServerError);
+    }
+  });
 
 #endregion
 

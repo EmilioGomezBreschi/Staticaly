@@ -15,12 +15,12 @@ namespace Staticaly.Client.Data
 
     public UsuariosClient(HttpClient httpClient)
     {
-      this.httpClient = httpClient;
+      this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
 
-    public async Task<User[]?> GetUsuariosAsync()
+    public async Task<User[]> GetUsuariosAsync()
     {
-      return await httpClient.GetFromJsonAsync<User[]>("users");
+      return await httpClient.GetFromJsonAsync<User[]>("users") ?? Array.Empty<User>();
     }
 
     public async Task<User?> GetUsuarioAsync(int id)
@@ -77,6 +77,28 @@ namespace Staticaly.Client.Data
     public async Task<HttpResponseMessage> PasswordResetAsync(string? password, int id)
     {
       return await httpClient.PutAsync($"users/cambiarcontrasena/{id}/{password}", null);
+    }
+
+    public async Task<bool> VerifyTokenAsync(string? token)
+    {
+      var response = await httpClient.PutAsync($"users/verifytoken/{token}", null);
+      return response.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> UpdateRolAsync(string? email)
+    {
+      var response = await httpClient.PutAsync($"users/updaterol/{email}", null);
+      return response.IsSuccessStatusCode;
+    }
+
+    public async Task<HttpResponseMessage> DeleteFotoUsuarioAsync(string? email)
+    {
+      return await httpClient.DeleteAsync($"users/foto/{email}");
+    }
+
+    public async Task<HttpResponseMessage> UpdateFotoDocenteAsync(User usuario)
+    {
+      return await httpClient.PutAsJsonAsync("users/foto", usuario);
     }
   }
 }

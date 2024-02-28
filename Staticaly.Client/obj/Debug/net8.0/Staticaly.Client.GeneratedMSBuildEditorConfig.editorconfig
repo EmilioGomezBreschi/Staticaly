@@ -26,6 +26,10 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/Pages/ActualizarFotoDocente.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWN0dWFsaXphckZvdG9Eb2NlbnRlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/Pages/CambiarContrasena.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FtYmlhckNvbnRyYXNlbmEucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
@@ -48,6 +52,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/Pages/VerificarCorreo.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVmVyaWZpY2FyQ29ycmVvLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/Pages/VerificarDocente.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVmVyaWZpY2FyRG9jZW50ZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/lime1/OneDrive/Documentos/Staticaly/Staticaly.Client/Shared/NavBar.razor]

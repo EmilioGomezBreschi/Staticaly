@@ -11,12 +11,27 @@
 
 <div
   class="h-screen w-screen bg-Primary-Background text-white font-Montserrat flex flex-col justify-center md:justify-normal items-center">
+  @if (isLoading)
+  {
+    <div class="h-screen absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-20">
+      <div class="flex flex-col items-center bg-primary-450 text-primary-100 p-6 rounded-lg">
+        <img src="Gifs/CorreoMandado.gif" alt="Correo enviado" class="w-40 h-40 mb-4 animate-bounce" />
+        <h2 class="text-xl font-bold">Mandando correo</h2>
+      </div>
+    </div>
+  }
   <div class="w-full max-w-[610px] px-6 md:flex md:flex-col md:justify-evenly md:items-center">
     <div id="logo" class="text-center md:mt-8 mb-4">
       <img src="images/heart.svg" class="w-24 h-24 mx-auto" alt="Logo de Statica.ly" />
       <h1 class="text-3xl font-Montserrat text-logo-text">Statica.ly</h1>
     </div>
     <div class="bg-primary-300 rounded-lg p-8">
+      @if (ShowCorreoInvalido)
+      {
+        <div class="bg-red-500 text-white text-center p-2 rounded-md mb-4">
+          <p>El correo electrónico no es válido.</p>
+        </div>
+      }
       <EditForm Model="@user" OnValidSubmit="MandarRecuperacion" class="flex flex-col text-primary-400">
         <div class="relative my-3 bg-primary-100 rounded-md font-bold">
           <InputText @bind-Value="@user.Email" type="email" id="email"
@@ -26,7 +41,7 @@
           <img src="images/email.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
             alt="Icono de Correo" />
         </div>
-        <button type="submit" class="w-full h-12 my-3 bg-primary-500 rounded-md text-primary-100">Mandar</button>
+        <button type="submit" class="w-full h-12 my-3 bg-primary-500 rounded-md text-primary-100 hover:bg-primary-700">Mandar</button>
       </EditForm>
       <a href="/login" class="text-sm text-primary-700 text-center mt-4 block mx-auto font-bold">¿Ya tienes cuenta?</a>
     </div>
@@ -35,83 +50,54 @@
 
 @code {
   private User user = new User();
+  private bool ShowCorreoInvalido = false;
+  private bool isLoading = false;
+  private string body = "";
 
   private async Task MandarRecuperacion()
   {
-    var existinguser = await client.GetUsuarioByEmailAsync(user.Email);
-    if (existinguser != null)
-    {
-      if (user != null && !string.IsNullOrEmpty(user.Email))
+      isLoading = true;
+      // Obtener el usuario por su correo electrónico
+      var existingUser = await client.GetUsuarioByEmailAsync(user.Email);
+
+      // Verificar si el usuario existe
+      if (existingUser != null)
       {
-        await emailServiceClient.SendEmailAsync(new EmailDTO
+
+          // Crear el cuerpo del correo de recuperación
+          body = emailServiceClient.HacerBodyRecuperacion(existingUser.Nombre, existingUser.Apellido, existingUser.UsuarioID);
+
+          // Verificar si el correo y el usuario no son nulos o vacíos
+          if (user != null && !string.IsNullOrEmpty(user.Email))
           {
-            Para = user.Email,
-            Asunto = "Cambio de contraseña",
-            Contenido =
-          $@"<!DOCTYPE html>
-<html lang='en'>
-<head>
-<meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>Cambio de contraseña - Staticaly</title>
-<style>
-body {{
-font-family: Montserrat, sans-serif;
-background-color: #000a23;
-margin: 0;
-padding: 0;
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100vh;
-}}
-.container {{
-max-width: 600px;
-background-color: #557996;
-border-radius: 10px;
-padding: 20px;
-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-text-align: center;
-}}
-h1 {{
-color: #02253d;
-margin-bottom: 20px;
-}}
-p {{
-color: #d2e3f1;
-margin-bottom: 10px;
-}}
-a {{
-color: #007bff;
-text-decoration: none;
-}}
-a:hover {{
-text-decoration: underline;
-}}
-.logo {{
-width: 100px;
-height: auto;
-margin-bottom: 20px;
-}}
-</style>
-</head>
-<body>
-<div class='container'>
-<h1>¡Hola {existinguser.Nombre} {existinguser.Apellido}!</h1>
-<p>Escuchamos que olvidaste tu contraseña en Statica.ly. Por favor, haz clic en el siguiente enlace para cambiar tu
-contraseña:</p>
-<p><a href='http://localhost:5197/cambiarcontrasena/{existinguser.UsuarioID}'>Aqui</a></p>
-</div>
-</body>
-</html>"
-          });
+              // Enviar el correo de recuperación
+              await emailServiceClient.SendEmailAsync(new EmailDTO
+              {
+                  Para = user.Email,
+                  Asunto = "Cambio de contraseña",
+                  Contenido = body
+              });
+
+              await Task.Delay(2000);
+              // Redirigir al usuario a la página de inicio de sesión
+              NavigationManager.NavigateTo("/login");
+          }
+          else
+          {
+              // Mostrar mensaje de error si el usuario o el correo electrónico son nulos o vacíos
+              ShowCorreoInvalido = true;
+              isLoading = false;
+              Console.WriteLine("No se puede enviar el correo electrónico porque el usuario o el correo electrónico es nulo o vacío.");
+              return;
+          }
       }
       else
       {
-        Console.WriteLine("No se puede enviar el correo electrónico porque el usuario o el correo electrónico es nulo.");
-        return;
+          // Mostrar mensaje de error si el usuario no existe
+          ShowCorreoInvalido = true;
+          Console.WriteLine("No se puede enviar el correo electrónico porque el usuario no existe.");
+          isLoading = false;
+          return;
       }
-      NavigationManager.NavigateTo("/login");
-    }
   }
 }

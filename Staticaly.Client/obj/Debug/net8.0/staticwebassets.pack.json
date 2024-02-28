@@ -13,6 +13,14 @@
       "PackagePath": "staticwebassets\\Staticaly.Client.styles.css"
     },
     {
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Gifs\\CorreoMandado.gif",
+      "PackagePath": "staticwebassets\\Gifs\\CorreoMandado.gif"
+    },
+    {
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Gifs\\ajustes.gif",
+      "PackagePath": "staticwebassets\\Gifs\\ajustes.gif"
+    },
+    {
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\Semestre.svg",
       "PackagePath": "staticwebassets\\Images\\Semestre.svg"
     },

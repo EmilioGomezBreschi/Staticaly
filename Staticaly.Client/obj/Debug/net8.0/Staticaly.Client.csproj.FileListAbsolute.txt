@@ -1062,7 +1062,6 @@ C:\Users\lime1\Documents\Staticaly-1\Staticaly.Client\obj\Debug\net8.0\ref\Stati
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\blazor.boot.json
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\blazor.webassembly.js
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\BouncyCastle.Cryptography.wasm
-C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\CryptSharp.wasm
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.js
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.js.map
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.native.8.0.2.gy7g3ke90s.js
@@ -1351,7 +1350,6 @@ C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\w
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.Drawing.wasm.gz
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.js.map.gz
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.Linq.Queryable.wasm.gz
-C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\CryptSharp.wasm.gz
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.Net.NameResolution.wasm.gz
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.Data.DataSetExtensions.wasm.gz
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.Security.Cryptography.Encoding.wasm.gz
@@ -1485,7 +1483,6 @@ C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\S
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\Staticaly.Client.dll
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\Staticaly.Client.pdb
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
-C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\CryptSharp.dll
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\MailKit.dll
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\Microsoft.AspNetCore.Authorization.dll
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\Microsoft.AspNetCore.Components.dll
@@ -1698,7 +1695,6 @@ C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\S
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\Staticaly.Client.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\Staticaly.Client.sourcelink.json
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\webcil\BouncyCastle.Cryptography.wasm
-C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\webcil\CryptSharp.wasm
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\webcil\MailKit.wasm
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\webcil\Microsoft.AspNetCore.Authorization.wasm
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\webcil\Microsoft.AspNetCore.Components.wasm
@@ -1909,7 +1905,6 @@ C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\s
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\scopedcss\projectbundle\Staticaly.Client.bundle.scp.css
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\i2k0oitj5b.gz
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\9u9vald0g8.gz
-C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\c3l6biqkal.gz
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\mky6vz59gl.gz
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\2v6nm8r7dy.gz
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\w7y45yb6q9.gz
@@ -2122,3 +2117,8 @@ C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\S
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\refint\Staticaly.Client.dll
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\Staticaly.Client.pdb
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\ref\Staticaly.Client.dll
+C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\BCrypt.Net-Next.wasm
+C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\BCrypt.Net-Next.wasm.gz
+C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\webcil\BCrypt.Net-Next.wasm
+C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\lut47hmaw7.gz

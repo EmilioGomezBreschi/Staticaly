@@ -84,7 +84,7 @@ namespace Staticaly.Client.Data
                   </html>";
     }
 
-    public string HacerBodyDocente(string? nombre, string? apellido, string? institucion, int? semestre)
+    public string HacerBodyDocente(string? nombre, string? apellido,string? correo, string? institucion, int? semestre)
     {
 
       // Construye el cuerpo del correo electrónico
@@ -135,12 +135,166 @@ namespace Staticaly.Client.Data
             <h2>Información del Docente</h2>
               <p><strong>Nombre:</strong> {nombre}</p>
               <p><strong>Apellido:</strong> {apellido}</p>
+              <p><strong>Correo:</strong> {correo}</p>
               <p><strong>Institución:</strong> {institucion}</p>
               <p><strong>Semestre:</strong> {semestre}</p>
+              <a href='http://localhost:5197/verificarDocente'>Verificar Informacion Docente</a>
             </div>
           </body>
           </html>";
     }
 
+    public string HacerBodyRecuperacion(string? nombre, string? apellido, int ID)
+    {
+      return $@"<!DOCTYPE html>
+            <html lang='en'>
+              <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Cambio de contraseña - Staticaly</title>
+                <style>
+                  body {{
+                    font-family: Montserrat, sans-serif;
+                    background-color: #000a23;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                  }}
+                  .container {{
+                    max-width: 600px;
+                    background-color: #557996;
+                    border-radius: 10px;
+                    padding: 20px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    text-align: center;
+                  }}
+                  h1 {{
+                    color: #02253d;
+                    margin-bottom: 20px;
+                  }}
+                  p {{
+                    color: #d2e3f1;
+                    margin-bottom: 10px;
+                  }}
+                  a {{
+                    color: #007bff;
+                    text-decoration: none;
+                  }}
+                  a:hover {{
+                    text-decoration: underline;
+                  }}
+                  .logo {{
+                    width: 100px;
+                    height: auto;
+                    margin-bottom: 20px;
+                  }}
+                </style>
+              </head>
+              <body>
+                <div class='container'>
+                  <h1>¡Hola {nombre} {apellido}!</h1>
+                  <p>Escuchamos que olvidaste tu contraseña en Statica.ly. Por favor, haz clic en el siguiente enlace para cambiar tu contraseña:</p>
+                  <p><a href='http://localhost:5197/cambiarcontrasena/{ID}'>Aquí</a></p>
+                </div>
+              </body>
+            </html>";
+    }
+
+    public string HacerBodyAceptacion()
+    {
+      return $@"<!DOCTYPE html>
+            <html lang='en'>
+              <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Ahora eres un Usuario Docente - Staticaly</title>
+                <style>
+                  body {{
+                    font-family: Montserrat, sans-serif;
+                    background-color: #000a23;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                  }}
+                  .container {{
+                    max-width: 600px;
+                    background-color: #557996;
+                    border-radius: 10px;
+                    padding: 20px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    text-align: center;
+                  }}
+                  h1 {{
+                    color: #02253d;
+                    margin-bottom: 20px;
+                  }}
+                  p {{
+                    color: #d2e3f1;
+                    margin-bottom: 10px;
+                  }}
+                </style>
+              </head>
+              <body>
+                <div class='container'>
+                  <h1>¡Bienvenido a Statica.ly Docente!</h1>
+                  <p>A partir de hoy tu cuenta pasa a ser de docente :).</p>
+                </div>
+              </body>
+            </html>";
+    }
+
+    public string HacerBodyRechazo()
+    {
+      return $@"<!DOCTYPE html>
+            <html lang='en'>
+              <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Rechazo de solicitud - Staticaly</title>
+                <style>
+                  body {{
+                    font-family: Montserrat, sans-serif;
+                    background-color: #000a23;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                  }}
+                  .container {{
+                    max-width: 600px;
+                    background-color: #557996;
+                    border-radius: 10px;
+                    padding: 20px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    text-align: center;
+                  }}
+                  h1 {{
+                    color: #02253d;
+                    margin-bottom: 20px;
+                  }}
+                  p {{
+                    color: #d2e3f1;
+                    margin-bottom: 10px;
+                  }}
+                </style>
+              </head>
+              <body>
+                <div class='container'>
+                  <h1>¡Lo sentimos!</h1>
+                  <p>Tu solicitud para ser docente en Statica.ly ha sido rechazada.</p>
+                  <p>Si deseas mandar otra foto ingresa a este link:</p>
+                  <p><a href='http://localhost:5197/ActualizarFotoDocente'>Mandar otra foto</a></p>
+                </div>
+              </body>
+            </html>";
+    }
   }
 }
