@@ -181,16 +181,16 @@ userGroup.MapPut("/rango/{id}/{puntos}", async (int id, int puntos, StaticalyCon
 // Eliminar usuario
 userGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
 {
-    var user = await context.Usuarios.FindAsync(id);
-    if (user == null)
-    {
-        return Results.NotFound();
-    }
+  var user = await context.Usuarios.FindAsync(id);
+  if (user == null)
+  {
+    return Results.NotFound();
+  }
 
-    context.Usuarios.Remove(user);
-    await context.SaveChangesAsync();
+  context.Usuarios.Remove(user);
+  await context.SaveChangesAsync();
 
-    return Results.NoContent();
+  return Results.NoContent();
 });
 
 // Verificar token de usuario
@@ -334,11 +334,13 @@ EquipoGroup.MapPut("/{id}", async (StaticalyContext context, int id, Equipos equ
   {
     return Results.NotFound();
   }
+  // Actualiza las propiedades del equipoToUpdate con los valores proporcionados
+  equipoToUpdate.Nombre = equipo.Nombre;
+  equipoToUpdate.Descripcion = equipo.Descripcion;
 
-  context.Entry(equipoToUpdate).CurrentValues.SetValues(equipo);
   await context.SaveChangesAsync();
 
-  return Results.StatusCode(204);
+  return Results.NoContent();
 }).Produces<Equipos>();
 
 // Crear equipo
@@ -351,5 +353,77 @@ EquipoGroup.MapPost("/", async (StaticalyContext context, Equipos equipo) =>
 
 #endregion
 
+var UsuariosEquiposGroup = app.MapGroup("/usuariosequipos").WithParameterValidation();
+
+# region Entry Points UsuariosEquipos
+
+// Agregar usuario a un equipo
+UsuariosEquiposGroup.MapPost("/", async (StaticalyContext context, UsuariosEquipos usuariosEquipos) =>
+{
+  context.UsuariosEquipos.Add(usuariosEquipos);
+  await context.SaveChangesAsync();
+  return Results.Created($"/usuariosequipos/{usuariosEquipos.UsuarioEquipoID}", usuariosEquipos);
+}).Produces<UsuariosEquipos>();
+
+// Eliminar usuario de un equipo
+UsuariosEquiposGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+{
+  var usuarioEquipo = await context.UsuariosEquipos.FindAsync(id);
+  if (usuarioEquipo == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.UsuariosEquipos.Remove(usuarioEquipo);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+// Actualizar permiso de usuario en un equipo
+UsuariosEquiposGroup.MapPut("/{id}/{permisoID}", async (StaticalyContext context, int id, int permisoID) =>
+{
+  var usuarioEquipoToUpdate = await context.UsuariosEquipos.FindAsync(id);
+  if (usuarioEquipoToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  usuarioEquipoToUpdate.PermisoID = permisoID;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+}).Produces<UsuariosEquipos>();
+
+// Obtener todos los equipos de un usuario
+UsuariosEquiposGroup.MapGet("/byUsuario/{id}", async (StaticalyContext context, int id) =>
+{
+  var usuariosEquipos = await context.UsuariosEquipos
+                                      .Include(ue => ue.Usuario)
+                                      .Include(ue => ue.Equipo)
+                                      .Include(ue => ue.Permiso)
+                                      .AsNoTracking()
+                                      .Where(ue => ue.UsuarioID == id)
+                                      .ToListAsync();
+
+  return usuariosEquipos.Any() ? Results.Ok(usuariosEquipos) : Results.NotFound();
+});
+
+// Obtener todos los usuarios de un equipo
+UsuariosEquiposGroup.MapGet("/{id}", async (StaticalyContext context, int id) =>
+{
+  var usuariosEquipos = await context.UsuariosEquipos
+                                      .Include(ue => ue.Usuario)
+                                      .Include(ue => ue.Equipo)
+                                      .Include(ue => ue.Permiso)
+                                      .AsNoTracking()
+                                      .Where(ue => ue.EquipoID == id)
+                                      .ToListAsync();
+
+  return usuariosEquipos.Any() ? Results.Ok(usuariosEquipos) : Results.NotFound();
+});
+
+#endregion
 
 app.Run();

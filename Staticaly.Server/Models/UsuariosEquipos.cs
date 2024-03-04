@@ -11,17 +11,17 @@ namespace Staticaly.Server.Models
     {
         [Key]
         public int UsuarioEquipoID { get; set; }
-        public User? Usuario { get; set; }
         [Required]
         [ForeignKey("UsuarioID")]
         public int UsuarioID { get; set; }
-        public Equipos? Equipo { get; set; }
+        public User? Usuario { get; set; }
         [Required]
         [ForeignKey("EquipoID")]
         public int EquipoID { get; set; }
-        public Permisos? Permiso { get; set; }
+        public Equipos? Equipo { get; set; }
         [Required]
         [ForeignKey("PermisoID")]
         public int PermisoID { get; set; }
+        public Permisos? Permiso { get; set; }
     }
 }
