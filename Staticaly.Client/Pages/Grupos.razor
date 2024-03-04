@@ -1,0 +1,34 @@
+@page "/grupos/{id}"
+@inject NavigationManager NavigationManager
+
+<PageTitle>Foro - Staticaly</PageTitle>
+
+<div class="container-fluid">
+  <NavBar id="@Id" />
+
+  <div class="container bg-red-50">
+    @if (!string.IsNullOrEmpty(Id))
+    {
+      <h1>Contenido del Grupo @Id</h1>
+    }
+    else
+    {
+      <h1>Grupos</h1>
+      <p>Grupos</p>
+    }
+  </div>
+</div>
+
+@code {
+  [Parameter] public string? Id { get; set; }
+
+  int Userid;
+
+  protected override void OnInitialized()
+  {
+    if (!string.IsNullOrEmpty(Id))
+    {
+      Userid = Convert.ToInt32(Id);
+    }
+  }
+}
