@@ -27,11 +27,13 @@ app.UseCors();
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Staticaly.Server v1"));
 
+#region Entry Points Email
 app.MapPost("/Email", (EmailDTO request, IEmailService emailService) =>
 {
   emailService.SendEmail(request);
   return Results.Ok();
 });
+#endregion
 
 var userGroup = app.MapGroup("/users").WithParameterValidation();
 
@@ -179,16 +181,16 @@ userGroup.MapPut("/rango/{id}/{puntos}", async (int id, int puntos, StaticalyCon
 // Eliminar usuario
 userGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
 {
-  var user = await context.Usuarios.FindAsync(id);
-  if (user == null)
-  {
-    return Results.NotFound();
-  }
+    var user = await context.Usuarios.FindAsync(id);
+    if (user == null)
+    {
+        return Results.NotFound();
+    }
 
-  context.Usuarios.Remove(user);
-  await context.SaveChangesAsync();
+    context.Usuarios.Remove(user);
+    await context.SaveChangesAsync();
 
-  return Results.NoContent();
+    return Results.NoContent();
 });
 
 // Verificar token de usuario
@@ -237,49 +239,115 @@ userGroup.MapPut("/updaterol/{email}", async (string email, StaticalyContext con
   }
 });
 
-  //Delete foto de usuario
-  userGroup.MapDelete("/foto/{email}", async (string email, StaticalyContext context) =>
+//Delete foto de usuario
+userGroup.MapDelete("/foto/{email}", async (string email, StaticalyContext context) =>
+{
+  try
   {
-    try
+    var user = await context.Usuarios.FirstOrDefaultAsync(user => user.Email == email);
+    if (user == null)
     {
-      var user = await context.Usuarios.FirstOrDefaultAsync(user => user.Email == email);
-      if (user == null)
-      {
-        return Results.NotFound();
-      }
-      user.Imagen = null;
-      await context.SaveChangesAsync();
-
-      return Results.NoContent();
+      return Results.NotFound();
     }
-    catch (Exception ex)
-    {
-      Console.WriteLine("Error al eliminar la foto del usuario: " + ex.Message);
-      return Results.StatusCode(StatusCodes.Status500InternalServerError);
-    }
-  });
+    user.Imagen = null;
+    await context.SaveChangesAsync();
 
-  //Update foto de usuario
-  userGroup.MapPut("/foto/", async ( StaticalyContext context, User user) =>
+    return Results.NoContent();
+  }
+  catch (Exception ex)
   {
-    try
-    {
-      var userToUpdate = await context.Usuarios.FirstOrDefaultAsync(u => u.UsuarioID == user.UsuarioID);
-      if (userToUpdate == null)
-      {
-        return Results.NotFound();
-      }
-      userToUpdate.Imagen = user.Imagen;
-      await context.SaveChangesAsync();
+    Console.WriteLine("Error al eliminar la foto del usuario: " + ex.Message);
+    return Results.StatusCode(StatusCodes.Status500InternalServerError);
+  }
+});
 
-      return Results.NoContent();
-    }
-    catch (Exception ex)
+//Update foto de usuario
+userGroup.MapPut("/foto/", async (StaticalyContext context, User user) =>
+{
+  try
+  {
+    var userToUpdate = await context.Usuarios.FirstOrDefaultAsync(u => u.UsuarioID == user.UsuarioID);
+    if (userToUpdate == null)
     {
-      Console.WriteLine("Error al actualizar la foto del usuario: " + ex.Message);
-      return Results.StatusCode(StatusCodes.Status500InternalServerError);
+      return Results.NotFound();
     }
-  });
+    userToUpdate.Imagen = user.Imagen;
+    await context.SaveChangesAsync();
+
+    return Results.NoContent();
+  }
+  catch (Exception ex)
+  {
+    Console.WriteLine("Error al actualizar la foto del usuario: " + ex.Message);
+    return Results.StatusCode(StatusCodes.Status500InternalServerError);
+  }
+});
+
+#endregion
+
+var EquipoGroup = app.MapGroup("/equipos").WithParameterValidation();
+
+#region Entry Points Equipos
+
+// Obtener todos los equipos
+EquipoGroup.MapGet("/", async (StaticalyContext context) =>
+{
+  var equipos = await context.Equipos
+                          .Include(e => e.TipoEquipo)
+                          .AsNoTracking()
+                          .ToListAsync();
+
+  return equipos.Any() ? Results.Ok(equipos) : Results.NotFound();
+});
+
+// Obtener equipo por ID
+EquipoGroup.MapGet("/{id}", async (StaticalyContext context, int id) =>
+{
+  var equipo = await context.Equipos
+                            .Include(e => e.TipoEquipo)
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(e => e.EquipoID == id);
+
+  return equipo != null ? Results.Ok(equipo) : Results.NotFound();
+}).Produces<Equipos>();
+
+// Borrar equipo por ID
+EquipoGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+{
+  var equipo = await context.Equipos.FindAsync(id);
+  if (equipo == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.Equipos.Remove(equipo);
+  await context.SaveChangesAsync();
+
+  return Results.StatusCode(204);
+});
+
+// Actualizar equipo por ID
+EquipoGroup.MapPut("/{id}", async (StaticalyContext context, int id, Equipos equipo) =>
+{
+  var equipoToUpdate = await context.Equipos.FindAsync(id);
+  if (equipoToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.Entry(equipoToUpdate).CurrentValues.SetValues(equipo);
+  await context.SaveChangesAsync();
+
+  return Results.StatusCode(204);
+}).Produces<Equipos>();
+
+// Crear equipo
+EquipoGroup.MapPost("/", async (StaticalyContext context, Equipos equipo) =>
+{
+  context.Equipos.Add(equipo);
+  await context.SaveChangesAsync();
+  return Results.Created($"/equipos/{equipo.EquipoID}", equipo);
+}).WithName("GetEquipos").Produces<Equipos>();
 
 #endregion
 

@@ -53,6 +53,7 @@
 | UsuarioEquipoID | INT          | Identificador único para cada relación usuario-equipo |
 | UsuarioID       | INT          | Referencia al ID del usuario en la tabla "Usuarios"   |
 | PermisoID       | INT          | Referencia al ID del permiso en la tabla "Permisos"   |
+| EquipoID        | INT          | Referencia al ID del equipo en la tabla "Equipos"     |
 
 ### Tabla: Foros
 

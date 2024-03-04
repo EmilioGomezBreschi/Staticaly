@@ -8,13 +8,30 @@ namespace Staticaly.Server.Models
     public DbSet<User> Usuarios { get; set; }
     public DbSet<Rol> Roles { get; set; }
     public DbSet<Rango> Rangos { get; set; }
+    public DbSet<Equipos> Equipos { get; set; }
+    public DbSet<Permisos> Permisos { get; set; }
+    public DbSet<TiposEquipos> TiposEquipos { get; set; }
+    public DbSet<UsuariosEquipos> UsuariosEquipos { get; set; }
 
     public StaticalyContext(DbContextOptions<StaticalyContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+      ApplyEntityConfigurations(modelBuilder);
+      SeedData.Initialize(modelBuilder);
+    }
+
+    private void ApplyEntityConfigurations(ModelBuilder modelBuilder)
+    {
       modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-      base.OnModelCreating(modelBuilder);
+
+      ConfigureUser(modelBuilder);
+      ConfigureEquipos(modelBuilder);
+      ConfigureUsuariosEquipos(modelBuilder);
+    }
+
+    private void ConfigureUser(ModelBuilder modelBuilder)
+    {
       modelBuilder.Entity<User>()
           .HasOne(u => u.Rol)
           .WithMany()
@@ -25,10 +42,35 @@ namespace Staticaly.Server.Models
           .WithMany()
           .HasForeignKey(u => u.RangoID)
           .OnDelete(DeleteBehavior.Restrict);
+    }
 
-      SeedData.Initialize(modelBuilder);
+    private void ConfigureEquipos(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<Equipos>()
+          .HasOne(e => e.TipoEquipo)
+          .WithMany()
+          .HasForeignKey(e => e.TipoEquipoID);
+    }
+
+    private void ConfigureUsuariosEquipos(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<UsuariosEquipos>()
+          .HasOne(ue => ue.Usuario)
+          .WithMany()
+          .HasForeignKey(ue => ue.UsuarioID);
+
+      modelBuilder.Entity<UsuariosEquipos>()
+          .HasOne(ue => ue.Equipo)
+          .WithMany()
+          .HasForeignKey(ue => ue.EquipoID);
+
+      modelBuilder.Entity<UsuariosEquipos>()
+          .HasOne(ue => ue.Permiso)
+          .WithMany()
+          .HasForeignKey(ue => ue.PermisoID);
     }
   }
+
 
   public static class SeedData
   {
@@ -121,6 +163,40 @@ namespace Staticaly.Server.Models
             NombreRango = "Guardian",
             PuntosMin = 40001,
             PuntosMax = 100000
+          }
+      );
+      modelBuilder.Entity<Permisos>().HasData(
+          new Permisos
+          {
+            PermisoID = 1,
+            Nombre = "Administrar"
+          },
+          new Permisos
+          {
+            PermisoID = 2,
+            Nombre = "Visualizar"
+          },
+          new Permisos
+          {
+            PermisoID = 3,
+            Nombre = "Editar"
+          }
+      );
+      modelBuilder.Entity<TiposEquipos>().HasData(
+          new TiposEquipos
+          {
+            TipoEquipoID = 1,
+            Nombre = "Publico"
+          },
+          new TiposEquipos
+          {
+            TipoEquipoID = 2,
+            Nombre = "Estudiante"
+          },
+          new TiposEquipos
+          {
+            TipoEquipoID = 3,
+            Nombre = "Docente"
           }
       );
     }

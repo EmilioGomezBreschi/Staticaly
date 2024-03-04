@@ -21,6 +21,68 @@ namespace Staticaly.Server.ModelsMigrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Staticaly.Server.Models.Equipos", b =>
+                {
+                    b.Property<int>("EquipoID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EquipoID"));
+
+                    b.Property<string>("Descripcion")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("TipoEquipoID")
+                        .HasColumnType("int");
+
+                    b.HasKey("EquipoID");
+
+                    b.HasIndex("TipoEquipoID");
+
+                    b.ToTable("Equipos");
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.Permisos", b =>
+                {
+                    b.Property<int>("PermisoID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PermisoID"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("PermisoID");
+
+                    b.ToTable("Permisos");
+
+                    b.HasData(
+                        new
+                        {
+                            PermisoID = 1,
+                            Nombre = "Administrar"
+                        },
+                        new
+                        {
+                            PermisoID = 2,
+                            Nombre = "Visualizar"
+                        },
+                        new
+                        {
+                            PermisoID = 3,
+                            Nombre = "Editar"
+                        });
+                });
+
             modelBuilder.Entity("Staticaly.Server.Models.Rango", b =>
                 {
                     b.Property<int>("RangoID")
@@ -31,8 +93,8 @@ namespace Staticaly.Server.ModelsMigrations
 
                     b.Property<string>("NombreRango")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<int>("PuntosMax")
                         .HasColumnType("int");
@@ -152,6 +214,41 @@ namespace Staticaly.Server.ModelsMigrations
                         });
                 });
 
+            modelBuilder.Entity("Staticaly.Server.Models.TiposEquipos", b =>
+                {
+                    b.Property<int>("TipoEquipoID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TipoEquipoID"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("TipoEquipoID");
+
+                    b.ToTable("TiposEquipos");
+
+                    b.HasData(
+                        new
+                        {
+                            TipoEquipoID = 1,
+                            Nombre = "Publico"
+                        },
+                        new
+                        {
+                            TipoEquipoID = 2,
+                            Nombre = "Estudiante"
+                        },
+                        new
+                        {
+                            TipoEquipoID = 3,
+                            Nombre = "Docente"
+                        });
+                });
+
             modelBuilder.Entity("Staticaly.Server.Models.User", b =>
                 {
                     b.Property<int>("UsuarioID")
@@ -207,12 +304,51 @@ namespace Staticaly.Server.ModelsMigrations
                     b.ToTable("Usuarios");
                 });
 
+            modelBuilder.Entity("Staticaly.Server.Models.UsuariosEquipos", b =>
+                {
+                    b.Property<int>("UsuarioEquipoID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UsuarioEquipoID"));
+
+                    b.Property<int>("EquipoID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PermisoID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioID")
+                        .HasColumnType("int");
+
+                    b.HasKey("UsuarioEquipoID");
+
+                    b.HasIndex("EquipoID");
+
+                    b.HasIndex("PermisoID");
+
+                    b.HasIndex("UsuarioID");
+
+                    b.ToTable("UsuariosEquipos");
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.Equipos", b =>
+                {
+                    b.HasOne("Staticaly.Server.Models.TiposEquipos", "TipoEquipo")
+                        .WithMany()
+                        .HasForeignKey("TipoEquipoID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TipoEquipo");
+                });
+
             modelBuilder.Entity("Staticaly.Server.Models.User", b =>
                 {
                     b.HasOne("Staticaly.Server.Models.Rango", "Rango")
                         .WithMany()
                         .HasForeignKey("RangoID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Staticaly.Server.Models.Rol", "Rol")
@@ -224,6 +360,33 @@ namespace Staticaly.Server.ModelsMigrations
                     b.Navigation("Rango");
 
                     b.Navigation("Rol");
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.UsuariosEquipos", b =>
+                {
+                    b.HasOne("Staticaly.Server.Models.Equipos", "Equipo")
+                        .WithMany()
+                        .HasForeignKey("EquipoID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Staticaly.Server.Models.Permisos", "Permiso")
+                        .WithMany()
+                        .HasForeignKey("PermisoID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Staticaly.Server.Models.User", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Equipo");
+
+                    b.Navigation("Permiso");
+
+                    b.Navigation("Usuario");
                 });
 #pragma warning restore 612, 618
         }
