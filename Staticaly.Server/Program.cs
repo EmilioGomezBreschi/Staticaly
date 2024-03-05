@@ -3,6 +3,7 @@ using Staticaly.Server.Services;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore;
 using System.Web;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options => options.AddDefaultPolicy(
@@ -365,10 +366,11 @@ UsuariosEquiposGroup.MapPost("/", async (StaticalyContext context, UsuariosEquip
   return Results.Created($"/usuariosequipos/{usuariosEquipos.UsuarioEquipoID}", usuariosEquipos);
 }).Produces<UsuariosEquipos>();
 
-// Eliminar usuario de un equipo
-UsuariosEquiposGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+// Eliminar usuario de un equipo por ID
+UsuariosEquiposGroup.MapDelete("/{usuarioid}/{grupoid}", async (StaticalyContext context, int usuarioid, int grupoid) =>
 {
-  var usuarioEquipo = await context.UsuariosEquipos.FindAsync(id);
+  var usuarioEquipo = await context.UsuariosEquipos
+                                  .FirstOrDefaultAsync(ue => ue.UsuarioID == usuarioid && ue.EquipoID == grupoid);
   if (usuarioEquipo == null)
   {
     return Results.NotFound();
@@ -407,7 +409,7 @@ UsuariosEquiposGroup.MapGet("/byUsuario/{id}", async (StaticalyContext context, 
                                       .Where(ue => ue.UsuarioID == id)
                                       .ToListAsync();
 
-  return usuariosEquipos.Any() ? Results.Ok(usuariosEquipos) : Results.NotFound();
+  return Results.Ok(usuariosEquipos);
 });
 
 // Obtener todos los usuarios de un equipo

@@ -81,6 +81,10 @@
       "PackagePath": "staticwebassets\\Images\\perfil.svg"
     },
     {
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\prohibido.svg",
+      "PackagePath": "staticwebassets\\Images\\prohibido.svg"
+    },
+    {
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\school.svg",
       "PackagePath": "staticwebassets\\Images\\school.svg"
     },

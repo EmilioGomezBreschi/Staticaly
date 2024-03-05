@@ -12,6 +12,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5233") });
 builder.Services.AddScoped<UsuariosClient>();
 builder.Services.AddScoped<EmailServiceClient>();
+builder.Services.AddScoped<EquiposClient>();
 
 
 await builder.Build().RunAsync();

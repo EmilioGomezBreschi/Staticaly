@@ -54,9 +54,9 @@ namespace Staticaly.Client.Data
         }
 
         //Borrar un usuario de un equipo
-        public async Task<HttpResponseMessage> DeleteUsuarioFromEquipoAsync(int id)
+        public async Task<HttpResponseMessage> DeleteUsuarioFromEquipoAsync(int usuarioid, int grupoid)
         {
-            return await httpClient.DeleteAsync($"usuariosequipos/{id}");
+            return await httpClient.DeleteAsync($"usuariosequipos/{usuarioid}/{grupoid}");
         }
 
         // Get Todos los usuarios de un equipo

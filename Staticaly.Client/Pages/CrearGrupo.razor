@@ -1,0 +1,137 @@
+@page "/crear-grupo/{id}"
+@using Models;
+@using Data;
+@using System.Text.Json;
+@inject NavigationManager NavigationManager
+@inject EquiposClient EquiposClient
+@inject UsuariosClient UsuariosClient
+
+<PageTitle>Crear Grupo - Staticaly</PageTitle>
+
+<div class="text-white flex flex-col justify-center items-center">
+  @if (isLoading)
+  {
+    <div class="h-full absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+      <svg class="animate-spin h-8 w-8 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+        viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647zM20 12a8 8 0 01-8 8v4c6.627 0 12-5.373 12-12h-4zm-2-5.291A7.962 7.962 0 0120 12h4c0-3.042-1.135-5.824-3-7.938l-3 2.647z">
+        </path>
+      </svg>
+    </div>
+  }
+  <div class="bg-primary-300 rounded-lg p-8">
+    <EditForm Model="@Equipo" OnValidSubmit="NuevoGrupo" class="flex flex-col text-primary-400">
+      @if (errorMessage != "")
+      {
+        <div class="relative mt-1 text-xs text-center bg-red-500 font-bold text-white px-4 py-2 rounded-md mb-4">
+          @errorMessage
+        </div>
+      }
+      <div class="relative my-3 bg-primary-100 rounded-md font-bold">
+        <InputText @bind-Value="@Equipo.Nombre" type="text" id="nombre"
+          class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-4 placeholder-primary-400 bg-transparent"
+          placeholder="Nombre del Grupo" />
+        <ValidationMessage For="@(() => Equipo.Nombre)" class="text-red-500" />
+        <img src="images/" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6" alt="Icono Grupo" />
+      </div>
+      <div class="relative my-3 bg-primary-100 rounded-md font-bold">
+        <InputText @bind-Value="@Equipo.Descripcion" type="text" id="descripcion"
+          class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-4 placeholder-primary-400 bg-transparent"
+          placeholder="Descripcion del Grupo" />
+        <ValidationMessage For="@(() => Equipo.Descripcion)" class="text-red-500" />
+        <img src="images/" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6" alt="Icono Grupo" />
+      </div>
+      <button type="submit"
+        class="bg-primary-500 text-white font-bold text-lg rounded-md h-12 hover:bg-primary-600 transition duration-300">Crear</button>
+    </EditForm>
+
+  </div>
+</div>
+
+@code {
+  private Equipos Equipo = new Equipos();
+  private UsuariosEquipos UsuarioEquipo = new UsuariosEquipos();
+  private User usuario = new User();
+  [Parameter] public string? id { get; set; }
+  int idUsuario;
+  int equipoId = 0;
+  private bool isLoading = false;
+  private string errorMessage = "";
+  private void SetErrorMessage(string message)
+  {
+    errorMessage = message;
+  }
+
+  private async Task NuevoGrupo()
+  {
+    if (Equipo.Nombre == null)
+    {
+      SetErrorMessage("Todos los campos son obligatorios");
+      return;
+    }
+    isLoading = true;
+    if (idUsuario == 0)
+    {
+      SetErrorMessage("Error al obtener el usuario");
+      isLoading = false;
+      return;
+    }
+    // Obtener el usuario actual
+    usuario = await UsuariosClient.GetUsuarioAsync(idUsuario)?? new User();
+    if (usuario == null)
+    {
+      SetErrorMessage("Error al obtener el usuario");
+      isLoading = false;
+      return;
+    }
+    Equipo.TipoEquipoID = usuario.RolID;
+
+    // Crear el nuevo equipo
+    var ExistingEquipo = await EquiposClient.CreateEquipoAsync(Equipo);
+
+    // Verificar si la creación del equipo fue exitosa
+    if (ExistingEquipo.IsSuccessStatusCode)
+    {
+      // Extraer el id del nuevo equipo creado
+      var equipoJson = await ExistingEquipo.Content.ReadAsStringAsync();
+      Console.WriteLine($"equipoJson: {equipoJson}");
+
+      var equipoObjeto = JsonSerializer.Deserialize<Dictionary<string, object>>(equipoJson);
+      if (equipoObjeto != null && equipoObjeto.ContainsKey("equipoID"))
+      {
+        if (int.TryParse(equipoObjeto["equipoID"].ToString(), out int id))
+        {
+          equipoId = id;
+        }
+      }
+
+      // Establecer el id del equipo en el objeto UsuarioEquipo
+      UsuarioEquipo.UsuarioID = idUsuario;
+      UsuarioEquipo.PermisoID = 1;
+      UsuarioEquipo.EquipoID = equipoId;
+
+      // Ahora, puedes agregar el usuario al nuevo equipo como administrador
+      await EquiposClient.AddUsuarioToEquipoAsync(UsuarioEquipo);
+      NavigationManager.NavigateTo($"/grupos/{idUsuario}");
+    }
+    else
+    {
+      // Si la creación del equipo falla, mostrar un mensaje de error
+      SetErrorMessage("Error al crear el grupo");
+      isLoading = false;
+      return;
+    }
+  }
+
+  protected override Task OnInitializedAsync()
+  {
+    if (!string.IsNullOrEmpty(id))
+    {
+      idUsuario = int.Parse(id);
+      return Task.CompletedTask;
+    }
+    return Task.CompletedTask;
+  }
+}
