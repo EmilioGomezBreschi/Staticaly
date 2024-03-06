@@ -28,6 +28,12 @@
     <h1 class="text-3xl text-logo-text">Statica.ly</h1>
   </div>
   <div class="bg-primary-300 rounded-lg mx-2 p-8 flex flex-col items-center">
+    @if (ErrorMessage != "")
+    {
+      <div class="px-5 py-2 bg-red-500 rounded-md font-bold text-xs text-white text-left max-w-full">
+        <p>@ErrorMessage</p>
+      </div>
+    }
     <EditForm Model="@user" OnValidSubmit="ActualizarFoto" class="flex flex-col text-primary-400">
       <div class="relative mt-3 bg-primary-100 rounded-md font-bold">
         <InputText @bind-Value="@user.Email" type="email" id="email"
@@ -80,8 +86,14 @@
   private bool isLoading = false;
   private bool submitted = false;
   private bool ValidateFoto = true;
+  private string ErrorMessage = "";
   private async Task ActualizarFoto()
   {
+    if (user.Email == null)
+    {
+      ErrorMessage = "El campo de Email no puede estar vacío";
+      return;
+    }
     submitted = true;
     isLoading = true;
     if (FotoDocente != null)
@@ -89,6 +101,12 @@
       var docente = await client.GetUsuarioByEmailAsync(user.Email);
       if (docente != null)
       {
+        if (docente.RolID == 3)
+        {
+          ErrorMessage = "El usuario ya es un docente";
+          isLoading = false;
+          return;
+        }
         docente.Imagen = FotoDocente;
         await client.UpdateFotoDocenteAsync(docente);
         isLoading = false;

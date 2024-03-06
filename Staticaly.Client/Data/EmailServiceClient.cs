@@ -51,10 +51,12 @@ namespace Staticaly.Client.Data
                               text-align: center;
                           }}
                           h1 {{
+                              font-size: 24px;
                               color: #02253d;
                               margin-bottom: 20px;
                           }}
                           p {{
+                              font-size: 16px;
                               color: #d2e3f1;
                               margin-bottom: 10px;
                           }}
@@ -84,7 +86,7 @@ namespace Staticaly.Client.Data
                   </html>";
     }
 
-    public string HacerBodyDocente(string? nombre, string? apellido,string? correo, string? institucion, int? semestre)
+    public string HacerBodyDocente(string? nombre, string? apellido, string? correo, string? institucion, int? semestre)
     {
 
       // Construye el cuerpo del correo electrónico
@@ -127,6 +129,14 @@ namespace Staticaly.Client.Data
                   }}
                   strong {{
                       font-weight: bold;
+                  }}
+                  a {{
+                      font-size: 1.2rem;
+                      color: #007bff;
+                      text-decoration: none;
+                  }}
+                  a:hover {{
+                      text-decoration: underline;
                   }}
               </style>
           </head>
@@ -172,14 +182,17 @@ namespace Staticaly.Client.Data
                     text-align: center;
                   }}
                   h1 {{
+                    font-size: 24px;
                     color: #02253d;
                     margin-bottom: 20px;
                   }}
                   p {{
+                    font-size: 16px;
                     color: #d2e3f1;
                     margin-bottom: 10px;
                   }}
                   a {{
+                    font-size: 1.2rem;
                     color: #007bff;
                     text-decoration: none;
                   }}
@@ -231,10 +244,12 @@ namespace Staticaly.Client.Data
                     text-align: center;
                   }}
                   h1 {{
+                    font-size: 24px;
                     color: #02253d;
                     margin-bottom: 20px;
                   }}
                   p {{
+                    font-size: 16px;
                     color: #d2e3f1;
                     margin-bottom: 10px;
                   }}
@@ -243,13 +258,13 @@ namespace Staticaly.Client.Data
               <body>
                 <div class='container'>
                   <h1>¡Bienvenido a Statica.ly Docente!</h1>
-                  <p>A partir de hoy tu cuenta pasa a ser de docente :).</p>
+                  <p>A partir de hoy podras disfrutar de todos loes beneficios de docente como crear grupos de hasta 50 personas, crear ejercicios personalizados y mucho mas.</p>
                 </div>
               </body>
             </html>";
     }
 
-    public string HacerBodyRechazo()
+    public string HacerBodyRechazo(string Asunto)
     {
       return $@"<!DOCTYPE html>
             <html lang='en'>
@@ -284,12 +299,25 @@ namespace Staticaly.Client.Data
                     color: #d2e3f1;
                     margin-bottom: 10px;
                   }}
+                  #rechazo{{
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    }}
+                  a{{
+                    font-size: 1.2rem;
+                    color: #007bff;
+                    text-decoration: none;
+                  }}
+                  a:hover{{
+                    text-decoration: underline;
+                  }}
                 </style>
               </head>
               <body>
                 <div class='container'>
                   <h1>¡Lo sentimos!</h1>
-                  <p>Tu solicitud para ser docente en Statica.ly ha sido rechazada.</p>
+                  <p>Tu solicitud para ser docente en Statica.ly ha sido rechazada por:</p>
+                  <p id='Rechazo'>{Asunto}</p>
                   <p>Si deseas mandar otra foto ingresa a este link:</p>
                   <p><a href='http://localhost:5197/ActualizarFotoDocente'>Mandar otra foto</a></p>
                 </div>

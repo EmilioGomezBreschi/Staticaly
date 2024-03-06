@@ -30,8 +30,8 @@ namespace Staticaly.Server.ModelsMigrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EquipoID"));
 
                     b.Property<string>("Descripcion")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()

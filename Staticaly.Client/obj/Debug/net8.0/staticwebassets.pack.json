@@ -17,6 +17,14 @@
       "PackagePath": "staticwebassets\\Gifs\\CorreoMandado.gif"
     },
     {
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Gifs\\Success.gif",
+      "PackagePath": "staticwebassets\\Gifs\\Success.gif"
+    },
+    {
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Gifs\\UnSuccess.gif",
+      "PackagePath": "staticwebassets\\Gifs\\UnSuccess.gif"
+    },
+    {
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Gifs\\ajustes.gif",
       "PackagePath": "staticwebassets\\Gifs\\ajustes.gif"
     },
@@ -59,6 +67,10 @@
     {
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\heart.svg",
       "PackagePath": "staticwebassets\\Images\\heart.svg"
+    },
+    {
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\info.svg",
+      "PackagePath": "staticwebassets\\Images\\info.svg"
     },
     {
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\llave.svg",

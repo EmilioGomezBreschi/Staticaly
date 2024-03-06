@@ -11,7 +11,7 @@ using Staticaly.Server.Models;
 namespace Staticaly.Server.ModelsMigrations
 {
     [DbContext(typeof(StaticalyContext))]
-    [Migration("20240304190604_InitialCreate")]
+    [Migration("20240305232517_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,8 +33,8 @@ namespace Staticaly.Server.ModelsMigrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EquipoID"));
 
                     b.Property<string>("Descripcion")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
