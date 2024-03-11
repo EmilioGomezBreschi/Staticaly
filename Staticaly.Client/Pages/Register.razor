@@ -1,13 +1,14 @@
 @page "/registro"
 @using Models;
 @using Data;
-@inject UsuariosClient client
 @using SixLabors.ImageSharp
 @using System.IO;
 @using System.Diagnostics;
 @using System.Text.RegularExpressions;
 @using SixLabors.ImageSharp.Processing;
 @using BCrypt.Net;
+@inject UsuariosClient client
+@inject IJSRuntime JSRuntime
 @inject EmailServiceClient emailServiceClient
 @inject NavigationManager NavigationManager
 
@@ -78,7 +79,7 @@
       </div>
       <div class="relative mt-6 bg-primary-100 rounded-md font-bold">
         <div class="relative">
-          <InputText @bind-Value="ConfirmPassword" type="@GetPasswordType()" id="confirmpassword"
+          <InputText @bind-Value="ConfirmPassword" type="password" id="confirmpassword"
             class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-12 placeholder-primary-400 bg-transparent"
             placeholder="Confirmar Contraseña" />
           <ValidationMessage For="@(() => user.Password)" class="text-red-500" />
@@ -189,6 +190,8 @@
     try
     {
       isLoading = true;
+      if (JSRuntime is not null)
+        await JSRuntime.InvokeVoidAsync("OnScrollEvent");
 
       // Verificar si el correo electrónico ya existe
       var existingUser = await client.GetUsuarioByEmailAsync(user.Email);
@@ -345,3 +348,9 @@
   }
 
 }
+
+<script>
+  function OnScrollEvent() {
+    document.documentElement.scrollTop = 0;
+  }
+</script>

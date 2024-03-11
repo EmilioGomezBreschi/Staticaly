@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "SN+RM5Qd/48XmOWH/KLjcwfbT2lxUiKX+AdCLNt/wIMKytFObABKlxPUoXv2Z19pg6mHBVHLY5u4KhQtDP/8PA==",
+  "dgSpecHash": "0dVZJCKCufhOBuSzSdiiIlNvr6hcWNpFdqKiTCP76kGO83/FHzROPUn7EFQJjDErTs1ynf+CkE7Nagkhd9ROSg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj",
+  "projectFilePath": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lime1\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\lime1\\.nuget\\packages\\bouncycastle.cryptography\\2.3.0\\bouncycastle.cryptography.2.3.0.nupkg.sha512",

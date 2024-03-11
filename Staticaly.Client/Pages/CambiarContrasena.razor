@@ -26,6 +26,12 @@
     <h1 class="text-3xl text-logo-text">Statica.ly</h1>
   </div>
   <div class="bg-primary-300 rounded-lg p-8">
+    @if (ErrorMessage != "")
+    {
+      <div class="px-5 py-2 bg-red-500 rounded-md font-bold text-xs text-white text-center max-w-full">
+        <p>@ErrorMessage</p>
+      </div>
+    }
     <EditForm Model="@user" OnValidSubmit="Cambiar" class="flex flex-col text-primary-400">
       <div class="relative mt-3 bg-primary-100 rounded-md font-bold">
         <InputText @bind-Value="@user.Password" type="@GetPasswordType()" id="password"
@@ -40,6 +46,14 @@
         <img src="images/ojo-cerrado.svg" @onclick="TogglePasswordVisibility"
           class="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 cursor-pointer @(showPassword ? "hidden" : "visible")"
           alt="Icono de ojo cerrado" id="eyeClosed" />
+      </div>
+      <div class="relative mt-3 bg-primary-100 rounded-md font-bold">
+        <InputText @bind-Value="@ConfirmPassword" id="password"
+          class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-12 placeholder-primary-400 bg-transparent"
+          placeholder="ConfirmarContraseña" />
+        <ValidationMessage For="@(() => user.Password)" class="text-red-500" />
+        <img src="images/llave.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
+          alt="Icono de llave" />
       </div>
       @if (submitted && !ValidatePassword(user.Password))
               {
@@ -60,6 +74,8 @@
 
 @code {
     [Parameter] public string? id { get; set; }
+    private string ConfirmPassword = "";
+    private string ErrorMessage = "";
     private User user = new User();
     private bool showPassword = false;
     private bool submitted = false;
@@ -75,7 +91,7 @@
         submitted = true;
         if (!int.TryParse(id, out int userId))
         {
-            Console.WriteLine("El parámetro id no es un número entero válido.");
+            ErrorMessage = "El enlace no es válido.";
             isLoading = false;
             return;
         }
@@ -83,6 +99,12 @@
         if (!ValidatePassword(user.Password))
         {
             Console.WriteLine("La contraseña debe tener al menos una mayúscula, una minúscula, un número y seis caracteres como mínimo.");
+            isLoading = false;
+            return;
+        }
+        if (user.Password != ConfirmPassword)
+        {
+            ErrorMessage = "Las contraseñas no coinciden.";
             isLoading = false;
             return;
         }

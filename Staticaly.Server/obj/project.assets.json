@@ -4769,11 +4769,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Server\\Staticaly.Server.csproj",
+      "projectUniqueName": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Server\\Staticaly.Server.csproj",
       "projectName": "Staticaly.Server",
-      "projectPath": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Server\\Staticaly.Server.csproj",
+      "projectPath": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Server\\Staticaly.Server.csproj",
       "packagesPath": "C:\\Users\\lime1\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Server\\obj\\",
+      "outputPath": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Server\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\lime1\\AppData\\Roaming\\NuGet\\NuGet.Config"
