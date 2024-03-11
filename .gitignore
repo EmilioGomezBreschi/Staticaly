@@ -271,3 +271,11 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+**/bin/
+**/obj/
+**/*.user
+**/artifacts/
+**/.vscode/
+**/.dotnet/
+**/*.binlog
