@@ -72,6 +72,16 @@
     errorMessage = message;
   }
 
+  protected override Task OnInitializedAsync()
+  {
+    if (!string.IsNullOrEmpty(id))
+    {
+      idUsuario = int.Parse(id);
+      return Task.CompletedTask;
+    }
+    return Task.CompletedTask;
+  }
+
   private async Task NuevoGrupo()
   {
     if (Equipo.Nombre == null)
@@ -87,13 +97,31 @@
       return;
     }
     // Obtener el usuario actual
-    usuario = await UsuariosClient.GetUsuarioAsync(idUsuario) ?? new User();
+    var tempUsuario = await UsuariosClient.GetUsuarioAsync(idUsuario);
+    if (tempUsuario != null)
+    {
+      usuario = tempUsuario;
+    }
+    else
+    {
+      usuario = new User();
+    }
     if (usuario == null)
     {
       SetErrorMessage("Error al obtener el usuario");
       isLoading = false;
       return;
     }
+
+    // Verificar si el usuario ya está en un grupo con EquipoID = 2 o EquipoID = 3
+    var equiposUsuario = await EquiposClient.GetEquiposFromUsuarioAsync(idUsuario);
+    if (equiposUsuario.Any(e => e.Equipo != null && e.Equipo.TipoEquipoID == 2))
+    {
+      SetErrorMessage("Ya estás en un grupo estudiante y no puedes crear otro.");
+      isLoading = false;
+      return;
+    }
+    // El usuario puede crear un nuevo grupo
     Equipo.TipoEquipoID = usuario.RolID;
 
     // Crear el nuevo equipo
@@ -120,7 +148,7 @@
       UsuarioEquipo.PermisoID = 1;
       UsuarioEquipo.EquipoID = equipoId;
 
-      // Ahora, puedes agregar el usuario al nuevo equipo como administrador
+      // Agregar el usuario al nuevo equipo como administrador
       await EquiposClient.AddUsuarioToEquipoAsync(UsuarioEquipo);
       NavigationManager.NavigateTo($"/grupos/{idUsuario}");
     }
@@ -133,13 +161,5 @@
     }
   }
 
-  protected override Task OnInitializedAsync()
-  {
-    if (!string.IsNullOrEmpty(id))
-    {
-      idUsuario = int.Parse(id);
-      return Task.CompletedTask;
-    }
-    return Task.CompletedTask;
-  }
+
 }

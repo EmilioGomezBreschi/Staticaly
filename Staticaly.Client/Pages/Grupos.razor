@@ -75,7 +75,33 @@
 
   private async Task SalirDelGrupo(int grupoId)
   {
+    // Eliminar al usuario del grupo
     await equiposClient.DeleteUsuarioFromEquipoAsync(Userid, grupoId);
-    NavigationManager.NavigateTo($"/grupos/{Userid}", forceLoad: true);
+
+    // Obtener la lista de usuarios restantes en el grupo
+    var usuariosEnGrupo = await equiposClient.GetUsuariosFromEquipoAsync(grupoId);
+
+    // Verificar si la lista de usuarios está vacía
+    if (usuariosEnGrupo.Length == 0)
+    {
+      // Si no hay usuarios en el grupo, eliminar el grupo
+      var response = await equiposClient.DeleteEquipoAsync(grupoId);
+      if (response.IsSuccessStatusCode)
+      {
+        // Redirigir al usuario a la página de grupos
+        NavigationManager.NavigateTo($"/grupos/{Userid}", forceLoad: true);
+      }
+      else
+      {
+        // Manejar el error si la eliminación del grupo falla
+        // Puedes mostrar un mensaje de error o realizar alguna otra acción
+        Console.WriteLine("Error al eliminar el grupo.");
+      }
+    }
+    else
+    {
+      // Si todavía hay usuarios en el grupo, redirigir al usuario a la página de grupos
+      NavigationManager.NavigateTo($"/grupos/{Userid}", forceLoad: true);
+    }
   }
 }
