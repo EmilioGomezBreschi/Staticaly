@@ -423,8 +423,9 @@ UsuariosEquiposGroup.MapGet("/{id}", async (StaticalyContext context, int id) =>
                                       .Where(ue => ue.EquipoID == id)
                                       .ToListAsync();
 
-  return usuariosEquipos.Any() ? Results.Ok(usuariosEquipos) : Results.NotFound();
+  return Results.Ok(usuariosEquipos); // Devolver una respuesta exitosa con la lista de usuarios, incluso si está vacía
 });
+
 
 #endregion
 
