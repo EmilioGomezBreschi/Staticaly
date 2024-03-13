@@ -18,7 +18,8 @@
       <div class="flex flex-col items-center bg-red-600 p-6 rounded-lg">
         <img src="/images/prohibido.svg" alt="Acceso denegado" class="w-32 h-32" />
         <h2 class="text-xl font-bold">Para acceder a esta pagina debes estar registrado</h2>
-        <button class="bg-white hover:bg-gray-300 text-red-600 font-bold py-2 px-4 rounded-lg mt-4"
+        <button
+          class="bg-white hover:bg-gray-300 transition duration-300 text-red-600 font-bold py-2 px-4 rounded-lg mt-4"
           @onclick='() => NavigationManager.NavigateTo("/registro")'>Registrarse</button>
       </div>
     </div>
@@ -39,17 +40,22 @@
         <div class="w-64 md:w-[500px] flex flex-col items-center bg-primary-400 p-6 rounded-lg m-4">
           <h2 class="text-2xl font-bold">@grupo.Nombre</h2>
           <p>@grupo.Descripcion</p>
-          <button class="bg-primary-500 hover:bg-primary-600 font-bold py-2 px-4 rounded-lg mt-2"
-            @onclick='() => NavigationManager.NavigateTo($"/{Userid}/{grupo.EquipoID}", forceLoad:true)'>Acceder al grupo</button>
+          <button class="bg-primary-500 hover:bg-primary-600 font-bold py-2 px-4 rounded-lg mt-2 transition duration-300"
+            @onclick='() => NavigationManager.NavigateTo($"/{Userid}/{grupo.EquipoID}", forceLoad:true)'>Acceder al
+            grupo</button>
           @if (grupo.TipoEquipoID != 3)
           {
-            <button class="bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg mt-2"
+            <button class="bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg mt-2 transition duration-300"
               @onclick='() => SalirDelGrupo(grupo.EquipoID)'>Salir del grupo</button>
           }
         </div>
       }
-      <button class="bg-primary-500 hover:bg-primary-600 font-bold py-2 px-4 rounded-lg mt-2 w-auto"
-        @onclick='() => NavigationManager.NavigateTo($"/crear-grupo/{Userid}")'>Crear grupo</button>
+      <div class="fixed bottom-0 right-0 mr-4 mb-4">
+        <button @onclick='() => NavigationManager.NavigateTo($"/crear-grupo/{Userid}")'
+          class="bg-primary-500 hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-full transition duration-300">
+          <img src="Images/plus.svg" alt="Crear Grupo" class="h-6 w-6" />
+        </button>
+      </div>
     </div>
   }
 </div>

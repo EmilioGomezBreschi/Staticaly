@@ -46,6 +46,14 @@ namespace Staticaly.Server.ModelsMigrations
                     b.HasIndex("TipoEquipoID");
 
                     b.ToTable("Equipos");
+
+                    b.HasData(
+                        new
+                        {
+                            EquipoID = 1,
+                            Nombre = "Foro Publico",
+                            TipoEquipoID = 1
+                        });
                 });
 
             modelBuilder.Entity("Staticaly.Server.Models.Permisos", b =>

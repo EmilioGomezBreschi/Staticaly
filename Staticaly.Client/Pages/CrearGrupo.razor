@@ -25,7 +25,7 @@
     <img src="images/heart.svg" class="w-24 h-24 mx-auto" alt="Logo de Statica.ly" />
     <h1 class="text-3xl text-logo-text">Statica.ly</h1>
   </div>
-  <div class="bg-primary-300 rounded-lg p-8 w-auto h-auto md:w-full md:h-full m-7">
+  <div class="bg-primary-300 rounded-lg p-8 w-auto h-full m-7">
     <EditForm Model="@Equipo" OnValidSubmit="NuevoGrupo" class="flex flex-col text-primary-400">
       @if (errorMessage != "")
       {
@@ -47,12 +47,12 @@
           placeholder="Descripcion (Opcional)" />
         <ValidationMessage For="@(() => Equipo.Descripcion)" class="text-red-500" />
       </div>
-      <div class="relative flex flex-row justify-between items-center w-full">
+      <div class="relative flex flex-row justify-between items-center w-full h-full">
         <button type="button"
-          class="bg-primary-500 text-white font-bold text-lg rounded-md h-32 w-32 hover:bg-primary-600 transition duration-300"
+          class="bg-primary-500 text-white font-bold text-lg rounded-md h-20 md:h-16 w-32 mx-1 hover:bg-red-600 transition duration-300"
           @onclick='() => NavigationManager.NavigateTo($"/grupos/{idUsuario}")'>Cancelar</button>
         <button type="submit"
-          class="bg-primary-500 text-white font-bold text-lg rounded-md h-32 w-32 hover:bg-primary-600 transition duration-300">Crear</button>
+          class="bg-primary-500 text-white font-bold text-lg rounded-md h-20 md:h-16 w-32 mx-1 hover:bg-primary-600 transition duration-300">Crear</button>
       </div>
     </EditForm>
   </div>

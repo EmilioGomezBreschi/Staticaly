@@ -1,0 +1,135 @@
+@page "/AgregarUsuario/{id}/{grupo}"
+@using Models
+@using Data
+@using Microsoft.JSInterop
+@inject NavigationManager NavigationManager
+@inject UsuariosClient client
+@inject EmailServiceClient EmailServiceClient
+@inject IJSRuntime JSRuntime
+
+
+<PageTitle>Verificar Docente - Staticaly</PageTitle>
+
+<div class="bg-Primary-Background text-white flex flex-col justify-center md:justify-normal items-center">
+  @if (isLoading)
+  {
+    <div class="h-full absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+      <svg class="animate-spin h-8 w-8 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+        viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647zM20 12a8 8 0 01-8 8v4c6.627 0 12-5.373 12-12h-4zm-2-5.291A7.962 7.962 0 0120 12h4c0-3.042-1.135-5.824-3-7.938l-3 2.647z">
+        </path>
+      </svg>
+    </div>
+  }
+  @if (Aceptado)
+  {
+    <div class="h-screen absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-20">
+      <div class="flex flex-col items-center bg-green-600 text-primary-50 p-6 rounded-lg">
+        <img src="Gifs/Success.gif" alt="Usuario Aceptado" class="w-40 h-40 mb-4" />
+        <h2 class="text-xl font-bold">Usuario Aceptado</h2>
+      </div>
+    </div>
+  }
+  @if (Rechazado)
+  {
+    <div class="h-screen absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-20">
+      <div class="flex flex-col items-center bg-red-600 text-primary-50 p-6 rounded-lg">
+        <img src="Gifs/UnSuccess.gif" alt="Usuario Rechazado" class="w-40 h-40 mb-4" />
+        <h2 class="text-xl font-bold">Usuario Rechazado</h2>
+      </div>
+    </div>
+  }
+  <div class="w-full max-w-[610px] px-6 md:flex md:flex-col md:justify-evenly md:items-center">
+    <div id="logo" class="text-center md:mt-8 mb-4">
+      <img src="images/heart.svg" class="w-24 h-24 mx-auto" alt="Logo de Statica.ly" />
+      <h1 class="text-3xl text-logo-text">Statica.ly</h1>
+    </div>
+    <div class="bg-primary-300 rounded-lg p-8">
+      @if (ErrorMessage != "")
+      {
+        <div class="bg-red-500 text-white p-4 rounded-md text-center">
+          <p>@ErrorMessage</p>
+        </div>
+      }
+      <EditForm Model="@user" OnValidSubmit="Buscar" class="flex flex-col space-y-4 text-primary-400">
+        <div class="relative my-3 bg-primary-100 rounded-md font-bold">
+          <InputText @bind-Value="@user.Email" id="email" type="email" name="email"
+            class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-12 placeholder-primary-400 bg-transparent"
+            placeholder="Email del Docente" />
+          <img src="images/email.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
+            alt="Icono de Correo" />
+        </div>
+        <button type="submit"
+          class="w-full h-12 my-3 bg-primary-500 rounded-md text-primary-100 hover:bg-primary-700 transition duration-300">Buscar
+          Correo</button>
+        @if (MensajeRechazo)
+        {
+          <div class="relative my-3 bg-primary-100 rounded-md font-bold">
+            <InputTextArea @bind-Value="@Asunto" id="body" name="body"
+              class="w-full h-32 p-2 rounded-md placeholder-primary-400 bg-transparent"
+              placeholder="Mensaje de Rechazo" />
+          </div>
+        }
+      </EditForm>
+      @if (buscado)
+      {
+        <div class="flex- flex-row my-3">
+          <button class="w-full h-12 my-3 bg-gray-700 hover:bg-gray-800 rounded-md text-white transition duration-300"
+            @onclick="() => Invitar()">Enviar Invitacion</button>
+          <button class="w-full h-12 my-3 bg-orange-700 hover:bg-orange-900 rounded-md text-white transition duration-300"
+            @onclick="() => NavigationManager.NavigateTo()">Regresar</button>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+@code {
+  [Parameter] public string? id { get; set; }
+  [Parameter] public string? grupo { get; set; }
+  private User user = new User();
+  private string ErrorMessage = "";
+  string body = "";
+  string Asunto = "";
+  bool buscado = false;
+  bool isLoading = false;
+  bool Aceptado = false;
+  bool Rechazado = false;
+  bool MensajeRechazo = false;
+
+  private async Task Buscar()
+  {
+    if (user.Email == null)
+    {
+      ErrorMessage = "Favor de ingresar un correo valido";
+      return;
+    }
+    isLoading = true;
+    var usuario = await client.GetUsuarioByEmailAsync(user.Email);
+    if (usuario != null)
+    {
+      StateHasChanged();
+      buscado = true;
+      isLoading = false;
+      ErrorMessage = "";
+      return;
+    }
+    StateHasChanged();
+    ErrorMessage = "No se encontro el usuario";
+    isLoading = false;
+    return;
+  }
+
+  private async Task Invitar()
+  {
+  }
+
+}
+
+<script>
+  function OnScrollEvent() {
+    document.documentElement.scrollTop = 0;
+  }
+</script>

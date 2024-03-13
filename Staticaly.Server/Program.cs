@@ -417,6 +417,7 @@ UsuariosEquiposGroup.MapGet("/{id}", async (StaticalyContext context, int id) =>
 {
   var usuariosEquipos = await context.UsuariosEquipos
                                       .Include(ue => ue.Usuario)
+                                        .ThenInclude(u => u.Rango)
                                       .Include(ue => ue.Equipo)
                                       .Include(ue => ue.Permiso)
                                       .AsNoTracking()

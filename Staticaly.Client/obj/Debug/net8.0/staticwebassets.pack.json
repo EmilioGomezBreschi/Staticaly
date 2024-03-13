@@ -33,6 +33,10 @@
       "PackagePath": "staticwebassets\\Images\\Semestre.svg"
     },
     {
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\amd-software-adrenalin-edition-24.2.1-combined-minimalsetup-240223_web.exe",
+      "PackagePath": "staticwebassets\\Images\\amd-software-adrenalin-edition-24.2.1-combined-minimalsetup-240223_web.exe"
+    },
+    {
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\amigos.svg",
       "PackagePath": "staticwebassets\\Images\\amigos.svg"
     },
@@ -91,6 +95,10 @@
     {
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\perfil.svg",
       "PackagePath": "staticwebassets\\Images\\perfil.svg"
+    },
+    {
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\plus.svg",
+      "PackagePath": "staticwebassets\\Images\\plus.svg"
     },
     {
       "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\prohibido.svg",

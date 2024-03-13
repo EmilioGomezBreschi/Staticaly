@@ -1,22 +1,120 @@
-@page "/{id}/{equipo}"
+@page "/{id}/{equipo?}"
 @page "/{id}"
 @page "/"
+@using Models
+@using Data
+@using System.Net.Http
 @inject NavigationManager NavigationManager
+@inject UsuariosClient UsuariosClient
+@inject EquiposClient EquiposClient
 
 <PageTitle>Foro - Staticaly</PageTitle>
 
-<NavBar id="@Id"/>
+<div
+  class="h-screen w-screen pt-11 pl-0 lg:pl-20 lg:pt-0 text-white flex flex-col justify-normal text-center items-center z-30 relative">
+  <div class="z-10">
+    <NavBar id="@Id" />
+  </div>
+  <div class="flex flex-col items-center w-auto m-2 p-3 bg-primary-800 rounded-md">
+    @if (equipo != null)
+    {
+      <h2 class="text-2xl font-bold">@equipo.Nombre</h2>
+    }
+    else
+    {
+      <h2 class="text-2xl font-bold">Este es un equipo que ya no existe</h2>
+    }
+  </div>
 
-@if (!string.IsNullOrEmpty(Id))
-{
-}
-else
-{
+  @if (usuario != null)
+  {
+    <div class="fixed bottom-0 right-0 mr-4 mb-4 text-right">
+      <button @onclick="MostrarListaUsuarios"
+        class="bg-primary-500 hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-md transition duration-300 mb-2 block text-center">
+        <span class="md:inline hidden">@((MostrarUsuarios) ? "Ocultar lista de usuarios" : "Mostrar lista de usuarios")</span>
+        <span class="md:hidden inline">Usuarios</span>
+      </button>
+      <button @onclick="CrearPublicacion"
+        class="bg-primary-500 inline-flex items-center justify-center hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-full md:rounded-md transition duration-300 text-center">
+        <img src="Images/plus.svg" alt="Crear Publicación" class="h-6 w-6 inline-block" />
+        <span class="ml-2 md:inline hidden">Nueva publicación</span>
+      </button>
+    </div>
+  }
 
+</div>
+
+
+@if (EquipoUsuario != null && EquipoUsuario.Count > 1 && equipoId != 1)
+{
+  <div class="bg-primary-100 text-primary-900 font-semibold flex flex-col items-center p-4 rounded-md shadow-md right-0 top-0 mr-4 mt-24 z-40 @(MostrarUsuarios ? "absolute" : "hidden")">
+      <div class=" max-h-72 overflow-y-auto bg-primary-200 rounded-md p-4">
+        <h3 class="text-lg font-bold mb-2">Usuarios del grupo</h3>
+        <ul>
+          @foreach (var usuarioEquipo in EquipoUsuario)
+          {
+            <div class="text-center bg-primary-300 mt-1 rounded-md px-3">
+              <div>@(usuarioEquipo.Usuario?.Nombre ?? "Unknown User") @(usuarioEquipo.Usuario?.Apellido ?? "Unknown User")
+              </div>
+              <div>@(usuarioEquipo.Usuario?.Rango?.NombreRango ?? "Unknown Rango")</div>
+            </div>
+          }
+        </ul>
+      </div>
+      <button @onclick="AgregarUsuario" class="bg-primary-500 hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-md transition duration-300 text-center mt-3">
+        Agregar usuario
+      </button>
+  </div>
 }
+
+
+
 
 @code {
   [Parameter] public string? Id { get; set; }
   [Parameter] public string? Equipo { get; set; }
+  int equipoId;
+  private User? usuario;
+  private Equipos? equipo;
+  private List<UsuariosEquipos>? EquipoUsuario = new List<UsuariosEquipos>();
+  private bool MostrarUsuarios = false;
 
+  protected override async Task OnInitializedAsync()
+  {
+    int.TryParse(Equipo, out equipoId);
+    // Si no se proporciona un ID de equipo en la URL, establecer el ID de equipo predeterminado como "1"
+    if (string.IsNullOrEmpty(Equipo))
+    {
+      equipoId = 1;
+    }
+    // Obtener el equipo correspondiente al ID proporcionado
+    equipo = await EquiposClient.GetEquipoAsync(equipoId);
+
+    // Obtener el usuario correspondiente al ID proporcionado
+    if (int.TryParse(Id, out int usuarioId))
+    {
+      usuario = await UsuariosClient.GetUsuarioAsync(usuarioId);
+    }
+
+    if (equipoId != 1)
+    {
+      // Obtener todos los usuarios del grupo
+      EquipoUsuario = (await EquiposClient.GetUsuariosFromEquipoAsync(equipoId)).ToList();
+    }
+  }
+
+  private void CrearPublicacion()
+  {
+    // Aquí puedes implementar la lógica para mostrar la publicación
+  }
+
+  private void AgregarUsuario()
+  {
+    // Aquí puedes implementar la lógica para agregar un usuario al grupo
+  }
+
+  private void MostrarListaUsuarios()
+  {
+    MostrarUsuarios = !MostrarUsuarios;
+  }
 }

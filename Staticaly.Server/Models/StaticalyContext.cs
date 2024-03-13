@@ -199,6 +199,14 @@ namespace Staticaly.Server.Models
             Nombre = "Docente"
           }
       );
+      modelBuilder.Entity<Equipos>().HasData(
+          new Equipos
+          {
+            EquipoID = 1,
+            Nombre = "Foro Publico",
+            TipoEquipoID = 1
+          }
+      );
     }
   }
 }
