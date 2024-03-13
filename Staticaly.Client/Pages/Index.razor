@@ -88,7 +88,7 @@
       equipoId = 1;
     }
     // Obtener el equipo correspondiente al ID proporcionado
-    equipo = await EquiposClient.GetEquipoAsync(equipoId);
+    equipo = await EquiposClient.GetEquipoByIdAsync(equipoId);
 
     // Obtener el usuario correspondiente al ID proporcionado
     if (int.TryParse(Id, out int usuarioId))

@@ -21,7 +21,7 @@ namespace Staticaly.Client.Data
       return await httpClient.PostAsJsonAsync("email", email);
     }
 
-    public string HacerBodyVerificacion(string? nombre, string? apellido, string? verificationToken)
+    public string? HacerBodyVerificacion(string? nombre, string? apellido, string? verificationToken)
     {
       // Crear el cuerpo del correo electrónico de verificación
       return $@"<!DOCTYPE html>
@@ -86,7 +86,7 @@ namespace Staticaly.Client.Data
                   </html>";
     }
 
-    public string HacerBodyDocente(string? nombre, string? apellido, string? correo, string? institucion, int? semestre)
+    public string? HacerBodyDocente(string? nombre, string? apellido, string? correo, string? institucion, int semestre)
     {
 
       // Construye el cuerpo del correo electrónico
@@ -154,7 +154,7 @@ namespace Staticaly.Client.Data
           </html>";
     }
 
-    public string HacerBodyRecuperacion(string? nombre, string? apellido, int ID)
+    public string? HacerBodyRecuperacion(string? nombre, string? apellido, int ID)
     {
       return $@"<!DOCTYPE html>
             <html lang='en'>
@@ -216,7 +216,7 @@ namespace Staticaly.Client.Data
             </html>";
     }
 
-    public string HacerBodyAceptacion()
+    public string? HacerBodyAceptacion()
     {
       return $@"<!DOCTYPE html>
             <html lang='en'>
@@ -264,7 +264,7 @@ namespace Staticaly.Client.Data
             </html>";
     }
 
-    public string HacerBodyRechazo(string Asunto)
+    public string? HacerBodyRechazo(string? Asunto)
     {
       return $@"<!DOCTYPE html>
             <html lang='en'>
@@ -320,6 +320,68 @@ namespace Staticaly.Client.Data
                   <p id='Rechazo'>{Asunto}</p>
                   <p>Si deseas mandar otra foto ingresa a este link:</p>
                   <p><a href='http://localhost:5197/ActualizarFotoDocente'>Mandar otra foto</a></p>
+                </div>
+              </body>
+            </html>";
+    }
+
+    public string? HacerBodyInvitacionEquipo(string? nombreinvitado, string? apellidoinvitado, string? nombreinvitador, string? apellidoInvitador, string? nombreEquipo, int idequipo, int idinvitado)
+    {
+      return $@"<!DOCTYPE html>
+            <html lang='en'>
+              <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Invitación a un equipo - Staticaly</title>
+                <style>
+                  body {{
+                    font-family: Montserrat, sans-serif;
+                    background-color: #000a23;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                  }}
+                  .container {{
+                    max-width: 600px;
+                    background-color: #557996;
+                    border-radius: 10px;
+                    padding: 20px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    text-align: center;
+                  }}
+                  h1 {{
+                    font-size: 24px;
+                    color: #02253d;
+                    margin-bottom: 20px;
+                  }}
+                  p {{
+                    font-size: 16px;
+                    color: #d2e3f1;
+                    margin-bottom: 10px;
+                  }}
+                  a {{
+                    font-size: 1.2rem;
+                    color: #007bff;
+                    text-decoration: none;
+                  }}
+                  a:hover {{
+                    text-decoration: underline;
+                  }}
+                  #token {{
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                  }}
+                </style>
+              </head>
+              <body>
+                <div class='container'>
+                  <h1>¡Hola {nombreinvitado} {apellidoinvitado}!</h1>
+                  <p> {nombreinvitador} {apellidoInvitador} te ha invitado a unirte a su equipo {nombreEquipo}.</p>
+                  <p>Para unirte a su equipo, por favor haz clic en el siguiente enlace:</p>
+                  <p><a href='http://localhost:5197/UnirEquipo/{idinvitado}/{idequipo}'>Unirme al equipo</a></p>
                 </div>
               </body>
             </html>";

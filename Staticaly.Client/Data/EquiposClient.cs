@@ -24,7 +24,7 @@ namespace Staticaly.Client.Data
         }
 
         // Get Un equipo por ID
-        public async Task<Equipos?> GetEquipoAsync(int id)
+        public async Task<Equipos?> GetEquipoByIdAsync(int id)
         {
             return await httpClient.GetFromJsonAsync<Equipos>($"equipos/{id}");
         }
