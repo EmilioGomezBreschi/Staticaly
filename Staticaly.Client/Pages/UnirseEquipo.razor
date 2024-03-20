@@ -1,0 +1,89 @@
+@page "/UnirEquipo/{id}/{equipo}"
+@using Models
+@using Data
+@using Microsoft.JSInterop
+@inject NavigationManager NavigationManager
+@inject UsuariosClient UsuariosClient
+@inject EquiposClient EquiposClient
+@inject EmailServiceClient EmailServiceClient
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Unir Equipo - Staticaly</PageTitle>
+
+<div class="bg-Primary-Background text-white flex flex-col justify-center md:justify-normal items-center">
+  @if (Aceptado)
+  {
+    <div class="h-screen absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-20">
+      <div class="flex flex-col items-center bg-green-600 text-primary-50 p-6 rounded-lg">
+        <img src="Gifs/Success.gif" alt="Success" class="w-40 h-40 mb-4" />
+        <h2 class="text-xl font-bold">Bienvenido al grupo</h2>
+      </div>
+    </div>
+  }
+  @if (Rechazado)
+  {
+    <div class="h-screen absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-20">
+      <div class="flex flex-col items-center bg-red-600 text-primary-50 p-6 rounded-lg">
+        <img src="Gifs/Error.gif" alt="Invitacion Rechazada" class="w-40 h-40 mb-4" />
+        <h2 class="text-xl font-bold">Ha habido un error al unirte al grupo</h2>
+        <h1 class="text-2xl font-bold">Error:</h1>
+        <p>@Error</p>
+      </div>
+    </div>
+  }
+</div>
+
+@code
+{
+  [Parameter] public string? Id { get; set; }
+  [Parameter] public string? Equipo { get; set; }
+  public bool Aceptado { get; set; }
+  public bool Rechazado { get; set; }
+  public string? Error { get; set; }
+  private User? usuario;
+  private Equipos? equipo;
+  private UsuariosEquipos? usuarioEquipo;
+  private List<UsuariosEquipos>? EquipoUsuario = new List<UsuariosEquipos>();
+
+  protected override async Task OnInitializedAsync()
+  {
+    int.TryParse(Id, out int usuarioid);
+    int.TryParse(Equipo, out int equipoid);
+    usuario = await UsuariosClient.GetUsuarioAsync(usuarioid);
+    equipo = await EquiposClient.GetEquipoByIdAsync(equipoid);
+    if (usuario == null || equipo == null)
+    {
+      Rechazado = true;
+      Error = "Usuario o equipo no encontrado";
+      return;
+    }
+    EquipoUsuario = (await EquiposClient.GetUsuariosFromEquipoAsync(equipoid)).ToList();
+
+    if (EquipoUsuario.Any(u => u.UsuarioID == usuarioid))
+    {
+      Rechazado = true;
+      Error = "Ya estas en el equipo";
+      return;
+    }
+
+    if ((EquipoUsuario.Count >= 4 && equipo.TipoEquipoID == 2) || (EquipoUsuario.Count >= 50 && equipo.TipoEquipoID == 3))
+    {
+      Rechazado = true;
+      Error = "El equipo ya esta lleno";
+      return;
+    }
+
+    Aceptado = true;
+
+    usuarioEquipo = new UsuariosEquipos
+    {
+      UsuarioID = usuarioid,
+      EquipoID = equipoid,
+      FechaUnir = DateTime.Now,
+      PermisoID = 2
+    };
+
+    await EquiposClient.AddUsuarioToEquipoAsync(usuarioEquipo);
+    NavigationManager.NavigateTo("/{id}/{equipo}");
+  }
+}

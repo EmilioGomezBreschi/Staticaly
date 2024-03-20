@@ -23,5 +23,7 @@ namespace Staticaly.Client.Models
     [Required]
     [ForeignKey("PermisoID")]
     public int PermisoID { get; set; }
+    [Required]
+    public DateTime FechaUnir { get; set; }
   }
 }

@@ -21,7 +21,7 @@ namespace Staticaly.Client.Data
       return await httpClient.PostAsJsonAsync("email", email);
     }
 
-    public string? HacerBodyVerificacion(string? nombre, string? apellido, string? verificationToken)
+    public string HacerBodyVerificacion(string? nombre, string? apellido, string? verificationToken)
     {
       // Crear el cuerpo del correo electrónico de verificación
       return $@"<!DOCTYPE html>
@@ -86,7 +86,7 @@ namespace Staticaly.Client.Data
                   </html>";
     }
 
-    public string? HacerBodyDocente(string? nombre, string? apellido, string? correo, string? institucion, int semestre)
+    public string HacerBodyDocente(string? nombre, string? apellido, string? correo, string? institucion, int semestre)
     {
 
       // Construye el cuerpo del correo electrónico
@@ -154,7 +154,7 @@ namespace Staticaly.Client.Data
           </html>";
     }
 
-    public string? HacerBodyRecuperacion(string? nombre, string? apellido, int ID)
+    public string HacerBodyRecuperacion(string? nombre, string? apellido, int ID)
     {
       return $@"<!DOCTYPE html>
             <html lang='en'>
@@ -216,7 +216,7 @@ namespace Staticaly.Client.Data
             </html>";
     }
 
-    public string? HacerBodyAceptacion()
+    public string HacerBodyAceptacion()
     {
       return $@"<!DOCTYPE html>
             <html lang='en'>
@@ -264,7 +264,7 @@ namespace Staticaly.Client.Data
             </html>";
     }
 
-    public string? HacerBodyRechazo(string? Asunto)
+    public string HacerBodyRechazo(string? Asunto)
     {
       return $@"<!DOCTYPE html>
             <html lang='en'>
@@ -325,7 +325,7 @@ namespace Staticaly.Client.Data
             </html>";
     }
 
-    public string? HacerBodyInvitacionEquipo(string? nombreinvitado, string? apellidoinvitado, string? nombreinvitador, string? apellidoInvitador, string? nombreEquipo, int idequipo, int idinvitado)
+    public string HacerBodyInvitacionEquipo(string? nombreinvitado, string? apellidoinvitado, string? nombreinvitador, string? apellidoInvitador, string? nombreEquipo, int idequipo, int idinvitado)
     {
       return $@"<!DOCTYPE html>
             <html lang='en'>

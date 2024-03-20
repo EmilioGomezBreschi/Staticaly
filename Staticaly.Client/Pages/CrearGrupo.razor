@@ -60,7 +60,7 @@
 
 @code {
   private Equipos Equipo = new Equipos();
-  private UsuariosEquipos UsuarioEquipo = new UsuariosEquipos();
+  private UsuariosEquipos? UsuarioEquipo;
   private User usuario = new User();
   [Parameter] public string? id { get; set; }
   int idUsuario;
@@ -143,10 +143,14 @@
         }
       }
 
+      UsuarioEquipo = new UsuariosEquipos
+      {
       // Establecer el id del equipo en el objeto UsuarioEquipo
-      UsuarioEquipo.UsuarioID = idUsuario;
-      UsuarioEquipo.PermisoID = 1;
-      UsuarioEquipo.EquipoID = equipoId;
+      UsuarioID = idUsuario,
+      PermisoID = 1,
+      EquipoID = equipoId,
+      FechaUnir = DateTime.Now
+      };
 
       // Agregar el usuario al nuevo equipo como administrador
       await EquiposClient.AddUsuarioToEquipoAsync(UsuarioEquipo);

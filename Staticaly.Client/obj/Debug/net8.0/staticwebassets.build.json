@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "t4umaGHwnrPsJssBLiMkQQGFuoj+sJ3ZgBUs8B5Ovkc=",
+  "Hash": "j8tJmS9Y8HnvOjTryX7W2v49In0CiYYw/r3jcNfOIKA=",
   "Source": "Staticaly.Client",
   "BasePath": "/",
   "Mode": "Root",
@@ -71,7 +71,7 @@
       "AssetTraitValue": "boot",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.aspnetcore.components.webassembly\\8.0.2\\build\\net8.0\\blazor.webassembly.js"
+      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.aspnetcore.components.webassembly\\8.0.3\\build\\net8.0\\blazor.webassembly.js"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\BouncyCastle.Cryptography.wasm",
@@ -109,7 +109,7 @@
       "AssetTraitValue": "native",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.2\\runtimes\\browser-wasm\\native\\dotnet.js"
+      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.3\\runtimes\\browser-wasm\\native\\dotnet.js"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.js.map",
@@ -128,15 +128,15 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.2\\runtimes\\browser-wasm\\native\\dotnet.js.map"
+      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.3\\runtimes\\browser-wasm\\native\\dotnet.js.map"
     },
     {
-      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.native.8.0.2.gy7g3ke90s.js",
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.native.8.0.3.e0daib42rq.js",
       "SourceId": "Staticaly.Client",
       "SourceType": "Computed",
       "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
       "BasePath": "/",
-      "RelativePath": "_framework/dotnet.native.8.0.2.gy7g3ke90s.js",
+      "RelativePath": "_framework/dotnet.native.8.0.3.e0daib42rq.js",
       "AssetKind": "Build",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -147,7 +147,7 @@
       "AssetTraitValue": "native",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.2\\runtimes\\browser-wasm\\native\\dotnet.native.js"
+      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.3\\runtimes\\browser-wasm\\native\\dotnet.native.js"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.native.wasm",
@@ -166,15 +166,15 @@
       "AssetTraitValue": "native",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.2\\runtimes\\browser-wasm\\native\\dotnet.native.wasm"
+      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.3\\runtimes\\browser-wasm\\native\\dotnet.native.wasm"
     },
     {
-      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.runtime.8.0.2.rzrjgma8xa.js",
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.runtime.8.0.3.y4fu17j3z2.js",
       "SourceId": "Staticaly.Client",
       "SourceType": "Computed",
       "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
       "BasePath": "/",
-      "RelativePath": "_framework/dotnet.runtime.8.0.2.rzrjgma8xa.js",
+      "RelativePath": "_framework/dotnet.runtime.8.0.3.y4fu17j3z2.js",
       "AssetKind": "Build",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -185,7 +185,7 @@
       "AssetTraitValue": "native",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.2\\runtimes\\browser-wasm\\native\\dotnet.runtime.js"
+      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.3\\runtimes\\browser-wasm\\native\\dotnet.runtime.js"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.runtime.js.map",
@@ -204,7 +204,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.2\\runtimes\\browser-wasm\\native\\dotnet.runtime.js.map"
+      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.3\\runtimes\\browser-wasm\\native\\dotnet.runtime.js.map"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_CJK.dat",
@@ -223,7 +223,7 @@
       "AssetTraitValue": "native",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.2\\runtimes\\browser-wasm\\native\\icudt_CJK.dat"
+      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.3\\runtimes\\browser-wasm\\native\\icudt_CJK.dat"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_EFIGS.dat",
@@ -242,7 +242,7 @@
       "AssetTraitValue": "native",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.2\\runtimes\\browser-wasm\\native\\icudt_EFIGS.dat"
+      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.3\\runtimes\\browser-wasm\\native\\icudt_EFIGS.dat"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_no_CJK.dat",
@@ -261,7 +261,7 @@
       "AssetTraitValue": "native",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.2\\runtimes\\browser-wasm\\native\\icudt_no_CJK.dat"
+      "OriginalItemSpec": "C:\\Users\\lime1\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\8.0.3\\runtimes\\browser-wasm\\native\\icudt_no_CJK.dat"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\MailKit.wasm",
@@ -4748,25 +4748,6 @@
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Runtime.Serialization.Formatters.wasm"
     },
     {
-      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\5nvyv9qubv.gz",
-      "SourceId": "Staticaly.Client",
-      "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
-      "BasePath": "/",
-      "RelativePath": "_framework/icudt_CJK.dat.gz",
-      "AssetKind": "Build",
-      "AssetMode": "All",
-      "AssetRole": "Alternative",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_CJK.dat",
-      "AssetTraitName": "Content-Encoding",
-      "AssetTraitValue": "gzip",
-      "CopyToOutputDirectory": "PreserveNewest",
-      "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_CJK.dat"
-    },
-    {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\5p57u5gndi.gz",
       "SourceId": "Staticaly.Client",
       "SourceType": "Computed",
@@ -4803,6 +4784,25 @@
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Xml.Serialization.wasm"
+    },
+    {
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\5yk6mimpfm.gz",
+      "SourceId": "Staticaly.Client",
+      "SourceType": "Computed",
+      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "_framework/dotnet.runtime.js.map.gz",
+      "AssetKind": "Build",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.runtime.js.map",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "CopyToOutputDirectory": "PreserveNewest",
+      "CopyToPublishDirectory": "Never",
+      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.runtime.js.map"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\5zbw7aqdjj.gz",
@@ -5223,6 +5223,25 @@
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Reflection.Emit.ILGeneration.wasm"
     },
     {
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\8ut7582u9a.gz",
+      "SourceId": "Staticaly.Client",
+      "SourceType": "Computed",
+      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "_framework/icudt_no_CJK.dat.gz",
+      "AssetKind": "Build",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_no_CJK.dat",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "CopyToOutputDirectory": "PreserveNewest",
+      "CopyToPublishDirectory": "Never",
+      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_no_CJK.dat"
+    },
+    {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\99j0g6pc5a.gz",
       "SourceId": "Staticaly.Client",
       "SourceType": "Computed",
@@ -5413,6 +5432,25 @@
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Net.ServicePoint.wasm"
     },
     {
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\aomjys29gs.gz",
+      "SourceId": "Staticaly.Client",
+      "SourceType": "Computed",
+      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "_framework/blazor.webassembly.js.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "CopyToOutputDirectory": "PreserveNewest",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js"
+    },
+    {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\appfj3hhlg.gz",
       "SourceId": "Staticaly.Client",
       "SourceType": "Computed",
@@ -5432,23 +5470,23 @@
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\Microsoft.Extensions.Configuration.Binder.wasm"
     },
     {
-      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\bb3gxyljl7.gz",
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\b1d6dh97aq.gz",
       "SourceId": "Staticaly.Client",
       "SourceType": "Computed",
       "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
       "BasePath": "/",
-      "RelativePath": "_framework/icudt_EFIGS.dat.gz",
+      "RelativePath": "_framework/dotnet.js.gz",
       "AssetKind": "Build",
       "AssetMode": "All",
       "AssetRole": "Alternative",
       "AssetMergeBehavior": "",
       "AssetMergeSource": "",
-      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_EFIGS.dat",
+      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.js",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_EFIGS.dat"
+      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.js"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\bd1pfirhwg.gz",
@@ -5525,25 +5563,6 @@
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Drawing.wasm"
-    },
-    {
-      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\bk5kbm53ru.gz",
-      "SourceId": "Staticaly.Client",
-      "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
-      "BasePath": "/",
-      "RelativePath": "_framework/dotnet.js.map.gz",
-      "AssetKind": "Build",
-      "AssetMode": "All",
-      "AssetRole": "Alternative",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.js.map",
-      "AssetTraitName": "Content-Encoding",
-      "AssetTraitValue": "gzip",
-      "CopyToOutputDirectory": "PreserveNewest",
-      "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.js.map"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\bxy9u4w2bs.gz",
@@ -5793,6 +5812,25 @@
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Net.HttpListener.wasm"
     },
     {
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\dk8rpgussc.gz",
+      "SourceId": "Staticaly.Client",
+      "SourceType": "Computed",
+      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "_framework/dotnet.native.wasm.gz",
+      "AssetKind": "Build",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.native.wasm",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "CopyToOutputDirectory": "PreserveNewest",
+      "CopyToPublishDirectory": "Never",
+      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.native.wasm"
+    },
+    {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\dkaedg2320.gz",
       "SourceId": "Staticaly.Client",
       "SourceType": "Computed",
@@ -5850,6 +5888,25 @@
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Windows.wasm"
     },
     {
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\e0daib42rq.gz",
+      "SourceId": "Staticaly.Client",
+      "SourceType": "Computed",
+      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "_framework/dotnet.native.8.0.3.e0daib42rq.js.gz",
+      "AssetKind": "Build",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.native.8.0.3.e0daib42rq.js",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "CopyToOutputDirectory": "PreserveNewest",
+      "CopyToPublishDirectory": "Never",
+      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.native.8.0.3.e0daib42rq.js"
+    },
+    {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\e8jtnbo9o2.gz",
       "SourceId": "Staticaly.Client",
       "SourceType": "Computed",
@@ -5886,6 +5943,25 @@
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Reflection.Emit.wasm"
+    },
+    {
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\eol02phfa1.gz",
+      "SourceId": "Staticaly.Client",
+      "SourceType": "Computed",
+      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "_framework/dotnet.js.map.gz",
+      "AssetKind": "Build",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.js.map",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "CopyToOutputDirectory": "PreserveNewest",
+      "CopyToPublishDirectory": "Never",
+      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.js.map"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\epkmvrhai6.gz",
@@ -6116,25 +6192,6 @@
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Diagnostics.Process.wasm"
     },
     {
-      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\gy7g3ke90s.gz",
-      "SourceId": "Staticaly.Client",
-      "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
-      "BasePath": "/",
-      "RelativePath": "_framework/dotnet.native.8.0.2.gy7g3ke90s.js.gz",
-      "AssetKind": "Build",
-      "AssetMode": "All",
-      "AssetRole": "Alternative",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.native.8.0.2.gy7g3ke90s.js",
-      "AssetTraitName": "Content-Encoding",
-      "AssetTraitValue": "gzip",
-      "CopyToOutputDirectory": "PreserveNewest",
-      "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.native.8.0.2.gy7g3ke90s.js"
-    },
-    {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\h8iwydkoc0.gz",
       "SourceId": "Staticaly.Client",
       "SourceType": "Computed",
@@ -6268,25 +6325,6 @@
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Net.WebSockets.Client.wasm"
     },
     {
-      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\i2k0oitj5b.gz",
-      "SourceId": "Staticaly.Client",
-      "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
-      "BasePath": "/",
-      "RelativePath": "_framework/blazor.webassembly.js.gz",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Alternative",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js",
-      "AssetTraitName": "Content-Encoding",
-      "AssetTraitValue": "gzip",
-      "CopyToOutputDirectory": "PreserveNewest",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js"
-    },
-    {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\idrrwrdh1t.gz",
       "SourceId": "Staticaly.Client",
       "SourceType": "Computed",
@@ -6399,25 +6437,6 @@
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.ServiceModel.Web.wasm"
-    },
-    {
-      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\jaov2yw1v6.gz",
-      "SourceId": "Staticaly.Client",
-      "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
-      "BasePath": "/",
-      "RelativePath": "_framework/dotnet.runtime.js.map.gz",
-      "AssetKind": "Build",
-      "AssetMode": "All",
-      "AssetRole": "Alternative",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.runtime.js.map",
-      "AssetTraitName": "Content-Encoding",
-      "AssetTraitValue": "gzip",
-      "CopyToOutputDirectory": "PreserveNewest",
-      "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.runtime.js.map"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\jfvsz4rdx2.gz",
@@ -6665,6 +6684,25 @@
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Runtime.Serialization.Xml.wasm"
+    },
+    {
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\l4r1fc5xot.gz",
+      "SourceId": "Staticaly.Client",
+      "SourceType": "Computed",
+      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "_framework/icudt_CJK.dat.gz",
+      "AssetKind": "Build",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_CJK.dat",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "CopyToOutputDirectory": "PreserveNewest",
+      "CopyToPublishDirectory": "Never",
+      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_CJK.dat"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\l9hczru1nq.gz",
@@ -7142,25 +7180,6 @@
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Web.wasm"
     },
     {
-      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\qd9xkbu4rs.gz",
-      "SourceId": "Staticaly.Client",
-      "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
-      "BasePath": "/",
-      "RelativePath": "_framework/dotnet.native.wasm.gz",
-      "AssetKind": "Build",
-      "AssetMode": "All",
-      "AssetRole": "Alternative",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.native.wasm",
-      "AssetTraitName": "Content-Encoding",
-      "AssetTraitValue": "gzip",
-      "CopyToOutputDirectory": "PreserveNewest",
-      "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.native.wasm"
-    },
-    {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\qj0shqyt7u.gz",
       "SourceId": "Staticaly.Client",
       "SourceType": "Computed",
@@ -7256,23 +7275,23 @@
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Security.wasm"
     },
     {
-      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\rzrjgma8xa.gz",
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\roggz2ifpr.gz",
       "SourceId": "Staticaly.Client",
       "SourceType": "Computed",
       "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
       "BasePath": "/",
-      "RelativePath": "_framework/dotnet.runtime.8.0.2.rzrjgma8xa.js.gz",
+      "RelativePath": "_framework/icudt_EFIGS.dat.gz",
       "AssetKind": "Build",
       "AssetMode": "All",
       "AssetRole": "Alternative",
       "AssetMergeBehavior": "",
       "AssetMergeSource": "",
-      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.runtime.8.0.2.rzrjgma8xa.js",
+      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_EFIGS.dat",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.runtime.8.0.2.rzrjgma8xa.js"
+      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_EFIGS.dat"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\s0t4ca9nke.gz",
@@ -7788,25 +7807,6 @@
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Linq.Expressions.wasm"
     },
     {
-      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\xg51x9d4md.gz",
-      "SourceId": "Staticaly.Client",
-      "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
-      "BasePath": "/",
-      "RelativePath": "_framework/icudt_no_CJK.dat.gz",
-      "AssetKind": "Build",
-      "AssetMode": "All",
-      "AssetRole": "Alternative",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_no_CJK.dat",
-      "AssetTraitName": "Content-Encoding",
-      "AssetTraitValue": "gzip",
-      "CopyToOutputDirectory": "PreserveNewest",
-      "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\icudt_no_CJK.dat"
-    },
-    {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\xkbjmoom4x.gz",
       "SourceId": "Staticaly.Client",
       "SourceType": "Computed",
@@ -7864,23 +7864,23 @@
       "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\System.Private.Xml.wasm"
     },
     {
-      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\y2oq2d3yd2.gz",
+      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\y4fu17j3z2.gz",
       "SourceId": "Staticaly.Client",
       "SourceType": "Computed",
       "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\",
       "BasePath": "/",
-      "RelativePath": "_framework/dotnet.js.gz",
+      "RelativePath": "_framework/dotnet.runtime.8.0.3.y4fu17j3z2.js.gz",
       "AssetKind": "Build",
       "AssetMode": "All",
       "AssetRole": "Alternative",
       "AssetMergeBehavior": "",
       "AssetMergeSource": "",
-      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.js",
+      "RelatedAsset": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.runtime.8.0.3.y4fu17j3z2.js",
       "AssetTraitName": "Content-Encoding",
       "AssetTraitValue": "gzip",
       "CopyToOutputDirectory": "PreserveNewest",
       "CopyToPublishDirectory": "Never",
-      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.js"
+      "OriginalItemSpec": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\dotnet.runtime.8.0.3.y4fu17j3z2.js"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\y6jav9mrs2.gz",
@@ -8147,25 +8147,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Gifs\\UnSuccess.gif"
-    },
-    {
-      "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\amd-software-adrenalin-edition-24.2.1-combined-minimalsetup-240223_web.exe",
-      "SourceId": "Staticaly.Client",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\",
-      "BasePath": "/",
-      "RelativePath": "Images/amd-software-adrenalin-edition-24.2.1-combined-minimalsetup-240223_web.exe",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Images\\amd-software-adrenalin-edition-24.2.1-combined-minimalsetup-240223_web.exe"
     },
     {
       "Identity": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\amigos.svg",

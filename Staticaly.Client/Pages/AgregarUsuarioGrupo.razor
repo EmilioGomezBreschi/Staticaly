@@ -9,7 +9,7 @@
 @inject IJSRuntime JSRuntime
 
 
-<PageTitle>Verificar Docente - Staticaly</PageTitle>
+<PageTitle>Agregar Usuario - Staticaly</PageTitle>
 
 <div class="bg-Primary-Background text-white flex flex-col justify-center md:justify-normal items-center">
   @if (isLoading)
@@ -49,38 +49,43 @@
         <div class="relative my-3 bg-primary-100 rounded-md font-bold">
           <InputText @bind-Value="@user.Email" id="email" type="email" name="email"
             class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-12 placeholder-primary-400 bg-transparent"
-            placeholder="Email del Docente" />
+            placeholder="Email del Usuario a Invitar" />
           <img src="images/email.svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6"
             alt="Icono de Correo" />
         </div>
         <button type="submit"
           class="w-full h-12 my-3 bg-primary-500 rounded-md text-primary-100 hover:bg-primary-700 transition duration-300">Buscar
           Correo</button>
+        <button
+          class="w-full h-12 my-3 ml-1 bg-orange-700 hover:bg-orange-800 rounded-md text-white transition duration-300"
+          @onclick="NavegarAGrupos">Regresar</button>
       </EditForm>
       @if (buscado)
       {
-        <div class="flex flex-col space-y-4 text-primary-400">
+        <div class="flex flex-col space-y-4 text-primary-500 mt-4">
           <h2 class="text-xl font-bold">Usuario Encontrado</h2>
-          <div class="flex flex-col space-y-4 text-primary-400">
-            <div class="flex flex-row justify-between">
-              <p>Nombre:</p>
-              <p>@user.Nombre</p>
+          @if (usuarioinvitado != null)
+          {
+            <div class="flex flex-col space-y-4 text-primary-800 justify-start">
+              <div class="flex flex-row">
+                <p class="font-semibold mr-1">Nombre:</p>
+                <p>@usuarioinvitado.Nombre</p>
+              </div>
+              <div class="flex flex-row">
+                <p class="font-semibold mr-1">Apellido:</p>
+                <p>@usuarioinvitado.Apellido</p>
+              </div>
+              <div class="flex flex-row">
+                <p class="font-semibold mr-1">Rango:</p>
+                <p>@usuarioinvitado.Rango?.NombreRango</p>
+              </div>
             </div>
-            <div class="flex flex-row justify-between">
-              <p>Apellido:</p>
-              <p>@user.Apellido</p>
-            </div>
-            <div class="flex flex-row justify-between">
-              <p>Rango:</p>
-              <p>@user.Rango?.NombreRango</p>
-            </div>
-          </div>
+          }
         </div>
         <div class="flex flex-row my-3">
-          <button class="w-full h-12 my-3 bg-gray-700 hover:bg-gray-800 rounded-md text-white transition duration-300"
+          <button
+            class="w-full h-12 my-3 mr-1 bg-gray-700 hover:bg-gray-800 rounded-md text-white transition duration-300"
             @onclick="() => Invitar()">Enviar Invitacion</button>
-          <button class="w-full h-12 my-3 bg-orange-700 hover:bg-orange-900 rounded-md text-white transition duration-300"
-            @onclick="NavegarAGrupos">Regresar</button>
         </div>
       }
     </div>
@@ -88,129 +93,101 @@
 </div>
 
 @code {
-  [Parameter] public string? idusuario { get; set; }
-  [Parameter] public string? idgrupo { get; set; }
-  private void NavegarAGrupos() => NavigationManager.NavigateTo($"/Grupos/{idusuario}/{idgrupo}");
+  [Parameter] public string? id { get; set; }
+  [Parameter] public string? grupo { get; set; }
   private User user = new User();
-  private Equipos equipo = new Equipos();
-  private UsuariosEquipos UsuarioEquipo = new UsuariosEquipos();
+  private User? usuarioinvitador;
+  private User? usuarioinvitado;
   private string ErrorMessage = "";
-  private User usuarioinvitador = new User();
-
-  string body = "";
-  string Asunto = "";
-  bool buscado = false;
-  bool isLoading = false;
-  bool Aceptado = false;
+  private string body = "";
+  private bool buscado = false;
+  private bool isLoading = false;
+  private bool Aceptado = false;
 
   protected override async Task OnInitializedAsync()
   {
-    if (int.TryParse(idusuario, out int usuarioId))
-    {
-      var usuarioinvitador = await UsuariosClient.GetUsuarioAsync(usuarioId);
-    }
+    if (!int.TryParse(id, out int usuarioId))
+      return;
 
+    usuarioinvitador = await UsuariosClient.GetUsuarioAsync(usuarioId);
   }
 
-  private async Task Buscar()
+  protected async Task Buscar()
   {
-    if (user.Email == null)
+    if (string.IsNullOrWhiteSpace(user.Email))
     {
-      ErrorMessage = "Favor de ingresar un correo valido";
+      ErrorMessage = "Favor de ingresar un correo válido";
       return;
     }
+
     isLoading = true;
-    var usuario = await UsuariosClient.GetUsuarioByEmailAsync(user.Email);
-    if (usuario != null)
-    {
-      StateHasChanged();
-      buscado = true;
-      isLoading = false;
-      ErrorMessage = "";
-      return;
-    }
-    StateHasChanged();
-    ErrorMessage = "No se encontro el usuario";
+    usuarioinvitado = await UsuariosClient.GetUsuarioByEmailAsync(user.Email);
+    buscado = usuarioinvitado != null;
+    ErrorMessage = buscado ? "" : "No se encontró el usuario";
     isLoading = false;
-    return;
   }
 
   private async Task Invitar()
   {
-    isLoading = true;
-    var usuarioinvitado = await UsuariosClient.GetUsuarioByEmailAsync(user.Email);
-    if (usuarioinvitado == null)
+    if (usuarioinvitado == null || string.IsNullOrWhiteSpace(usuarioinvitado.Email))
     {
-      ErrorMessage = "No se encontro el usuario";
-      isLoading = false;
-      StateHasChanged();
+      ErrorMessage = "No se encontró el usuario";
       return;
     }
-    if (usuarioinvitado.Email == null)
-    {
-      ErrorMessage = "Favor de ingresar un correo valido";
-      isLoading = false;
-      StateHasChanged();
-      return;
-    }
-    if (int.TryParse(idgrupo, out int equipoId))
-    {
-      var equipo = await EquiposClient.GetEquipoByIdAsync(equipoId);
-      if (equipo == null)
-      {
-        ErrorMessage = "ID de equipo no válido";
-        isLoading = false;
-        StateHasChanged();
-        return;
-      }
-      if (usuarioinvitador == null)
-      {
-        ErrorMessage = "No se encontro el usuario";
-        isLoading = false;
-        StateHasChanged();
-        return;
-      }
-      var equipoUsuario = await EquiposClient.GetEquiposFromUsuarioAsync(usuarioinvitado.UsuarioID);
-      if(equipoUsuario.Any(e => e.Equipo != null && e.Equipo.TipoEquipoID == usuarioinvitador.RolID))
-      {
-        ErrorMessage = "El usuario ya pertenece a un equipo de este tipo";
-        isLoading = false;
-        StateHasChanged();
-        return;
-      }
-      var email = new EmailDTO();
-      var body = EmailServiceClient.HacerBodyInvitacionEquipo(usuarioinvitado.Nombre, usuarioinvitado.Apellido,
-      usuarioinvitador.Nombre, usuarioinvitador.Apellido, equipo.Nombre, equipo.EquipoID, usuarioinvitado.UsuarioID);
-      if (body == null)
-      {
-        ErrorMessage = "Error al enviar la invitación";
-        isLoading = false;
-        StateHasChanged();
-        return;
-      }
-      email.Para = usuarioinvitado.Email;
-      email.Asunto = "Invitación a Grupo";
-      email.Contenido = body;
-      await EmailServiceClient.SendEmailAsync(email);
-      isLoading = false;
-      Aceptado = true;
-      StateHasChanged();
-      return;
-    }
-    else
+
+    if (!int.TryParse(grupo, out int equipoId))
     {
       ErrorMessage = "ID de equipo no válido";
+      return;
     }
 
-    isLoading = false;
-    StateHasChanged();
+    isLoading = true;
+    var equipo = await EquiposClient.GetEquipoByIdAsync(equipoId);
+    if (equipo == null)
+    {
+      ErrorMessage = "ID de equipo no válido";
+      isLoading = false;
+      return;
+    }
+
+    if (usuarioinvitador == null)
+    {
+      ErrorMessage = "No se encontró el usuario";
+      isLoading = false;
+      return;
+    }
+
+    var equipoUsuario = await EquiposClient.GetEquiposFromUsuarioAsync(usuarioinvitado.UsuarioID);
+    if (equipoUsuario.Any(e => e.Equipo != null && e.Equipo.TipoEquipoID == usuarioinvitador.RolID))
+    {
+      ErrorMessage = "El usuario ya pertenece a un equipo de este tipo";
+      isLoading = false;
+      return;
+    }
+
+    body = EmailServiceClient.HacerBodyInvitacionEquipo(usuarioinvitado.Nombre, usuarioinvitado.Apellido,
+    usuarioinvitador.Nombre, usuarioinvitador.Apellido, equipo.Nombre, equipo.EquipoID, usuarioinvitado.UsuarioID);
+    if (body == null)
+    {
+      ErrorMessage = "Error al enviar la invitación";
+      isLoading = false;
+      return;
+    }
+
+    var email = new EmailDTO
+      {
+        Para = usuarioinvitado.Email,
+        Asunto = "Invitación a Grupo",
+        Contenido = body
+      };
+
+    await EmailServiceClient.SendEmailAsync(email);
+
+    NavigationManager.Refresh();
   }
 
-
+  private void NavegarAGrupos()
+  {
+    NavigationManager.NavigateTo($"/{id}/{grupo}");
+  }
 }
-
-<script>
-  function OnScrollEvent() {
-    document.documentElement.scrollTop = 0;
-  }
-</script>

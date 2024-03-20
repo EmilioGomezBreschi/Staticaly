@@ -29,43 +29,61 @@
   @if (usuario != null)
   {
     <div class="fixed bottom-0 right-0 mr-4 mb-4 text-right">
+      @if (equipoId != 1)
+      {
       <button @onclick="MostrarListaUsuarios"
         class="bg-primary-500 hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-md transition duration-300 mb-2 block text-center">
         <span class="md:inline hidden">@((MostrarUsuarios) ? "Ocultar lista de usuarios" : "Mostrar lista de usuarios")</span>
         <span class="md:hidden inline">Usuarios</span>
       </button>
+      }
+      @if (usuario != null && EquipoUsuario != null && EquipoUsuario.Any(u=>u.UsuarioID == usuario.UsuarioID && u.PermisoID != 2))
+      {
       <button @onclick="CrearPublicacion"
         class="bg-primary-500 inline-flex items-center justify-center hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-full md:rounded-md transition duration-300 text-center">
         <img src="Images/plus.svg" alt="Crear Publicación" class="h-6 w-6 inline-block" />
         <span class="ml-2 md:inline hidden">Nueva publicación</span>
       </button>
+      }
     </div>
   }
 
 </div>
 
 
-@if (EquipoUsuario != null && EquipoUsuario.Count > 1 && equipoId != 1)
-{
-  <div class="bg-primary-100 text-primary-900 font-semibold flex flex-col items-center p-4 rounded-md shadow-md right-0 top-0 mr-4 mt-24 z-40 @(MostrarUsuarios ? "absolute" : "hidden")">
-      <div class=" max-h-72 overflow-y-auto bg-primary-200 rounded-md p-4">
-        <h3 class="text-lg font-bold mb-2">Usuarios del grupo</h3>
-        <ul>
-          @foreach (var usuarioEquipo in EquipoUsuario)
-          {
-            <div class="text-center bg-primary-300 mt-1 rounded-md px-3">
-              <div>@(usuarioEquipo.Usuario?.Nombre ?? "Unknown User") @(usuarioEquipo.Usuario?.Apellido ?? "Unknown User")
+<div class="bg-primary-200 text-primary-900 font-semibold flex flex-col items-center p-4 rounded-md shadow-md right-0 top-0 mr-4 mt-24 z-40 @(MostrarUsuarios ? "absolute" : "hidden")">
+
+  @if (EquipoUsuario != null && EquipoUsuario.Count > 1 && equipoId != 1)
+  {
+        <div class=" max-h-72 overflow-y-auto rounded-md p-4">
+          <h3 class="text-lg font-bold mb-2">Usuarios del grupo</h3>
+          <ul>
+            @foreach (var usuarioEquipo in EquipoUsuario)
+            {
+              <div class="text-center bg-primary-300 mt-1 rounded-md px-3">
+                <div>@(usuarioEquipo.Usuario?.Nombre ?? "Unknown User") @(usuarioEquipo.Usuario?.Apellido ?? "Unknown User")
+                </div>
+                <div>@(usuarioEquipo.Usuario?.Rango?.NombreRango ?? "Unknown Rango")</div>
               </div>
-              <div>@(usuarioEquipo.Usuario?.Rango?.NombreRango ?? "Unknown Rango")</div>
-            </div>
-          }
-        </ul>
-      </div>
+            }
+          </ul>
+        </div>
+  }
+  else
+  {
+    <div class="text-center">
+      <h3 class="text-lg font-bold mb-2">No hay usuarios en este grupo</h3>
+    </div>
+  }
+  @if (usuario != null && EquipoUsuario != null && EquipoUsuario.Any(u=>u.UsuarioID == usuario.UsuarioID && u.PermisoID == 1))
+  {
       <button @onclick="AgregarUsuario" class="bg-primary-500 hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-md transition duration-300 text-center mt-3">
-        Agregar usuario
+          Agregar usuario
       </button>
-  </div>
-}
+  }
+
+
+</div>
 
 
 
@@ -110,7 +128,7 @@
 
   private void AgregarUsuario()
   {
-    // Aquí puedes implementar la lógica para agregar un usuario al grupo
+    NavigationManager.NavigateTo($"/AgregarUsuario/{Id}/{equipoId}");
   }
 
   private void MostrarListaUsuarios()
