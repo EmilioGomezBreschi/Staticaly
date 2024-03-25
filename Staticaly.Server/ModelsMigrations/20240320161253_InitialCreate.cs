@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -122,6 +123,36 @@ namespace Staticaly.Server.ModelsMigrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Publicaciones",
+                columns: table => new
+                {
+                    PublicacionID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ForoID = table.Column<int>(type: "int", nullable: false),
+                    EquipoID = table.Column<int>(type: "int", nullable: true),
+                    UsuarioID = table.Column<int>(type: "int", nullable: false),
+                    Titulo = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Contenido = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Imagen = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Publicaciones", x => x.PublicacionID);
+                    table.ForeignKey(
+                        name: "FK_Publicaciones_Equipos_EquipoID",
+                        column: x => x.EquipoID,
+                        principalTable: "Equipos",
+                        principalColumn: "EquipoID");
+                    table.ForeignKey(
+                        name: "FK_Publicaciones_Usuarios_UsuarioID",
+                        column: x => x.UsuarioID,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UsuariosEquipos",
                 columns: table => new
                 {
@@ -129,7 +160,8 @@ namespace Staticaly.Server.ModelsMigrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UsuarioID = table.Column<int>(type: "int", nullable: false),
                     EquipoID = table.Column<int>(type: "int", nullable: false),
-                    PermisoID = table.Column<int>(type: "int", nullable: false)
+                    PermisoID = table.Column<int>(type: "int", nullable: false),
+                    FechaUnir = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -212,6 +244,16 @@ namespace Staticaly.Server.ModelsMigrations
                 column: "TipoEquipoID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Publicaciones_EquipoID",
+                table: "Publicaciones",
+                column: "EquipoID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Publicaciones_UsuarioID",
+                table: "Publicaciones",
+                column: "UsuarioID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_RangoID",
                 table: "Usuarios",
                 column: "RangoID");
@@ -240,6 +282,9 @@ namespace Staticaly.Server.ModelsMigrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Publicaciones");
+
             migrationBuilder.DropTable(
                 name: "UsuariosEquipos");
 

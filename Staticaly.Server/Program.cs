@@ -430,4 +430,76 @@ UsuariosEquiposGroup.MapGet("/{id}", async (StaticalyContext context, int id) =>
 
 #endregion
 
+var publicacionesGroup = app.MapGroup("/publicaciones").WithParameterValidation();
+
+#region Entry Points Publicaciones
+
+// Crear publicacion
+publicacionesGroup.MapPost("/", async (StaticalyContext context, Publicaciones publicacion) =>
+{
+  context.Publicaciones.Add(publicacion);
+  await context.SaveChangesAsync();
+  return Results.Created($"/publicaciones/{publicacion.PublicacionID}", publicacion);
+}).Produces<Publicaciones>();
+
+// Obtener publicaciones en equipo
+publicacionesGroup.MapGet("/byEquipo/{id}", async (StaticalyContext context, int id) =>
+{
+  var publicaciones = await context.Publicaciones
+                                  .Include(p => p.Equipo)
+                                  .Include(p => p.Usuario)
+                                  .AsNoTracking()
+                                  .Where(p => p.ForoID == id)
+                                  .ToListAsync();
+
+  return publicaciones.Any() ? Results.Ok(publicaciones) : Results.NotFound();
+});
+
+// Obtener publicacion de equipo por nombre
+publicacionesGroup.MapGet("/byEquipo/{id}/{titulo}", async (StaticalyContext context, int id, string titulo) =>
+{
+  var publicacion = await context.Publicaciones
+                                  .Include(p => p.Equipo)
+                                  .Include(p => p.Usuario)
+                                  .AsNoTracking()
+                                  .FirstOrDefaultAsync(p => p.ForoID == id && p.Titulo == titulo);
+
+  return publicacion != null ? Results.Ok(publicacion) : Results.NotFound();
+});
+
+// Editar publicacion
+publicacionesGroup.MapPut("/{id}", async (StaticalyContext context, int id, Publicaciones publicacion) =>
+{
+  var publicacionToUpdate = await context.Publicaciones.FindAsync(id);
+  if (publicacionToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  publicacionToUpdate.Titulo = publicacion.Titulo;
+  publicacionToUpdate.Contenido = publicacion.Contenido;
+  publicacionToUpdate.Imagen = publicacion.Imagen;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+}).Produces<Publicaciones>();
+
+// Eliminar publicacion
+publicacionesGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+{
+  var publicacion = await context.Publicaciones.FindAsync(id);
+  if (publicacion == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.Publicaciones.Remove(publicacion);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+#endregion
+
 app.Run();

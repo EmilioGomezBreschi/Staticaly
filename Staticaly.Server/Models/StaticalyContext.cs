@@ -12,6 +12,7 @@ namespace Staticaly.Server.Models
     public DbSet<Permisos> Permisos { get; set; }
     public DbSet<TiposEquipos> TiposEquipos { get; set; }
     public DbSet<UsuariosEquipos> UsuariosEquipos { get; set; }
+    public DbSet<Publicaciones> Publicaciones { get; set; }
 
     public StaticalyContext(DbContextOptions<StaticalyContext> options) : base(options) { }
 
@@ -68,6 +69,18 @@ namespace Staticaly.Server.Models
           .HasOne(ue => ue.Permiso)
           .WithMany()
           .HasForeignKey(ue => ue.PermisoID);
+    }
+    private void ConfigurarPublicaciones(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<Publicaciones>()
+          .HasOne(p => p.Equipo)
+          .WithMany()
+          .HasForeignKey(p => p.ForoID);
+
+      modelBuilder.Entity<Publicaciones>()
+          .HasOne(p => p.Usuario)
+          .WithMany()
+          .HasForeignKey(p => p.UsuarioID);
     }
   }
 

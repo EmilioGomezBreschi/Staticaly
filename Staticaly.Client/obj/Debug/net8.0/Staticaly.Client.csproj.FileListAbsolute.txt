@@ -2113,9 +2113,7 @@ C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_fr
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\BouncyCastle.Cryptography.wasm
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.js
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.js.map
-C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.native.8.0.2.gy7g3ke90s.js
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.native.wasm
-C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.runtime.8.0.2.rzrjgma8xa.js
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.runtime.js.map
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\icudt_CJK.dat
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\icudt_EFIGS.dat
@@ -2413,7 +2411,6 @@ C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_fr
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.ComponentModel.EventBasedAsync.wasm.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.Net.WebProxy.wasm.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.IO.Pipes.wasm.gz
-C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.native.8.0.2.gy7g3ke90s.js.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.Net.WebSockets.Client.wasm.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\Microsoft.Extensions.FileSystemGlobbing.wasm.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.Private.Xml.wasm.gz
@@ -2473,7 +2470,6 @@ C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_fr
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.Net.HttpListener.wasm.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.Dynamic.Runtime.wasm.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.Threading.Tasks.Dataflow.wasm.gz
-C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.runtime.8.0.2.rzrjgma8xa.js.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\Microsoft.CSharp.wasm.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.Security.Cryptography.OpenSsl.wasm.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\System.Security.Claims.wasm.gz
@@ -2956,7 +2952,6 @@ C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\staticwebas
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\scopedcss\Shared\MainLayout.razor.rz.scp.css
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\scopedcss\bundle\Staticaly.Client.styles.css
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\scopedcss\projectbundle\Staticaly.Client.bundle.scp.css
-C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\i2k0oitj5b.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\qvsfhwcp5m.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\nwqepac8un.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\bnbpz5vxlr.gz
@@ -3154,15 +3149,6 @@ C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\1iyr0a55qj.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\6ff1e6wkj0.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\kh879h1yde.gz
-C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\y2oq2d3yd2.gz
-C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\bk5kbm53ru.gz
-C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\gy7g3ke90s.gz
-C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\qd9xkbu4rs.gz
-C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\rzrjgma8xa.gz
-C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\jaov2yw1v6.gz
-C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\5nvyv9qubv.gz
-C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\bb3gxyljl7.gz
-C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\xg51x9d4md.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\a5c2bsuq9c.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\6emmqnd3ls.gz
 C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\fveyapdap7.gz
@@ -3185,3 +3171,17 @@ C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\c
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\l4r1fc5xot.gz
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\roggz2ifpr.gz
 C:\Users\lime1\OneDrive\Documentos\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\8ut7582u9a.gz
+C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.native.8.0.3.e0daib42rq.js
+C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.runtime.8.0.3.y4fu17j3z2.js
+C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.native.8.0.3.e0daib42rq.js.gz
+C:\Users\lime1\Documents\Staticaly\Staticaly.Client\bin\Debug\net8.0\wwwroot\_framework\dotnet.runtime.8.0.3.y4fu17j3z2.js.gz
+C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\aomjys29gs.gz
+C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\b1d6dh97aq.gz
+C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\eol02phfa1.gz
+C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\e0daib42rq.gz
+C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\dk8rpgussc.gz
+C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\y4fu17j3z2.gz
+C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\5yk6mimpfm.gz
+C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\l4r1fc5xot.gz
+C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\roggz2ifpr.gz
+C:\Users\lime1\Documents\Staticaly\Staticaly.Client\obj\Debug\net8.0\compressed\8ut7582u9a.gz
