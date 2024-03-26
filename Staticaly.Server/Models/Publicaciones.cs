@@ -14,7 +14,6 @@ namespace Staticaly.Server.Models
       [Required]
       [ForeignKey("EquipoID")]
       public int ForoID { get; set; }
-      public Equipos? Equipo { get; set; }
       [Required]
       [ForeignKey("UsuarioID")]
       public int UsuarioID { get; set; }
@@ -25,6 +24,9 @@ namespace Staticaly.Server.Models
       [Required]
       public string? Contenido { get; set; }
       public byte[]? Imagen { get; set; }
+      public float Calificacion { get; set; }
+      [Required]
+      public int Reportes { get; set; }
       [Required]
       public DateTime Fecha { get; set; }
     }

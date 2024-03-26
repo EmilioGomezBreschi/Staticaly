@@ -12,7 +12,7 @@ using Staticaly.Server.Models;
 namespace Staticaly.Server.ModelsMigrations
 {
     [DbContext(typeof(StaticalyContext))]
-    [Migration("20240320161253_InitialCreate")]
+    [Migration("20240325233414_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -103,12 +103,12 @@ namespace Staticaly.Server.ModelsMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PublicacionID"));
 
+                    b.Property<float>("Calificacion")
+                        .HasColumnType("real");
+
                     b.Property<string>("Contenido")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("EquipoID")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
@@ -119,6 +119,9 @@ namespace Staticaly.Server.ModelsMigrations
                     b.Property<byte[]>("Imagen")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<int>("Reportes")
+                        .HasColumnType("int");
+
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -128,8 +131,6 @@ namespace Staticaly.Server.ModelsMigrations
                         .HasColumnType("int");
 
                     b.HasKey("PublicacionID");
-
-                    b.HasIndex("EquipoID");
 
                     b.HasIndex("UsuarioID");
 
@@ -401,17 +402,11 @@ namespace Staticaly.Server.ModelsMigrations
 
             modelBuilder.Entity("Staticaly.Server.Models.Publicaciones", b =>
                 {
-                    b.HasOne("Staticaly.Server.Models.Equipos", "Equipo")
-                        .WithMany()
-                        .HasForeignKey("EquipoID");
-
                     b.HasOne("Staticaly.Server.Models.User", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Equipo");
 
                     b.Navigation("Usuario");
                 });

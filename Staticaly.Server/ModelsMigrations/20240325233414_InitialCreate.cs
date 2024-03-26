@@ -129,21 +129,17 @@ namespace Staticaly.Server.ModelsMigrations
                     PublicacionID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ForoID = table.Column<int>(type: "int", nullable: false),
-                    EquipoID = table.Column<int>(type: "int", nullable: true),
                     UsuarioID = table.Column<int>(type: "int", nullable: false),
                     Titulo = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Contenido = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Imagen = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Calificacion = table.Column<float>(type: "real", nullable: false),
+                    Reportes = table.Column<int>(type: "int", nullable: false),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Publicaciones", x => x.PublicacionID);
-                    table.ForeignKey(
-                        name: "FK_Publicaciones_Equipos_EquipoID",
-                        column: x => x.EquipoID,
-                        principalTable: "Equipos",
-                        principalColumn: "EquipoID");
                     table.ForeignKey(
                         name: "FK_Publicaciones_Usuarios_UsuarioID",
                         column: x => x.UsuarioID,
@@ -242,11 +238,6 @@ namespace Staticaly.Server.ModelsMigrations
                 name: "IX_Equipos_TipoEquipoID",
                 table: "Equipos",
                 column: "TipoEquipoID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Publicaciones_EquipoID",
-                table: "Publicaciones",
-                column: "EquipoID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Publicaciones_UsuarioID",

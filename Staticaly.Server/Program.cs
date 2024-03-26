@@ -446,7 +446,6 @@ publicacionesGroup.MapPost("/", async (StaticalyContext context, Publicaciones p
 publicacionesGroup.MapGet("/byEquipo/{id}", async (StaticalyContext context, int id) =>
 {
   var publicaciones = await context.Publicaciones
-                                  .Include(p => p.Equipo)
                                   .Include(p => p.Usuario)
                                   .AsNoTracking()
                                   .Where(p => p.ForoID == id)
@@ -455,17 +454,19 @@ publicacionesGroup.MapGet("/byEquipo/{id}", async (StaticalyContext context, int
   return publicaciones.Any() ? Results.Ok(publicaciones) : Results.NotFound();
 });
 
-// Obtener publicacion de equipo por nombre
+// Obtener publicaciones de equipo por parte del título
 publicacionesGroup.MapGet("/byEquipo/{id}/{titulo}", async (StaticalyContext context, int id, string titulo) =>
 {
-  var publicacion = await context.Publicaciones
-                                  .Include(p => p.Equipo)
-                                  .Include(p => p.Usuario)
-                                  .AsNoTracking()
-                                  .FirstOrDefaultAsync(p => p.ForoID == id && p.Titulo == titulo);
+  var publicaciones = await context.Publicaciones
+                                    .Include(p => p.Usuario)
+                                    .AsNoTracking()
+                                    .Where(p => p.ForoID == id && p.Titulo != null && p.Titulo.Contains(titulo))
+                                    .ToListAsync();
 
-  return publicacion != null ? Results.Ok(publicacion) : Results.NotFound();
+  return publicaciones.Any() ? Results.Ok(publicaciones) : Results.NotFound();
 });
+
+
 
 // Editar publicacion
 publicacionesGroup.MapPut("/{id}", async (StaticalyContext context, int id, Publicaciones publicacion) =>
@@ -484,6 +485,38 @@ publicacionesGroup.MapPut("/{id}", async (StaticalyContext context, int id, Publ
 
   return Results.NoContent();
 }).Produces<Publicaciones>();
+
+// Actualizar calificación de publicación
+publicacionesGroup.MapPut("/calificacion/{id}/{calificacion}", async (StaticalyContext context, int id, float calificacion) =>
+{
+  var publicacionToUpdate = await context.Publicaciones.FindAsync(id);
+  if (publicacionToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  publicacionToUpdate.Calificacion = calificacion;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+// Actualizar reportes de publicación
+publicacionesGroup.MapPut("/reportes/{id}/{reportes}", async (StaticalyContext context, int id, int reportes) =>
+{
+  var publicacionToUpdate = await context.Publicaciones.FindAsync(id);
+  if (publicacionToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  publicacionToUpdate.Reportes = reportes;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
 
 // Eliminar publicacion
 publicacionesGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>

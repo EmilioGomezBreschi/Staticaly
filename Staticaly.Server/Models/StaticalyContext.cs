@@ -73,11 +73,6 @@ namespace Staticaly.Server.Models
     private void ConfigurarPublicaciones(ModelBuilder modelBuilder)
     {
       modelBuilder.Entity<Publicaciones>()
-          .HasOne(p => p.Equipo)
-          .WithMany()
-          .HasForeignKey(p => p.ForoID);
-
-      modelBuilder.Entity<Publicaciones>()
           .HasOne(p => p.Usuario)
           .WithMany()
           .HasForeignKey(p => p.UsuarioID);
