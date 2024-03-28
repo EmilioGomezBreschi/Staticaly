@@ -13,6 +13,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://
 builder.Services.AddScoped<UsuariosClient>();
 builder.Services.AddScoped<EmailServiceClient>();
 builder.Services.AddScoped<EquiposClient>();
+builder.Services.AddScoped<PublicacionesClient>();
 
 
 await builder.Build().RunAsync();

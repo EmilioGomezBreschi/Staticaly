@@ -1,4 +1,4 @@
-@page "/{id}/{equipo?}"
+@page "/{id}/{equipo}"
 @page "/{id}"
 @page "/"
 @using Models
@@ -7,23 +7,106 @@
 @inject NavigationManager NavigationManager
 @inject UsuariosClient UsuariosClient
 @inject EquiposClient EquiposClient
+@inject PublicacionesClient PublicacionesClient
 
 <PageTitle>Foro - Staticaly</PageTitle>
 
 <div
-  class="h-screen w-screen pt-11 pl-0 lg:pl-20 lg:pt-0 text-white flex flex-col justify-normal text-center items-center z-30 relative">
+  class="pt-11 pl-0 lg:pl-20 lg:pt-0 text-white flex flex-col justify-normal text-center items-center z-30 relative">
   <div class="z-10">
     <NavBar id="@Id" />
   </div>
-  <div class="flex flex-col items-center w-auto m-2 p-3 bg-primary-800 rounded-md">
-    @if (equipo != null)
+  <div class="flex flex-col items-center my-2 p-3 bg-primary-800 rounded-md">
+    @if (equipo == null)
     {
-      <h2 class="text-2xl font-bold">@equipo.Nombre</h2>
+      <h2 class="text-2xl font-bold">Este es un equipo que no existe</h2>
     }
     else
     {
-      <h2 class="text-2xl font-bold">Este es un equipo que ya no existe</h2>
+      <h2 class="text-2xl font-bold">@equipo.Nombre</h2>
     }
+  </div>
+
+  <div class="h-fullflex flex-col justify-center items-center text-primary-100">
+  @if (Publicaciones == null || Publicaciones.Count <= 0)
+  {
+      <h3 class="text-lg font-bold">No hay publicaciones en este grupo</h3>
+  }
+  else
+  {
+<div class="rounded-md p-4">
+    <ul>
+    @foreach (var publicacion in Publicaciones)
+    {
+        <div class="text-center w-full bg-primary-300 mt-5 rounded-md px-5 flex flex-col p-10">
+            <div class="text-center font-bold text-2xl text-primary-600">@publicacion.Titulo</div>
+            <div class="mt-1 rounded-md px-3 flex flex-row justify-around">
+                <div class="text-center flex flex-col w-24 mr-5">
+                    <p class="font-bold text-primary-500">@publicacion.Usuario?.Nombre</p>
+                    <p class="font-light">@publicacion.Usuario?.Rango?.NombreRango</p>
+                </div>
+                <p class="text-justify w-full mr-5 max-w-96">@publicacion.Contenido</p>
+            </div>
+            <div class="text-left">@publicacion.Fecha.ToString("dd/MM/yyyy")</div>
+<div class="mt-4 flex justify-between">
+    <div class="mt-4 flex justify-between">
+    @{
+    // Calcula las partes entera y fraccionaria de la calificación
+    var integerPart = (int)Math.Floor(publicacion.Calificacion);
+    var fractionalPart = publicacion.Calificacion - integerPart;
+
+    // Estrellas enteras
+    for (int i = 0; i < integerPart; i++)
+    {
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 fill-current" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 1l2.5 6.5H18l-5 3.75 2.5 6.25L10 14l-5 4 2.5-6.25-5-3.75h5.5L10 1z" />
+        </svg>
+    }
+
+    // Estrellas fraccionarias
+    if (fractionalPart >= 0.5)
+    {
+        if (fractionalPart < 0.75)
+        {
+            // Estrella medio llena
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 fill-current" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 1l2.5 6.5H18l-5 3.75 2.5 6.25L10 14l-5 4 2.5-6.25-5-3.75h5.5L10 1z" />
+            </svg>
+        }
+        else
+        {
+            // Estrella llena
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 fill-current" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 1l2.5 6.5H18l-5 3.75 2.5 6.25L10 14l-5 4 2.5-6.25-5-3.75h5.5L10 1z" />
+            </svg>
+        }
+    }
+
+    // Estrellas vacías
+    for (int i = integerPart + ((fractionalPart >= 0.25) ? 1 : 0); i < 5; i++)
+    {
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300 fill-current" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 1l2.5 6.5H18l-5 3.75 2.5 6.25L10 14l-5 4 2.5-6.25-5-3.75h5.5L10 1z" />
+        </svg>
+    }
+}
+
+</div>
+
+</div>
+
+        </div>
+    }
+    </ul>
+    <div class="mt-4 flex justify-evenly">
+        <button @onclick="IrAPaginaAnterior" class="bg-primary-500 text-white font-bold py-2 px-4 rounded-md">Anterior</button>
+        <span>Página @PaginaActual de @TotalPaginas</span>
+        <button @onclick="IrAPaginaSiguiente" class="bg-primary-500 text-white font-bold py-2 px-4 rounded-md">Siguiente</button>
+    </div>
+</div>
+
+  }
+
   </div>
 
   @if (usuario != null)
@@ -37,7 +120,7 @@
         <span class="md:hidden inline">Usuarios</span>
       </button>
       }
-      @if (usuario != null && EquipoUsuario != null && EquipoUsuario.Any(u=>u.UsuarioID == usuario.UsuarioID && u.PermisoID != 2))
+      @if (usuario != null && EquipoUsuario != null && (equipoId==1 || EquipoUsuario.Any(u=>u.UsuarioID == usuario.UsuarioID && u.PermisoID != 2)))
       {
       <button @onclick="CrearPublicacion"
         class="bg-primary-500 inline-flex items-center justify-center hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-full md:rounded-md transition duration-300 text-center">
@@ -92,34 +175,67 @@
   [Parameter] public string? Id { get; set; }
   [Parameter] public string? Equipo { get; set; }
   int equipoId;
+  private int PaginaActual = 1;
+  private int TotalPaginas = 1;
+  private const int PublicacionesPorPagina = 3;
   private User? usuario;
   private Equipos? equipo;
   private List<UsuariosEquipos>? EquipoUsuario = new List<UsuariosEquipos>();
+  private List<Publicaciones>? Publicaciones = null;
   private bool MostrarUsuarios = false;
 
-  protected override async Task OnInitializedAsync()
-  {
+
+protected override async Task OnInitializedAsync()
+{
+    int.TryParse(Id, out int userId);
+    usuario = await UsuariosClient.GetUsuarioAsync(userId);
     int.TryParse(Equipo, out equipoId);
+
     // Si no se proporciona un ID de equipo en la URL, establecer el ID de equipo predeterminado como "1"
     if (string.IsNullOrEmpty(Equipo))
     {
-      equipoId = 1;
+        equipoId = 1;
     }
+
     // Obtener el equipo correspondiente al ID proporcionado
     equipo = await EquiposClient.GetEquipoByIdAsync(equipoId);
 
-    // Obtener el usuario correspondiente al ID proporcionado
-    if (int.TryParse(Id, out int usuarioId))
+    // Verificar si el equipo existe
+    if (equipo != null)
     {
-      usuario = await UsuariosClient.GetUsuarioAsync(usuarioId);
+        // Obtener todos los usuarios del grupo
+        EquipoUsuario = (await EquiposClient.GetUsuariosFromEquipoAsync(equipoId)).ToList();
+        await CargarPublicaciones();
+    }
+}
+    private async Task CargarPublicaciones()
+    {
+        var resultado = await PublicacionesClient.ObtenerPublicaciones(PaginaActual, PublicacionesPorPagina,equipoId);
+
+        if (resultado != null)
+        {
+            Publicaciones = resultado.Publicaciones;
+            TotalPaginas = resultado.TotalPaginas;
+        }
     }
 
-    if (equipoId != 1)
+private async Task IrAPaginaAnterior()
     {
-      // Obtener todos los usuarios del grupo
-      EquipoUsuario = (await EquiposClient.GetUsuariosFromEquipoAsync(equipoId)).ToList();
+        if (PaginaActual > 1)
+        {
+            PaginaActual--;
+            await CargarPublicaciones();
+        }
     }
-  }
+
+    private async Task IrAPaginaSiguiente()
+    {
+        if (PaginaActual < TotalPaginas)
+        {
+            PaginaActual++;
+            await CargarPublicaciones();
+        }
+    }
 
   private void CrearPublicacion()
   {

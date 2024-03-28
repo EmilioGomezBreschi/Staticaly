@@ -442,29 +442,49 @@ publicacionesGroup.MapPost("/", async (StaticalyContext context, Publicaciones p
   return Results.Created($"/publicaciones/{publicacion.PublicacionID}", publicacion);
 }).Produces<Publicaciones>();
 
-// Obtener publicaciones en equipo
-publicacionesGroup.MapGet("/byEquipo/{id}", async (StaticalyContext context, int id) =>
+// Obtener publicaciones en equipo paginadas
+publicacionesGroup.MapGet("/byEquipo/{id}", async (StaticalyContext context, int id, int page = 1, int pageSize = 5) =>
 {
-  var publicaciones = await context.Publicaciones
-                                  .Include(p => p.Usuario)
-                                  .AsNoTracking()
-                                  .Where(p => p.ForoID == id)
-                                  .ToListAsync();
+  var skipAmount = (page - 1) * pageSize;
 
-  return publicaciones.Any() ? Results.Ok(publicaciones) : Results.NotFound();
+  var publicaciones = await context.Publicaciones
+      .Include(p => p.Usuario)
+      .ThenInclude(u => u.Rango)
+      .AsNoTracking()
+      .Where(p => p.ForoID == id)
+      .OrderBy(p => p.Fecha) // Ordena por Fecha ascendente
+      .Skip(skipAmount)
+      .Take(pageSize)
+      .ToListAsync();
+
+  var totalPublicaciones = await context.Publicaciones
+      .Where(p => p.ForoID == id)
+      .CountAsync();
+
+  var totalPages = (int)Math.Ceiling(totalPublicaciones / (double)pageSize);
+
+  return Results.Ok(new
+  {
+    Publicaciones = publicaciones,
+    TotalPaginas = totalPages
+  });
 });
+
+
 
 // Obtener publicaciones de equipo por parte del título
 publicacionesGroup.MapGet("/byEquipo/{id}/{titulo}", async (StaticalyContext context, int id, string titulo) =>
 {
   var publicaciones = await context.Publicaciones
                                     .Include(p => p.Usuario)
+                                    .ThenInclude(u => u.Rango)
                                     .AsNoTracking()
                                     .Where(p => p.ForoID == id && p.Titulo != null && p.Titulo.Contains(titulo))
                                     .ToListAsync();
 
-  return publicaciones.Any() ? Results.Ok(publicaciones) : Results.NotFound();
+  return Results.Ok(publicaciones);
 });
+
 
 
 

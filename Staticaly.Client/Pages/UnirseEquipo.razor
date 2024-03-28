@@ -24,7 +24,7 @@
   {
     <div class="h-screen absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-20">
       <div class="flex flex-col items-center bg-red-600 text-primary-50 p-6 rounded-lg">
-        <img src="Gifs/Error.gif" alt="Invitacion Rechazada" class="w-40 h-40 mb-4" />
+        <img src="Gifs/UnSuccess.gif" alt="Invitacion Rechazada" class="w-40 h-40 mb-4" />
         <h2 class="text-xl font-bold">Ha habido un error al unirte al grupo</h2>
         <h1 class="text-2xl font-bold">Error:</h1>
         <p>@Error</p>
@@ -84,6 +84,6 @@
     };
 
     await EquiposClient.AddUsuarioToEquipoAsync(usuarioEquipo);
-    NavigationManager.NavigateTo("/{id}/{equipo}");
+    NavigationManager.NavigateTo($"/{usuarioid}/{equipoid}");
   }
 }
