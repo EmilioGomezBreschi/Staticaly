@@ -1,13 +1,12 @@
 @page "/registro"
 @using Models;
 @using Data;
-@using SixLabors.ImageSharp
 @using System.IO;
-@using System.Diagnostics;
 @using System.Text.RegularExpressions;
-@using SixLabors.ImageSharp.Processing;
 @using BCrypt.Net;
+@using System.Diagnostics;
 @inject UsuariosClient client
+@inject ImageServiceClient imageServiceClient
 @inject IJSRuntime JSRuntime
 @inject EmailServiceClient emailServiceClient
 @inject NavigationManager NavigationManager
@@ -167,7 +166,7 @@
   private string InstitucionDocente = "";
   private int Semestre = 0;
   private string ConfirmPassword = "";
-  private byte[]? FotoDocente;
+  private byte[]? FotoDocente = null;
   private bool showPassword = false;
   private bool submitted = false;
   private bool ValidateFoto = true;
@@ -287,6 +286,15 @@
       return false;
     }
   }
+  private async Task HandleFileSelected(InputFileChangeEventArgs e)
+  {
+    FotoDocente = await imageServiceClient.HandleFileSelected(e);
+    if (FotoDocente is null)
+    {
+      ValidateFoto = false;
+    }
+  }
+
 
   private bool ValidatePassword(string? password)
   {
@@ -310,41 +318,6 @@
   {
     // Obtener el tipo de entrada de la contraseña (texto o contraseña)
     return showPassword ? "text" : "password";
-  }
-
-  private async Task HandleFileSelected(InputFileChangeEventArgs e)
-  {
-    var file = e.File;
-
-    // Verificar la extensión del archivo
-    var extension = Path.GetExtension(file.Name).ToLowerInvariant();
-    if (extension != ".jpg" && extension != ".jpeg" && extension != ".png")
-    {
-      ValidateFoto = false;
-      // Mostrar un mensaje de error o manejar de otra forma
-      Debug.WriteLine("El archivo debe ser una imagen JPG o PNG.");
-      return;
-    }
-
-    // Leer el archivo en un buffer de bytes
-    var buffer = new byte[file.Size];
-    await file.OpenReadStream().ReadAsync(buffer);
-
-    // Validar la resolución de la imagen (opcional)
-    using (var imageStream = new MemoryStream(buffer))
-    using (var image = Image.Load(imageStream))
-    {
-      if (image.Width > 480 || image.Height > 480)
-      {
-        // Mostrar un mensaje de error o manejar de otra forma
-        ValidateFoto = false;
-        Debug.WriteLine("La imagen debe tener una resolución máxima de 480p.");
-        return;
-      }
-    }
-
-    // Asignar el buffer de bytes a la propiedad FotoDocente
-    FotoDocente = buffer;
   }
 
 }

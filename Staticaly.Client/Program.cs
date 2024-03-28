@@ -14,6 +14,7 @@ builder.Services.AddScoped<UsuariosClient>();
 builder.Services.AddScoped<EmailServiceClient>();
 builder.Services.AddScoped<EquiposClient>();
 builder.Services.AddScoped<PublicacionesClient>();
+builder.Services.AddScoped<ImageServiceClient>();
 
 
 await builder.Build().RunAsync();

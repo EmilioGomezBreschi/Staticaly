@@ -452,7 +452,7 @@ publicacionesGroup.MapGet("/byEquipo/{id}", async (StaticalyContext context, int
       .ThenInclude(u => u.Rango)
       .AsNoTracking()
       .Where(p => p.ForoID == id)
-      .OrderBy(p => p.Fecha) // Ordena por Fecha ascendente
+      .OrderByDescending(p => p.Fecha) // Ordena por Fecha descendente
       .Skip(skipAmount)
       .Take(pageSize)
       .ToListAsync();
