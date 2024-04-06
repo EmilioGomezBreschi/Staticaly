@@ -8,14 +8,17 @@
 @inject UsuariosClient UsuariosClient
 @inject EquiposClient EquiposClient
 @inject PublicacionesClient PublicacionesClient
+@inject ComentariosClient ComentariosClient
 
 <PageTitle>Foro - Staticaly</PageTitle>
 
-  <div class="z-40 fixed top-0 w-full">
-    <NavBar id="@Id" />
-  </div>
-<div class="pt-16 lg:pl-20 text-white flex flex-col justify-normal text-center items-center relative">
-  <div class="flex flex-col items-center my-2 p-3 bg-primary-800 rounded-md">
+<div class="z-40 fixed top-0">
+  <NavBar id="@Id" />
+</div>
+
+<div class="pt-16 lg:pl-20 lg:pt-0 text-primary-100 flex flex-col justify-normal text-center items-center">
+
+  <div class="flex flex-col items-center my-2 p-3 bg-primary-800 rounded-md text-white">
     @if (equipo == null)
     {
       <h2 class="text-2xl font-bold">Este es un equipo que no existe</h2>
@@ -25,8 +28,11 @@
       <h2 class="text-2xl font-bold">@equipo.Nombre</h2>
     }
   </div>
+  <div class="w-full max-w-72 md:max-w-md mt-4  text-black">
+      <input type="text" @oninput="BuscarPublicaciones" placeholder="Buscar publicaciones..." class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-primary-500" />
+  </div>
 
-  <div class="h-fullflex flex-col justify-center items-center text-primary-100">
+  <div class="h-full flex flex-col justify-center items-center">
   @if (Publicaciones == null || Publicaciones.Count <= 0)
   {
       <h3 class="text-lg font-bold">No hay publicaciones en este grupo</h3>
@@ -37,70 +43,90 @@
     <ul>
     @foreach (var publicacion in Publicaciones)
     {
-        <div class="text-center w-full bg-primary-300 mt-5 rounded-md px-5 flex flex-col p-10">
-            <div class="text-center font-bold text-2xl text-primary-600">@publicacion.Titulo</div>
-            <div class="mt-1 rounded-md px-3 flex flex-row justify-around">
-                <div class="text-center flex flex-col w-24 mr-5">
+      <div class="text-center w-full max-w-[600px] h-full bg-primary-300 mt-5 rounded-md">
+        <div  @onclick="() => IrAPublicacion(publicacion.PublicacionID)" class="hover:cursor-pointer flex flex-col p-2">
+            <h2 class="text-center font-bold text-2xl text-primary-600">@publicacion.Titulo</h2>
+            <div class="mt-1 px-3 flex flex-row justify-around">
+                <div class="text-center flex flex-col mr-5">
                     <p class="font-bold text-primary-500">@publicacion.Usuario?.Nombre</p>
                     <p class="font-light">@publicacion.Usuario?.Rango?.NombreRango</p>
                 </div>
                 <div class="flex flex-col w-full md:w-96">
-                <p class="text-justify w-full mr-5 mb-4">@publicacion.Contenido</p>
-                @if (publicacion.Imagen != null)
-                {
-                <img src="data:image;base64,@(Convert.ToBase64String(publicacion.Imagen))" alt="Foto seleccionada"
-                class="max-w-[430px] max-h-[430px]" />
-                }
+                    <p class="text-justify w-full mr-5 mb-4">@publicacion.Contenido</p>
+                    @if (publicacion.Imagen != null)
+                    {
+                        <img src="data:image;base64,@(Convert.ToBase64String(publicacion.Imagen))" alt="Foto seleccionada"
+                        class="max-w-[430px] max-h-[430px]" />
+                    }
                 </div>
             </div>
-            <div class="text-left">@publicacion.Fecha.ToString("dd/MM/yyyy")</div>
-<div class="mt-4 flex justify-between">
-    <div class="mt-4 flex justify-between">
-    @{
-    // Calcula las partes entera y fraccionaria de la calificación
-    var integerPart = (int)Math.Floor(publicacion.Calificacion);
-    var fractionalPart = publicacion.Calificacion - integerPart;
 
-    // Estrellas enteras
-    for (int i = 0; i < integerPart; i++)
-    {
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 fill-current" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M10 1l2.5 6.5H18l-5 3.75 2.5 6.25L10 14l-5 4 2.5-6.25-5-3.75h5.5L10 1z" />
-        </svg>
-    }
+            @if (ComentariosPorPublicacion != null && ComentariosPorPublicacion.ContainsKey(publicacion.PublicacionID))
+            {
+                var comentariosPublicacion = ComentariosPorPublicacion[publicacion.PublicacionID];
+                <div class="mt-4">
+                    @foreach (var comentario in comentariosPublicacion.Take(3))
+                    {
+                      <div class="bg-primary-500 rounded-md p-5 mt-2">
+                          <div class="flex flex-row">
+                              <div class="mr-2">
+                                  <p class="font-bold text-primary-900">@comentario.Usuario?.Nombre</p>
+                                  <p class="font-light">@comentario.Usuario?.Rango?.NombreRango</p>
+                              </div>
+                              <p class="ml-2 text-justify">@comentario.Contenido</p>
+                          </div>
+                          <p class="font-light text-left">@comentario.Fecha?.ToString("dd/MM/yyyy")</p>
+                        </div>
+                    }
+                </div>
+            }
 
-    // Estrellas fraccionarias
-    if (fractionalPart >= 0.5)
-    {
-        if (fractionalPart < 0.75)
-        {
-            // Estrella medio llena
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 fill-current" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M10 1l2.5 6.5H18l-5 3.75 2.5 6.25L10 14l-5 4 2.5-6.25-5-3.75h5.5L10 1z" />
-            </svg>
-        }
-        else
-        {
-            // Estrella llena
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 fill-current" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M10 1l2.5 6.5H18l-5 3.75 2.5 6.25L10 14l-5 4 2.5-6.25-5-3.75h5.5L10 1z" />
-            </svg>
-        }
-    }
+            <div class="mt-4 flex justify-start">
+                @{
+                    // Calcula las partes entera y fraccionaria de la calificación
+                    var integerPart = (int)Math.Floor(publicacion.Calificacion);
+                    var fractionalPart = publicacion.Calificacion - integerPart;
 
-    // Estrellas vacías
-    for (int i = integerPart + ((fractionalPart >= 0.25) ? 1 : 0); i < 5; i++)
-    {
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300 fill-current" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M10 1l2.5 6.5H18l-5 3.75 2.5 6.25L10 14l-5 4 2.5-6.25-5-3.75h5.5L10 1z" />
-        </svg>
-    }
-}
-
-</div>
-
-</div>
-
+                    // Estrellas enteras
+                    for (int i = 0; i < integerPart; i++)
+                    {
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 fill-current" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 1l2.5 6.5H18l-5 3.75 2.5 6.25L10 14l-5 4 2.5-6.25-5-3.75h5.5L10 1z" />
+                        </svg>
+                    }
+                    // Estrellas fraccionarias
+                    if (fractionalPart >= 0.5)
+                    {
+                        if (fractionalPart < 0.75)
+                        {
+                            // Estrella medio llena
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 fill-current" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 1l2.5 6.5H18l-5 3.75 2.5 6.25L10 14l-5 4 2.5-6.25-5-3.75h5.5L10 1z" />
+                            </svg>
+                        }
+                        else
+                        {
+                            // Estrella llena
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 fill-current" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 1l2.5 6.5H18l-5 3.75 2.5 6.25L10 14l-5 4 2.5-6.25-5-3.75h5.5L10 1z" />
+                            </svg>
+                        }
+                    }
+                    // Estrellas vacías
+                    for (int i = integerPart + ((fractionalPart >= 0.25) ? 1 : 0); i < 5; i++)
+                    {
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300 fill-current" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 1l2.5 6.5H18l-5 3.75 2.5 6.25L10 14l-5 4 2.5-6.25-5-3.75h5.5L10 1z" />
+                        </svg>
+                    }
+                }
+            </div>
+            <p class="text-left mt-2">@publicacion.Fecha.ToString("dd/MM/yyyy")</p>
+      </div>
+            @if (publicacion.Usuario?.UsuarioID == usuario?.UsuarioID)
+            {
+              <button @onclick="()=>BorrarPublicacion(publicacion.PublicacionID)" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md mb-4 transition duration-300">Eliminar</button>
+            }
         </div>
     }
     </ul>
@@ -113,7 +139,7 @@
 
   }
 
-  </div>
+</div>
 
   @if (usuario != null)
   {
@@ -169,6 +195,12 @@
       <button @onclick="AgregarUsuario" class="bg-primary-500 hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-md transition duration-300 text-center mt-3">
           Agregar usuario
       </button>
+      if (EquipoUsuario.Count > 1)
+      {
+      <button @onclick="EditarPermisos" class="bg-primary-500 hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-md transition duration-300 text-center mt-3">
+          Editar permisos
+      </button>
+      }
   }
 
 
@@ -188,42 +220,69 @@
   private Equipos? equipo;
   private List<UsuariosEquipos>? EquipoUsuario = new List<UsuariosEquipos>();
   private List<Publicaciones>? Publicaciones = null;
+  private Dictionary<int, Comentarios[]> ComentariosPorPublicacion = new Dictionary<int, Comentarios[]>();
   private bool MostrarUsuarios = false;
 
 
-protected override async Task OnInitializedAsync()
+  protected override async Task OnInitializedAsync()
+  {
+      if (!string.IsNullOrEmpty(Id))
+      {
+          int.TryParse(Id, out int userId);
+          usuario = await UsuariosClient.GetUsuarioAsync(userId);
+      }
+
+      int.TryParse(Equipo, out equipoId);
+
+      // Si no se proporciona un ID de equipo en la URL, establecer el ID de equipo predeterminado como "1"
+      if (string.IsNullOrEmpty(Equipo))
+      {
+          equipoId = 1;
+      }
+
+      // Obtener el equipo correspondiente al ID proporcionado
+      equipo = await EquiposClient.GetEquipoByIdAsync(equipoId);
+
+      // Verificar si el equipo existe
+      if (equipo != null)
+      {
+          // Obtener todos los usuarios del grupo
+          EquipoUsuario = (await EquiposClient.GetUsuariosFromEquipoAsync(equipoId)).ToList();
+          await CargarPublicaciones();
+      }
+  }
+
+  private async Task BuscarPublicaciones(ChangeEventArgs e)
+  {
+      // Obtener el término de búsqueda del evento
+      string terminoBusqueda = e.Value?.ToString() ?? string.Empty;
+
+      // Llamar al método para cargar publicaciones con el término de búsqueda
+      await CargarPublicaciones(terminoBusqueda);
+  }
+private async Task CargarPublicaciones(string? terminoBusqueda = null)
 {
-    int.TryParse(Id, out int userId);
-    usuario = await UsuariosClient.GetUsuarioAsync(userId);
-    int.TryParse(Equipo, out equipoId);
-
-    // Si no se proporciona un ID de equipo en la URL, establecer el ID de equipo predeterminado como "1"
-    if (string.IsNullOrEmpty(Equipo))
+    var resultado = await PublicacionesClient.ObtenerPublicaciones(PaginaActual, PublicacionesPorPagina, equipoId, terminoBusqueda);
+    if (resultado != null)
     {
-        equipoId = 1;
-    }
-
-    // Obtener el equipo correspondiente al ID proporcionado
-    equipo = await EquiposClient.GetEquipoByIdAsync(equipoId);
-
-    // Verificar si el equipo existe
-    if (equipo != null)
-    {
-        // Obtener todos los usuarios del grupo
-        EquipoUsuario = (await EquiposClient.GetUsuariosFromEquipoAsync(equipoId)).ToList();
-        await CargarPublicaciones();
-    }
-}
-    private async Task CargarPublicaciones()
-    {
-        var resultado = await PublicacionesClient.ObtenerPublicaciones(PaginaActual, PublicacionesPorPagina,equipoId);
-
-        if (resultado != null)
+        Publicaciones = resultado.Publicaciones;
+        TotalPaginas = resultado.TotalPaginas;
+        // Si hay al menos una publicación, cargar los comentarios de todas las publicaciones de manera asincrónica
+        if (Publicaciones != null && Publicaciones.Count > 0)
         {
-            Publicaciones = resultado.Publicaciones;
-            TotalPaginas = resultado.TotalPaginas;
+            foreach (var publicacion in Publicaciones)
+            {
+                await CargarComentariosAsync(publicacion.PublicacionID);
+            }
         }
     }
+}
+
+private async Task CargarComentariosAsync(int publicacionId)
+{
+    var comentarios = await ComentariosClient.GetComentariosAsync(publicacionId);
+    ComentariosPorPublicacion[publicacionId] = comentarios;
+}
 
 private async Task IrAPaginaAnterior()
     {
@@ -251,6 +310,29 @@ private async Task IrAPaginaAnterior()
   private void AgregarUsuario()
   {
     NavigationManager.NavigateTo($"/AgregarUsuario/{Id}/{equipoId}");
+  }
+
+  private void EditarPermisos()
+  {
+    NavigationManager.NavigateTo($"/EditarPermisos/{Id}/{equipoId}");
+  }
+
+  private void IrAPublicacion(int publicacionId)
+  {
+      if (Id != null)
+      {
+          NavigationManager.NavigateTo($"/Publicacion/{publicacionId}/{Id}");
+      }
+      else
+      {
+          NavigationManager.NavigateTo($"/Publicacion/{publicacionId}");
+      }
+  }
+
+  private async Task BorrarPublicacion(int publicacionId)
+  {
+    await PublicacionesClient.DeletePublicacionAsync(publicacionId);
+    await CargarPublicaciones();
   }
 
   private void MostrarListaUsuarios()

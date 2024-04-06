@@ -182,6 +182,36 @@ namespace Staticaly.Server.ModelsMigrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Comentarios",
+                columns: table => new
+                {
+                    ComentarioID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PublicacionID = table.Column<int>(type: "int", nullable: false),
+                    UsuarioID = table.Column<int>(type: "int", nullable: false),
+                    Contenido = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Imagen = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Reportes = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comentarios", x => x.ComentarioID);
+                    table.ForeignKey(
+                        name: "FK_Comentarios_Publicaciones_PublicacionID",
+                        column: x => x.PublicacionID,
+                        principalTable: "Publicaciones",
+                        principalColumn: "PublicacionID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comentarios_Usuarios_UsuarioID",
+                        column: x => x.UsuarioID,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.InsertData(
                 table: "Permisos",
                 columns: new[] { "PermisoID", "Nombre" },
@@ -235,6 +265,16 @@ namespace Staticaly.Server.ModelsMigrations
                 values: new object[] { 1, null, "Foro Publico", 1 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comentarios_PublicacionID",
+                table: "Comentarios",
+                column: "PublicacionID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comentarios_UsuarioID",
+                table: "Comentarios",
+                column: "UsuarioID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Equipos_TipoEquipoID",
                 table: "Equipos",
                 column: "TipoEquipoID");
@@ -274,10 +314,13 @@ namespace Staticaly.Server.ModelsMigrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Publicaciones");
+                name: "Comentarios");
 
             migrationBuilder.DropTable(
                 name: "UsuariosEquipos");
+
+            migrationBuilder.DropTable(
+                name: "Publicaciones");
 
             migrationBuilder.DropTable(
                 name: "Equipos");

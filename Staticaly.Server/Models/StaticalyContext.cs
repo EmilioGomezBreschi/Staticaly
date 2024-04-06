@@ -13,6 +13,7 @@ namespace Staticaly.Server.Models
     public DbSet<TiposEquipos> TiposEquipos { get; set; }
     public DbSet<UsuariosEquipos> UsuariosEquipos { get; set; }
     public DbSet<Publicaciones> Publicaciones { get; set; }
+    public DbSet<Comentarios> Comentarios { get; set; }
 
     public StaticalyContext(DbContextOptions<StaticalyContext> options) : base(options) { }
 
@@ -29,6 +30,8 @@ namespace Staticaly.Server.Models
       ConfigureUser(modelBuilder);
       ConfigureEquipos(modelBuilder);
       ConfigureUsuariosEquipos(modelBuilder);
+      ConfigurarPublicaciones(modelBuilder);
+      ConfigurarComentarios(modelBuilder);
     }
 
     private void ConfigureUser(ModelBuilder modelBuilder)
@@ -76,6 +79,21 @@ namespace Staticaly.Server.Models
           .HasOne(p => p.Usuario)
           .WithMany()
           .HasForeignKey(p => p.UsuarioID);
+    }
+
+    private void ConfigurarComentarios(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<Comentarios>()
+          .HasOne(c => c.Publicacion)
+          .WithMany()
+          .HasForeignKey(c => c.PublicacionID)
+          .OnDelete(DeleteBehavior.Cascade); // Eliminar en cascada si se elimina la publicación
+
+      modelBuilder.Entity<Comentarios>()
+          .HasOne(c => c.Usuario)
+          .WithMany()
+          .HasForeignKey(c => c.UsuarioID)
+          .OnDelete(DeleteBehavior.Restrict); // No realizar acción en cascada si se elimina el usuario
     }
   }
 

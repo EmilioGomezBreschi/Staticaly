@@ -24,14 +24,20 @@ namespace Staticaly.Client.Data
       return await httpClient.PostAsJsonAsync("publicaciones", publicacion);
     }
 
-    // Obtener publicaciones de equipo
-    public async Task<Publicaciones[]> GetPublicacionesAsync(int equipoID)
+    // Eliminar publicacion
+    public async Task<HttpResponseMessage> DeletePublicacionAsync(int publicacionID)
     {
-      return await httpClient.GetFromJsonAsync<Publicaciones[]>($"publicaciones/byEquipo/{equipoID}") ?? Array.Empty<Publicaciones>();
+      return await httpClient.DeleteAsync($"publicaciones/{publicacionID}");
+    }
+
+    // Obtener publicacion por ID
+    public async Task<Publicaciones?> GetPublicacionAsync(int publicacionID)
+    {
+      return await httpClient.GetFromJsonAsync<Publicaciones>($"publicaciones/{publicacionID}");
     }
 
     // obtener publicacion de equipo por nombre
-    public async Task<Publicaciones?> GetPublicacionAsync(int equipoID, string nombre)
+    public async Task<Publicaciones?> GetPublicacionesByNameAsync(int equipoID, string nombre)
     {
       return await httpClient.GetFromJsonAsync<Publicaciones>($"publicaciones/byEquipo/{equipoID}/{nombre}");
     }
@@ -48,10 +54,18 @@ namespace Staticaly.Client.Data
       return await httpClient.PutAsJsonAsync($"publicaciones/{publicacionID}/calificacion", calificacion);
     }
 
-    public async Task<RespuestaPaginada<Publicaciones>> ObtenerPublicaciones(int pagina, int porPagina, int equipoId)
+    public async Task<RespuestaPaginada<Publicaciones>> ObtenerPublicaciones(int pagina, int porPagina, int equipoId, string? titulo = null)
     {
+      // Construye la URL del endpoint incluyendo el título si está presente
+      string endpoint = $"publicaciones/byEquipo/{equipoId}";
+      if (!string.IsNullOrEmpty(titulo))
+      {
+        endpoint += $"/{Uri.EscapeDataString(titulo)}";
+      }
+      endpoint += $"?page={pagina}&pageSize={porPagina}";
+
       // Llama a tu backend para obtener las publicaciones de la página actual
-      var response = await httpClient.GetAsync($"publicaciones/byEquipo/{equipoId}?page={pagina}&pageSize={porPagina}");
+      var response = await httpClient.GetAsync(endpoint);
 
       if (response.IsSuccessStatusCode)
       {
@@ -66,6 +80,7 @@ namespace Staticaly.Client.Data
         return new RespuestaPaginada<Publicaciones>(); // Return a default instance in case of error
       }
     }
+
 
   }
 }

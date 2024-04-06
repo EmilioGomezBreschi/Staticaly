@@ -1,0 +1,123 @@
+@page "/Publicacion/{publicacion}/{id}"
+@page "/Publicacion/{publicacion}"
+@using Models
+@using Data
+@using Microsoft.JSInterop
+@inject NavigationManager NavigationManager
+@inject PublicacionesClient PublicacionClient
+@inject ComentariosClient ComentariosClient
+@inject IJSRuntime JSRuntime
+
+
+<PageTitle>Publicación - Staticaly</PageTitle>
+
+<div class="z-40 fixed top-0">
+  <NavBar id="@Id" />
+</div>
+
+<div class="pt-16 lg:pl-20 lg:pt-0 text-primary-100 flex flex-col justify-normal text-center items-center">
+  <div id="logo" class="text-center md:mt-8 mb-4">
+    <img src="images/heart.svg" class="w-24 h-24 mx-auto" alt="Logo de Statica.ly" />
+    <h1 class="text-3xl text-logo-text">Statica.ly</h1>
+  </div>
+  <div class="bg-primary-300 rounded-lg p-8 text-primary-100 w-full max-w-[600px]">
+    @if (ErrorMessage != "")
+    {
+      <div class="bg-red-500 text-white p-4 rounded-md text-center">
+        <p>@ErrorMessage</p>
+      </div>
+    }
+    <h2 class="text-center font-bold text-2xl text-primary-600">@publicacionData.Titulo</h2>
+    <div class="mt-1 px-3 flex flex-row justify-around mb-4">
+      <div class="text-center flex flex-col mr-5">
+        @if (publicacionData.Usuario != null && publicacionData.Usuario.Rango != null)
+        {
+          <p class="font-semibold text-primary-500">@publicacionData.Usuario.Nombre</p>
+          <p class="font-light">@publicacionData.Usuario.Rango.NombreRango</p>
+        }
+        else
+        {
+          <p class="text-left">Anónimo</p>
+        }
+      </div>
+      <div class="flex flex-col w-full md:w-96">
+        <p class="text-justify w-full mr-5 mb-4">@publicacionData.Contenido</p>
+        @if (publicacionData.Imagen != null)
+        {
+          <img src="data:image;base64,@(Convert.ToBase64String(publicacionData.Imagen))" alt="Foto seleccionada"
+            class="max-w-[430px] max-h-[430px]" />
+        }
+      </div>
+    </div>
+    @if (Id != null)
+    {
+      <button class="bg-primary-100 text-primary-500 hover:bg-primary-200 transition duration-300 rounded-md p-2 w-full"
+        @onclick='() => NavigationManager.NavigateTo($"/Comentar/{publicacion}/{Id}")'>
+        <p class="text-center">Comentar</p>
+      </button>
+    }
+    @foreach (var comentario in comentariosData)
+    {
+      <div class="mt-2 bg-primary-500 rounded-md p-5">
+        <div class="flex flex-row">
+          <div class="mr-2">
+            @if (comentario.Usuario != null && comentario.Usuario.Rango != null)
+            {
+              <p class="font-semibold text-primary-900 text-left">@comentario.Usuario.Nombre</p>
+              <p class="font-light text-left">@comentario.Usuario.Rango.NombreRango</p>
+            }
+            else
+            {
+              <p class="text-left font-semibold text-primary-900">Anónimo</p>
+            }
+          </div>
+          <p class="text-justify">@comentario.Contenido</p>
+        </div>
+        <p class="text-justify ml-2">@comentario.Fecha?.ToString("dd/MM/yyyy")</p>
+      </div>
+    }
+    <p class="text-left mt-2">@publicacionData.Fecha.ToString("dd/MM/yyyy")</p>
+  </div>
+</div>
+
+@code {
+  private string ErrorMessage = "";
+
+  [Parameter]
+  public string? publicacion { get; set; }
+  [Parameter]
+  public string? Id { get; set; }
+
+  public Publicaciones publicacionData { get; set; } = new Publicaciones();
+
+  public List<Comentarios> comentariosData { get; set; } = new List<Comentarios>();
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (publicacion == null)
+    {
+      NavigationManager.NavigateTo("/");
+    }
+    else
+    {
+      var response = await PublicacionClient.GetPublicacionAsync(int.Parse(publicacion));
+      if (response == null)
+      {
+        NavigationManager.NavigateTo("/");
+      }
+      else
+      {
+        publicacionData = response;
+
+        //Obtener comentarios de la publicación
+        var responseComentarios = await ComentariosClient.GetComentariosAsync(int.Parse(publicacion));
+        if (responseComentarios != null)
+        {
+          comentariosData = responseComentarios.ToList();
+        }
+
+      }
+    }
+  }
+}
+}

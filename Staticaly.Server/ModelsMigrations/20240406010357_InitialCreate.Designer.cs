@@ -12,7 +12,7 @@ using Staticaly.Server.Models;
 namespace Staticaly.Server.ModelsMigrations
 {
     [DbContext(typeof(StaticalyContext))]
-    [Migration("20240325233414_InitialCreate")]
+    [Migration("20240406010357_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -24,6 +24,43 @@ namespace Staticaly.Server.ModelsMigrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Staticaly.Server.Models.Comentarios", b =>
+                {
+                    b.Property<int>("ComentarioID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ComentarioID"));
+
+                    b.Property<string>("Contenido")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Fecha")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("Imagen")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("PublicacionID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Reportes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ComentarioID");
+
+                    b.HasIndex("PublicacionID");
+
+                    b.HasIndex("UsuarioID");
+
+                    b.ToTable("Comentarios");
+                });
 
             modelBuilder.Entity("Staticaly.Server.Models.Equipos", b =>
                 {
@@ -387,6 +424,25 @@ namespace Staticaly.Server.ModelsMigrations
                     b.HasIndex("UsuarioID");
 
                     b.ToTable("UsuariosEquipos");
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.Comentarios", b =>
+                {
+                    b.HasOne("Staticaly.Server.Models.Publicaciones", "Publicacion")
+                        .WithMany()
+                        .HasForeignKey("PublicacionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Staticaly.Server.Models.User", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Publicacion");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Staticaly.Server.Models.Equipos", b =>

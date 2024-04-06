@@ -442,6 +442,18 @@ publicacionesGroup.MapPost("/", async (StaticalyContext context, Publicaciones p
   return Results.Created($"/publicaciones/{publicacion.PublicacionID}", publicacion);
 }).Produces<Publicaciones>();
 
+// Obtener publicacion por ID
+publicacionesGroup.MapGet("/{id}", async (StaticalyContext context, int id) =>
+{
+  var publicacion = await context.Publicaciones
+                              .Include(p => p.Usuario)
+                              .ThenInclude(u => u.Rango)
+                              .AsNoTracking()
+                              .FirstOrDefaultAsync(p => p.PublicacionID == id);
+
+  return publicacion != null ? Results.Ok(publicacion) : Results.NotFound();
+}).Produces<Publicaciones>();
+
 // Obtener publicaciones en equipo paginadas
 publicacionesGroup.MapGet("/byEquipo/{id}", async (StaticalyContext context, int id, int page = 1, int pageSize = 5) =>
 {
@@ -472,21 +484,33 @@ publicacionesGroup.MapGet("/byEquipo/{id}", async (StaticalyContext context, int
 
 
 
-// Obtener publicaciones de equipo por parte del título
-publicacionesGroup.MapGet("/byEquipo/{id}/{titulo}", async (StaticalyContext context, int id, string titulo) =>
+// Obtener publicaciones de equipo por parte del título paginadas
+publicacionesGroup.MapGet("/byEquipo/{id}/{titulo}", async (StaticalyContext context, int id, string titulo, int page = 1, int pageSize = 5) =>
 {
+  var skipAmount = (page - 1) * pageSize;
+
   var publicaciones = await context.Publicaciones
-                                    .Include(p => p.Usuario)
-                                    .ThenInclude(u => u.Rango)
-                                    .AsNoTracking()
-                                    .Where(p => p.ForoID == id && p.Titulo != null && p.Titulo.Contains(titulo))
-                                    .ToListAsync();
+      .Include(p => p.Usuario)
+      .ThenInclude(u => u.Rango)
+      .AsNoTracking()
+      .Where(p => p.ForoID == id && p.Titulo != null && p.Titulo.Contains(titulo))
+      .OrderByDescending(p => p.Fecha) // Ordena por Fecha descendente
+      .Skip(skipAmount)
+      .Take(pageSize)
+      .ToListAsync();
 
-  return Results.Ok(publicaciones);
+  var totalPublicaciones = await context.Publicaciones
+      .Where(p => p.ForoID == id && p.Titulo != null && p.Titulo.Contains(titulo))
+      .CountAsync();
+
+  var totalPages = (int)Math.Ceiling(totalPublicaciones / (double)pageSize);
+
+  return Results.Ok(new
+  {
+    Publicaciones = publicaciones,
+    TotalPaginas = totalPages
+  });
 });
-
-
-
 
 // Editar publicacion
 publicacionesGroup.MapPut("/{id}", async (StaticalyContext context, int id, Publicaciones publicacion) =>
@@ -548,6 +572,81 @@ publicacionesGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =
   }
 
   context.Publicaciones.Remove(publicacion);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+#endregion
+
+var comentariosGroup = app.MapGroup("/comentarios").WithParameterValidation();
+
+#region Entry Points Comentarios
+
+// Crear comentario
+comentariosGroup.MapPost("/", async (StaticalyContext context, Comentarios comentario) =>
+{
+  context.Comentarios.Add(comentario);
+  await context.SaveChangesAsync();
+  return Results.Created($"/comentarios/{comentario.ComentarioID}", comentario);
+}).Produces<Comentarios>();
+
+// Obtener comentarios de una publicación
+comentariosGroup.MapGet("/byPublicacion/{id}", async (StaticalyContext context, int id) =>
+{
+  var comentarios = await context.Comentarios
+                                  .Include(c => c.Usuario)
+                                  .ThenInclude(u => u.Rango)
+                                  .AsNoTracking()
+                                  .Where(c => c.PublicacionID == id)
+                                  .ToListAsync();
+
+  return Results.Ok(comentarios);
+});
+
+// Editar comentario
+comentariosGroup.MapPut("/{id}", async (StaticalyContext context, int id, Comentarios comentario) =>
+{
+  var comentarioToUpdate = await context.Comentarios.FindAsync(id);
+  if (comentarioToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  comentarioToUpdate.Contenido = comentario.Contenido;
+  comentarioToUpdate.Imagen = comentario.Imagen;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+}).Produces<Comentarios>();
+
+// Actualizar reportes de comentario
+comentariosGroup.MapPut("/reportes/{id}/{reportes}", async (StaticalyContext context, int id, int reportes) =>
+{
+  var comentarioToUpdate = await context.Comentarios.FindAsync(id);
+  if (comentarioToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  comentarioToUpdate.Reportes = reportes;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+// Eliminar comentario
+comentariosGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+{
+  var comentario = await context.Comentarios.FindAsync(id);
+  if (comentario == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.Comentarios.Remove(comentario);
   await context.SaveChangesAsync();
 
   return Results.NoContent();
