@@ -16,6 +16,8 @@ builder.Services.AddScoped<EquiposClient>();
 builder.Services.AddScoped<PublicacionesClient>();
 builder.Services.AddScoped<ImageServiceClient>();
 builder.Services.AddScoped<ComentariosClient>();
-
+builder.Services.AddScoped<CuestionarioClient>();
+builder.Services.AddScoped<PreguntasClient>();
+builder.Services.AddScoped<OpcionesCuestionarioClient>();
 
 await builder.Build().RunAsync();
