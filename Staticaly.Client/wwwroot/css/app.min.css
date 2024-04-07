@@ -778,6 +778,9 @@ video {
 .max-w-\[430px\] {
   max-width: 430px;
 }
+.max-w-\[550px\] {
+  max-width: 550px;
+}
 .max-w-\[600px\] {
   max-width: 600px;
 }
@@ -845,6 +848,9 @@ video {
 .justify-start {
   justify-content: flex-start;
 }
+.justify-end {
+  justify-content: flex-end;
+}
 .justify-center {
   justify-content: center;
 }
@@ -864,6 +870,12 @@ video {
 }
 .overflow-y-auto {
   overflow-y: auto;
+}
+.text-wrap {
+  text-wrap: wrap;
+}
+.break-words {
+  overflow-wrap: break-word;
 }
 .rounded {
   border-radius: 0.25rem;

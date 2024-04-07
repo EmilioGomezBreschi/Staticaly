@@ -599,6 +599,7 @@ comentariosGroup.MapGet("/byPublicacion/{id}", async (StaticalyContext context, 
                                   .ThenInclude(u => u.Rango)
                                   .AsNoTracking()
                                   .Where(c => c.PublicacionID == id)
+                                  .OrderByDescending(c => c.Fecha)
                                   .ToListAsync();
 
   return Results.Ok(comentarios);

@@ -43,7 +43,7 @@
     <ul>
     @foreach (var publicacion in Publicaciones)
     {
-      <div class="text-center w-full max-w-[600px] h-full bg-primary-300 mt-5 rounded-md">
+      <div class="text-center w-full h-full bg-primary-300 mt-5 rounded-md">
         <div  @onclick="() => IrAPublicacion(publicacion.PublicacionID)" class="hover:cursor-pointer flex flex-col p-2">
             <h2 class="text-center font-bold text-2xl text-primary-600">@publicacion.Titulo</h2>
             <div class="mt-1 px-3 flex flex-row justify-around">
@@ -51,8 +51,8 @@
                     <p class="font-bold text-primary-500">@publicacion.Usuario?.Nombre</p>
                     <p class="font-light">@publicacion.Usuario?.Rango?.NombreRango</p>
                 </div>
-                <div class="flex flex-col w-full md:w-96">
-                    <p class="text-justify w-full mr-5 mb-4">@publicacion.Contenido</p>
+                <div class="flex flex-col w-full md:w-96 max-w-[600px]">
+                    <p class="text-justify w-full mr-5 mb-4 text-wrap break-words">@publicacion.Contenido</p>
                     @if (publicacion.Imagen != null)
                     {
                         <img src="data:image;base64,@(Convert.ToBase64String(publicacion.Imagen))" alt="Foto seleccionada"
@@ -67,16 +67,32 @@
                 <div class="mt-4">
                     @foreach (var comentario in comentariosPublicacion.Take(3))
                     {
-                      <div class="bg-primary-500 rounded-md p-5 mt-2">
-                          <div class="flex flex-row">
-                              <div class="mr-2">
-                                  <p class="font-bold text-primary-900">@comentario.Usuario?.Nombre</p>
-                                  <p class="font-light">@comentario.Usuario?.Rango?.NombreRango</p>
-                              </div>
-                              <p class="ml-2 text-justify">@comentario.Contenido</p>
+                      <div class="mt-2 bg-primary-500 rounded-md p-5">
+                        <div class="flex flex-row">
+                          <div class="mr-2">
+                            @if (comentario.Usuario != null && comentario.Usuario.Rango != null)
+                            {
+                              <p class="font-semibold text-primary-900 text-left">@comentario.Usuario.Nombre</p>
+                              <p class="font-light text-left">@comentario.Usuario.Rango.NombreRango</p>
+                            }
+                            else
+                            {
+                              <p class="text-left font-semibold text-primary-900">Anónimo</p>
+                            }
                           </div>
-                          <p class="font-light text-left">@comentario.Fecha?.ToString("dd/MM/yyyy")</p>
+                          <div class="flex flex-col w-full max-w-[550px] md:w-96 ml-2">
+                            @{
+                                var contenidoCorto = comentario?.Contenido?.Length > 200 ? comentario.Contenido.Substring(0, 200) + "..." : comentario?.Contenido;
+                            }
+                            <p class="text-justify text-wrap break-words">@contenidoCorto</p>
+                            @if (comentario?.Imagen != null)
+                            {
+                              <img src="data:image;base64,@(Convert.ToBase64String(comentario.Imagen))" alt="Foto seleccionada"
+                                class="max-w-[430px] max-h-[430px]" />
+                            }
+                          </div>
                         </div>
+                      </div>
                     }
                 </div>
             }

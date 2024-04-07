@@ -40,8 +40,8 @@
           <p class="text-left">Anónimo</p>
         }
       </div>
-      <div class="flex flex-col w-full md:w-96">
-        <p class="text-justify w-full mr-5 mb-4">@publicacionData.Contenido</p>
+      <div class="flex flex-col w-full max-w-[600px] md:w-96">
+        <p class="text-justify w-full mr-5 mb-4 text-wrap break-words">@publicacionData.Contenido</p>
         @if (publicacionData.Imagen != null)
         {
           <img src="data:image;base64,@(Convert.ToBase64String(publicacionData.Imagen))" alt="Foto seleccionada"
@@ -71,9 +71,25 @@
               <p class="text-left font-semibold text-primary-900">Anónimo</p>
             }
           </div>
-          <p class="text-justify">@comentario.Contenido</p>
+          <div class="flex flex-col w-full max-w-[550px] md:w-96 ml-2">
+            <p class="text-justify text-wrap break-words">@comentario.Contenido</p>
+            @if (comentario.Imagen != null)
+            {
+              <img src="data:image;base64,@(Convert.ToBase64String(comentario.Imagen))" alt="Foto seleccionada"
+                class="max-w-[430px] max-h-[430px]" />
+            }
+          </div>
         </div>
         <p class="text-justify ml-2">@comentario.Fecha?.ToString("dd/MM/yyyy")</p>
+        @if (comentario.UsuarioID == (int.Parse(Id ?? "0")))
+        {
+          <div class="flex flex-row justify-end">
+            <button class="bg-red-500 text-white hover:bg-red-600 transition duration-300 rounded-md p-2"
+              @onclick='() => EliminarComentario(comentario.ComentarioID)'>
+              <p class="text-center">Eliminar</p>
+            </button>
+          </div>
+        }
       </div>
     }
     <p class="text-left mt-2">@publicacionData.Fecha.ToString("dd/MM/yyyy")</p>
@@ -110,14 +126,32 @@
         publicacionData = response;
 
         //Obtener comentarios de la publicación
-        var responseComentarios = await ComentariosClient.GetComentariosAsync(int.Parse(publicacion));
-        if (responseComentarios != null)
-        {
-          comentariosData = responseComentarios.ToList();
-        }
+        await ObtenerComentarios();
 
       }
     }
   }
-}
+
+  private async Task EliminarComentario(int id)
+  {
+    var response = await ComentariosClient.DeleteComentarioAsync(id);
+    if (response != null)
+    {
+      ErrorMessage = "";
+      await ObtenerComentarios();
+    }
+    else
+    {
+      ErrorMessage = "No se pudo eliminar el comentario";
+    }
+  }
+
+  private async Task ObtenerComentarios()
+  {
+    var response = await ComentariosClient.GetComentariosAsync(int.Parse(publicacion ?? "0"));
+    if (response != null)
+    {
+      comentariosData = response.ToList();
+    }
+  }
 }

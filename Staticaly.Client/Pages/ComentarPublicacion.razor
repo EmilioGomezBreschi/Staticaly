@@ -1,0 +1,134 @@
+@page "/Comentar/{publicacionId}/{id}"
+@using Models;
+@using Data;
+@using System.Text.Json;
+@inject NavigationManager NavigationManager
+@inject ComentariosClient ComentariosClient
+@inject UsuariosClient UsuariosClient
+@inject ImageServiceClient imageServiceClient
+
+<PageTitle>Crear Comentario - Staticaly</PageTitle>
+
+<div class="text-white flex flex-col justify-center items-center px-24">
+  @if (isLoading)
+  {
+    <div class="h-full absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+      <svg class="animate-spin h-8 w-8 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+        viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647zM20 12a8 8 0 01-8 8v4c6.627 0 12-5.373 12-12h-4zm-2-5.291A7.962 7.962 0 0120 12h4c0-3.042-1.135-5.824-3-7.938l-3 2.647z">
+        </path>
+      </svg>
+    </div>
+  }
+  <div id="logo" class="text-center md:mt-8 mb-4">
+    <img src="images/heart.svg" class="w-24 h-24 mx-auto" alt="Logo de Statica.ly" />
+    <h1 class="text-3xl text-logo-text">Statica.ly</h1>
+  </div>
+  <div class="bg-primary-300 rounded-lg p-8 w-auto h-full m-7">
+    <EditForm Model="@Comentarios" OnValidSubmit="NuevoComentario" class="flex flex-col text-primary-400">
+      @if (errorMessage != "")
+      {
+        <div class="relative mt-1 text-xs text-center bg-red-500 font-bold text-white px-4 py-2 rounded-md mb-4">
+          @errorMessage
+        </div>
+      }
+      <div class="relative my-3 bg-primary-100 rounded-md font-bold">
+        <InputTextArea @bind-Value="@Comentarios.Contenido" type="text" id="descripcion"
+          class="w-full h-24 md:h-60 border-2 border-Primary-Background rounded-md p-3 placeholder-primary-400 bg-transparent"
+          placeholder="Contenido" MaxLength="1000" />
+        <ValidationMessage For="@(() => Comentarios.Contenido)" class="text-red-500" />
+        <div class="absolute my-5 bottom-3 right-3 text-sm text-white">
+          @Comentarios?.Contenido?.Length/1000
+        </div>
+      </div>
+      <div class="relative mt-3 bg-primary-100 rounded-md font-bold flex items-center justify-center text-center">
+        <label for="fotoPublicacacion" class="absolute left-3">
+          <img src="images/camera.svg" alt="Icono de cámara" class="h-6 w-6" />
+        </label>
+        <InputFile id="fotoPublicacacion"
+          class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-4 placeholder-primary-400 bg-transparent"
+          accept=".jpg,.jpeg,.png" OnChange="HandleFileSelected" />
+      </div>
+      <div class="px-5 py-2 mb-3 bg-primary-50 rounded-md font-bold text-xs text-primary-400 text-center max-w-full">
+        <p>Esta imagen es opcional para dar mas informacion, debe ser de un tamaño maximo de 480px x 480px</p>
+      </div>
+      @if (FotoComentario != null)
+      {
+        <div class="flex justify-center items-center">
+          <img src="data:image;base64,@(Convert.ToBase64String(FotoComentario))" alt="Foto seleccionada"
+            class="my-3 max-w-24 max-h-24 hover:max-w-[430px] hover:max-h-[430px]" />
+        </div>
+      }
+      <div class="relative flex flex-row justify-between items-center w-full h-full">
+        <button type="button"
+          class="bg-primary-500 text-white font-bold text-lg rounded-md h-20 md:h-16 w-32 mx-1 hover:bg-red-600 transition duration-300"
+          @onclick='() => NavigationManager.NavigateTo($"/Publicacion/{idPublicacion}/{idUsuario}")'>Cancelar</button>
+        <button type="submit"
+          class="bg-primary-500 text-white font-bold text-lg rounded-md h-20 md:h-16 w-32 mx-1 hover:bg-primary-600 transition duration-300">Crear</button>
+      </div>
+    </EditForm>
+  </div>
+</div>
+
+@code {
+  private Comentarios Comentarios = new Comentarios();
+  [Parameter] public string? id { get; set; }
+  [Parameter] public string? publicacionid { get; set; }
+  int idUsuario;
+  int idPublicacion;
+  byte[]? FotoComentario = null;
+  private bool isLoading = false;
+  private string errorMessage = "";
+  private void SetErrorMessage(string message)
+  {
+    errorMessage = message;
+  }
+
+  protected override Task OnInitializedAsync()
+  {
+    if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(publicacionid))
+    {
+      idUsuario = int.Parse(id);
+      idPublicacion = int.Parse(publicacionid);
+      return Task.CompletedTask;
+    }
+    else
+    {
+      NavigationManager.NavigateTo("/");
+      return Task.CompletedTask;
+    }
+  }
+
+  private async Task NuevoComentario()
+  {
+    isLoading = true;
+    Comentarios.PublicacionID = idPublicacion;
+    Comentarios.UsuarioID = idUsuario;
+    Comentarios.Fecha = DateTime.Now;
+    Comentarios.Imagen = FotoComentario;
+    var response = await ComentariosClient.CreateComentarioAsync(Comentarios);
+    if (response != null)
+    {
+      NavigationManager.NavigateTo($"/Publicacion/{idPublicacion}/{idUsuario}");
+    }
+    else
+    {
+      SetErrorMessage("Error al crear el comentario");
+    }
+    isLoading = false;
+  }
+
+  private async Task HandleFileSelected(InputFileChangeEventArgs e)
+  {
+    FotoComentario = await imageServiceClient.HandleFileSelected(e);
+    if (FotoComentario is null)
+    {
+      SetErrorMessage("Error al cargar la imagen");
+    }
+  }
+
+
+
+}

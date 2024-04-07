@@ -160,7 +160,6 @@
 | DatosEncuestaID    | INT          | Referencia al ID de los datos de encuesta en la tabla "DatosEncuestas" |
 | PreguntaID         | INT          | Referencia al ID de la pregunta en la tabla "Preguntas"                |
 | RespuestaID        | INT          | Referencia al ID de la respuesta en la tabla "Respuestas"              |
-| ContenidoUsuario   | TEXT         | Contenido de la respuesta proporcionada por el usuario                 |
 
 ### Tabla: Ejercicios
 

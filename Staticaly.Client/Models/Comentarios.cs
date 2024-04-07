@@ -26,5 +26,7 @@ namespace Staticaly.Client.Models
     public DateTime? Fecha { get; set; }
     [Required]
     public int Reportes { get; set; }
+    [Required]
+    public bool? Aprobado { get; set; }
   }
 }
