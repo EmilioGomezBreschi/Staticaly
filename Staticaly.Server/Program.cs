@@ -655,4 +655,184 @@ comentariosGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
 
 #endregion
 
+var cuestionariosGroup = app.MapGroup("/cuestionarios").WithParameterValidation();
+
+#region Entry Points Cuestionarios
+
+// Crear cuestionario
+cuestionariosGroup.MapPost("/", async (StaticalyContext context, Cuestionarios cuestionario) =>
+{
+  context.Cuestionarios.Add(cuestionario);
+  await context.SaveChangesAsync();
+  return Results.Created($"/cuestionarios/{cuestionario.CuestionarioID}", cuestionario);
+}).Produces<Cuestionarios>();
+
+// Obtener cuestionario por Equipo
+cuestionariosGroup.MapGet("/byEquipo/{id}", async (StaticalyContext context, int id) =>
+{
+  var cuestionarios = await context.Cuestionarios
+                                  .Include(c => c.Usuario)
+                                  .Include(c => c.Equipo)
+                                  .AsNoTracking()
+                                  .Where(c => c.EquipoID == id)
+                                  .ToListAsync();
+
+  return Results.Ok(cuestionarios);
+});
+
+// Obtener cuestionario por ID
+cuestionariosGroup.MapGet("/{id}", async (StaticalyContext context, int id) =>
+{
+  var cuestionario = await context.Cuestionarios
+                              .Include(c => c.Usuario)
+                              .Include(c => c.Equipo)
+                              .AsNoTracking()
+                              .FirstOrDefaultAsync(c => c.CuestionarioID == id);
+
+  return cuestionario != null ? Results.Ok(cuestionario) : Results.NotFound();
+}).Produces<Cuestionarios>();
+
+//Obtener cuestionario por usuario
+cuestionariosGroup.MapGet("/byUsuario/{id}", async (StaticalyContext context, int id) =>
+{
+  var cuestionarios = await context.Cuestionarios
+                                  .Include(c => c.Usuario)
+                                  .Include(c => c.Equipo)
+                                  .AsNoTracking()
+                                  .Where(c => c.UsuarioID == id)
+                                  .ToListAsync();
+
+  return Results.Ok(cuestionarios);
+});
+
+// Eliminar cuestionario
+cuestionariosGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+{
+  var cuestionario = await context.Cuestionarios.FindAsync(id);
+  if (cuestionario == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.Cuestionarios.Remove(cuestionario);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+#endregion
+
+var preguntasGroup = app.MapGroup("/preguntas").WithParameterValidation();
+
+#region Entry Points Preguntas
+
+// Crear pregunta
+preguntasGroup.MapPost("/", async (StaticalyContext context, Preguntas pregunta) =>
+{
+  context.Preguntas.Add(pregunta);
+  await context.SaveChangesAsync();
+  return Results.Created($"/preguntas/{pregunta.PreguntaID}", pregunta);
+}).Produces<Preguntas>();
+
+// Obtener preguntas por cuestionario
+preguntasGroup.MapGet("/byCuestionario/{id}", async (StaticalyContext context, int id) =>
+{
+  var preguntas = await context.Preguntas
+                              .Include(p => p.Cuestionario)
+                              .AsNoTracking()
+                              .Where(p => p.CuestionarioID == id)
+                              .ToListAsync();
+
+  return Results.Ok(preguntas);
+});
+
+// Editar pregunta
+preguntasGroup.MapPut("/{id}", async (StaticalyContext context, int id, Preguntas pregunta) =>
+{
+  var preguntaToUpdate = await context.Preguntas.FindAsync(id);
+  if (preguntaToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  preguntaToUpdate.Pregunta = pregunta.Pregunta;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+}).Produces<Preguntas>();
+
+// Eliminar pregunta
+preguntasGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+{
+  var pregunta = await context.Preguntas.FindAsync(id);
+  if (pregunta == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.Preguntas.Remove(pregunta);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+#endregion
+
+var opcionesCuestionarioGroup = app.MapGroup("/opcionescuestionario").WithParameterValidation();
+
+#region Entry Points OpcionesCuestionario
+
+// Crear opción de cuestionario
+opcionesCuestionarioGroup.MapPost("/", async (StaticalyContext context, OpcionesCuestionario opcion) =>
+{
+  context.OpcionesCuestionario.Add(opcion);
+  await context.SaveChangesAsync();
+  return Results.Created($"/opcionescuestionario/{opcion.OpcionID}", opcion);
+}).Produces<OpcionesCuestionario>();
+
+// Obtener opciones de cuestionario por pregunta
+opcionesCuestionarioGroup.MapGet("/byPregunta/{id}", async (StaticalyContext context, int id) =>
+{
+  var opciones = await context.OpcionesCuestionario
+                              .Include(o => o.Pregunta)
+                              .AsNoTracking()
+                              .Where(o => o.PreguntaID == id)
+                              .ToListAsync();
+
+  return Results.Ok(opciones);
+});
+
+// Editar opción de cuestionario
+opcionesCuestionarioGroup.MapPut("/{id}", async (StaticalyContext context, int id, OpcionesCuestionario opcion) =>
+{
+  var opcionToUpdate = await context.OpcionesCuestionario.FindAsync(id);
+  if (opcionToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  opcionToUpdate.Opcion = opcion.Opcion;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+}).Produces<OpcionesCuestionario>();
+
+// Eliminar opción de cuestionario
+opcionesCuestionarioGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+{
+  var opcion = await context.OpcionesCuestionario.FindAsync(id);
+  if (opcion == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.OpcionesCuestionario.Remove(opcion);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+#endregion
+
 app.Run();
