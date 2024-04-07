@@ -14,6 +14,9 @@ namespace Staticaly.Server.Models
     public DbSet<UsuariosEquipos> UsuariosEquipos { get; set; }
     public DbSet<Publicaciones> Publicaciones { get; set; }
     public DbSet<Comentarios> Comentarios { get; set; }
+    public DbSet<Cuestionarios> Cuestionarios { get; set; }
+    public DbSet<Preguntas> Preguntas { get; set; }
+    public DbSet<OpcionesCuestionario> OpcionesCuestionario { get; set; }
 
     public StaticalyContext(DbContextOptions<StaticalyContext> options) : base(options) { }
 
@@ -32,6 +35,9 @@ namespace Staticaly.Server.Models
       ConfigureUsuariosEquipos(modelBuilder);
       ConfigurarPublicaciones(modelBuilder);
       ConfigurarComentarios(modelBuilder);
+      ConfigureCuestionarios(modelBuilder);
+      ConfigurePreguntas(modelBuilder);
+      ConfigureOpcionesCuestionario(modelBuilder);
     }
 
     private void ConfigureUser(ModelBuilder modelBuilder)
@@ -94,6 +100,35 @@ namespace Staticaly.Server.Models
           .WithMany()
           .HasForeignKey(c => c.UsuarioID)
           .OnDelete(DeleteBehavior.Restrict); // No realizar acción en cascada si se elimina el usuario
+    }
+
+    private void ConfigureCuestionarios(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<Cuestionarios>()
+          .HasOne(c => c.Equipo)
+          .WithMany()
+          .HasForeignKey(c => c.EquipoID);
+
+      modelBuilder.Entity<Cuestionarios>()
+          .HasOne(c => c.Usuario)
+          .WithMany()
+          .HasForeignKey(c => c.UsuarioID);
+    }
+
+    private void ConfigurePreguntas(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<Preguntas>()
+          .HasOne(p => p.Cuestionario)
+          .WithMany()
+          .HasForeignKey(p => p.CuestionarioID);
+    }
+
+    private void ConfigureOpcionesCuestionario(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<OpcionesCuestionario>()
+          .HasOne(o => o.Pregunta)
+          .WithMany()
+          .HasForeignKey(o => o.PreguntaID);
     }
   }
 
