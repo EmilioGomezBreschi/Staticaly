@@ -36,7 +36,7 @@
     </div>
     <div
       class="flex justify-start lg:justify-evenly items-center group w-full cursor-pointer transform transition-all duration-300 hover:rounded-r"
-      data-link="@(!string.IsNullOrEmpty(Id) ? $"/estadisticas/{Id}" : "/estadisticas")">
+      data-link="@(!string.IsNullOrEmpty(Id) || !string.IsNullOrEmpty(Equipo) ? $"/estadisticas/{Id}/{Equipo}" : "/estadisticas")">
       <img src="images/estadisticas.svg" alt="Estadistica" class="h-9 w-9 rounded" />
       <div class="flex flex-col ml-5 relative lg:absolute">
         <span id="texto-Estadisticas" class="text-md lg:text-xs opacity-1 lg:opacity-0 font-bold">
@@ -46,7 +46,7 @@
     </div>
     <div
       class="flex justify-start lg:justify-evenly items-center group w-full cursor-pointer transform transition-all duration-300 hover:rounded-r"
-      data-link="@(!string.IsNullOrEmpty(Id) ? $"/encuestas/{Id}" : "/encuestas")">
+      data-link="@(!string.IsNullOrEmpty(Id) || !string.IsNullOrEmpty(Equipo) ? $"/encuestas/{Id}/{Equipo}" : "/encuestas")">
       <img src="images/encuesta.svg" alt="Encuestas" class="h-9 w-9 rounded object-contain" />
       <div class="flex flex-col ml-5 relative lg:absolute">
         <span id="texto-Encuestas"
@@ -55,7 +55,7 @@
     </div>
     <div
       class="flex justify-start lg:justify-evenly items-center group w-full cursor-pointer transform transition-all duration-300 hover:rounded-r"
-      data-link="@(!string.IsNullOrEmpty(Id) ? $"/ejercicios/{Id}" : "/ejercicios")">
+      data-link="@(!string.IsNullOrEmpty(Id) || !string.IsNullOrEmpty(Equipo) ? $"/ejercicios/{Id}/{Equipo}" : "/ejercicios")">
       <img src="images/ejercicios.svg" alt="Ejercicios" class="h-9 w-9 rounded object-contain" />
       <div class="flex flex-col ml-5 relative lg:absolute">
         <span id="texto-Ejercicios"
@@ -80,6 +80,7 @@
 
 @code {
   [Parameter] public string? Id { get; set; }
+  [Parameter] public string? Equipo { get; set; }
   private User? usuario;
 
   protected override async Task OnInitializedAsync()
