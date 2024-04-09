@@ -20,19 +20,19 @@ namespace Staticaly.Client.Data
     //Crear cuestionario
     public async Task<HttpResponseMessage> CrearCuestionarioAsync(Cuestionarios cuestionario)
     {
-      return await _httpClient.PostAsJsonAsync("cuestionario", cuestionario);
+      return await _httpClient.PostAsJsonAsync("cuestionarios", cuestionario);
     }
 
     //Obtener Cuestionario por Equipo
     public async Task<Cuestionarios[]> ObtenerCuestionarioPorEquipoAsync(int id)
     {
-      return await _httpClient.GetFromJsonAsync<Cuestionarios[]>($"cuestionario/byEquipo/{id}") ?? Array.Empty<Cuestionarios>();
+      return await _httpClient.GetFromJsonAsync<Cuestionarios[]>($"cuestionarios/byEquipo/{id}") ?? Array.Empty<Cuestionarios>();
     }
 
     //Obtener Cuestionario por Usuario
     public async Task<Cuestionarios[]> ObtenerCuestionarioPorUsuarioAsync(int id)
     {
-      return await _httpClient.GetFromJsonAsync<Cuestionarios[]>($"cuestionario/byUsuario/{id}") ?? Array.Empty<Cuestionarios>();
+      return await _httpClient.GetFromJsonAsync<Cuestionarios[]>($"cuestionarios/byUsuario/{id}") ?? Array.Empty<Cuestionarios>();
     }
 
     //Obtener Cuestionario por ID
@@ -40,7 +40,7 @@ namespace Staticaly.Client.Data
     {
       try
       {
-        return await _httpClient.GetFromJsonAsync<Cuestionarios>($"cuestionario/{id}");
+        return await _httpClient.GetFromJsonAsync<Cuestionarios>($"cuestionarios/{id}");
       }
       catch (Exception ex)
       {
@@ -52,7 +52,13 @@ namespace Staticaly.Client.Data
     //Eliminar Cuestionario
     public async Task<HttpResponseMessage> EliminarCuestionarioAsync(int id)
     {
-      return await _httpClient.DeleteAsync($"cuestionario/{id}");
+      return await _httpClient.DeleteAsync($"cuestionarios/{id}");
+    }
+
+    //Actualizar Estado Cuestionario
+    public async Task<HttpResponseMessage> ActualizarEstadoCuestionarioAsync(int id, bool estado)
+    {
+      return await _httpClient.PutAsJsonAsync($"cuestionarios/{id}/estado", estado);
     }
   }
 }

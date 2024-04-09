@@ -23,5 +23,7 @@ namespace Staticaly.Client.Models
     [StringLength(255)]
     public string? Titulo { get; set; }
     public string? Descripcion { get; set; }
+    [Required]
+    public bool Publicado { get; set; }
   }
 }

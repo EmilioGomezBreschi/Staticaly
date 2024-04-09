@@ -77,6 +77,9 @@ namespace Staticaly.Server.ModelsMigrations
                     b.Property<int>("EquipoID")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Publicado")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasMaxLength(255)

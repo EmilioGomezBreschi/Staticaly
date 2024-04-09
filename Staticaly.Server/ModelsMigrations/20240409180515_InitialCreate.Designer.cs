@@ -12,7 +12,7 @@ using Staticaly.Server.Models;
 namespace Staticaly.Server.ModelsMigrations
 {
     [DbContext(typeof(StaticalyContext))]
-    [Migration("20240407220303_InitialCreate")]
+    [Migration("20240409180515_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -79,6 +79,9 @@ namespace Staticaly.Server.ModelsMigrations
 
                     b.Property<int>("EquipoID")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Publicado")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Titulo")
                         .IsRequired()

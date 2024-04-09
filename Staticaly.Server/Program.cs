@@ -720,6 +720,22 @@ cuestionariosGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =
   return Results.NoContent();
 });
 
+// Cambiar estado de publicación de cuestionario
+cuestionariosGroup.MapPut("/publicado/{id}/{publicado}", async (StaticalyContext context, int id, bool publicado) =>
+{
+  var cuestionarioToUpdate = await context.Cuestionarios.FindAsync(id);
+  if (cuestionarioToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  cuestionarioToUpdate.Publicado = publicado;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
 #endregion
 
 var preguntasGroup = app.MapGroup("/preguntas").WithParameterValidation();

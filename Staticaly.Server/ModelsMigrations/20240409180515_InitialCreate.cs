@@ -158,7 +158,8 @@ namespace Staticaly.Server.ModelsMigrations
                     EquipoID = table.Column<int>(type: "int", nullable: false),
                     UsuarioID = table.Column<int>(type: "int", nullable: false),
                     Titulo = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Publicado = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
