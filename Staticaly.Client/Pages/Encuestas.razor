@@ -1,0 +1,111 @@
+@page "/Encuestas/{id}/{equipo}"
+@page "/Encuestas/{id}"
+@using Models
+@using Data
+@using System.Net.Http
+@inject NavigationManager NavigationManager
+@inject UsuariosClient UsuariosClient
+@inject EquiposClient EquiposClient
+@inject CuestionarioClient CuestionarioClient
+
+<PageTitle>Encuestas - Staticaly</PageTitle>
+
+<div class="z-40 fixed top-0">
+  <NavBar Id="@Id" Equipo="@Equipo" />
+</div>
+
+<div
+  class="pt-11 pl-0 lg:pl-20 lg:pt-0 text-white flex flex-col justify-center md:justify-normal text-center items-center">
+  @if (string.IsNullOrEmpty(Id))
+  {
+    <div class="h-screen absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-20">
+      <div class="flex flex-col items-center bg-red-600 p-6 rounded-lg">
+        <img src="/images/prohibido.svg" alt="Acceso denegado" class="w-32 h-32" />
+        <h2 class="text-xl font-bold">Para acceder a esta pagina debes estar registrado</h2>
+        <button
+          class="bg-white hover:bg-gray-300 transition duration-300 text-red-600 font-bold py-2 px-4 rounded-lg mt-4"
+          @onclick='() => NavigationManager.NavigateTo("/registro")'>Registrarse</button>
+      </div>
+    </div>
+  }
+  else
+  {
+    <div class="h-full w-full flex flex-col justify-center text-primary-50">
+      <div class="flex space-x-4 mt-4 justify-around">
+        <button @onclick="() => CargarEncuestasGrupo()"
+          class="text-primary-500 hover:text-primary-600 transition duration-300 font-bold py-2 px-4 w-48 border-b-2 border-transparent hover:border-primary-600 focus:outline-none focus:border-primary-600">
+          Encuestas
+        </button>
+        <button @onclick="() => CargarMisEncuestas()"
+          class="text-primary-500 hover:text-primary-600 transition duration-300 font-bold py-2 px-4 w-48 border-b-2 border-transparent hover:border-primary-600 focus:outline-none focus:border-primary-600">
+          Mis Encuestas
+        </button>
+      </div>
+
+      @if (EncuestasDelGrupo.Count > 0)
+      {
+        <div class="flex flex-col h-full items-center mt-3">
+          @foreach (var encuesta in EncuestasDelGrupo)
+          {
+            <div class="bg-primary-500 rounded-lg p-4 w-96 m-auto flex flex-col items-center">
+              <h2 class="text-2xl font-bold text-primary-800 mb-2">@encuesta.Titulo</h2>
+              <p class="text-primary-700 mt-2">@encuesta.Descripcion</p>
+              <p class="text-sm font-light">Por: @encuesta.Usuario?.Nombre @encuesta.Usuario?.Apellido</p>
+            </div>
+          }
+        </div>
+      }
+      <div class="fixed bottom-0 right-0 mr-4 mb-4">
+        <button @onclick='() => NavigationManager.NavigateTo($"/crear-Cuestionario/{Id}/{EquipoId}")'
+          class="bg-primary-500 inline-flex items-center justify-center hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-full md:rounded-md transition duration-300 text-center">
+          <img src="Images/plus.svg" alt="Crear Publicación" class="h-6 w-6 inline-block" />
+          <span class="ml-2 md:inline hidden">Crear Encuesta</span>
+        </button>
+      </div>
+    </div>
+  }
+</div>
+
+
+
+
+
+
+@code {
+  [Parameter] public string? Id { get; set; }
+  [Parameter] public string? Equipo { get; set; }
+  public int EquipoId;
+  public List<Cuestionarios> EncuestasDelGrupo = new List<Cuestionarios>();
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (!string.IsNullOrEmpty(Id))
+    {
+      if (string.IsNullOrEmpty(Equipo))
+      {
+        EquipoId = 1;
+      }
+      else
+      {
+        EquipoId = int.Parse(Equipo);
+      }
+      await CargarEncuestasGrupo();
+    }
+  }
+
+  // Método para cargar las encuestas de grupo
+  private async Task CargarEncuestasGrupo()
+  {
+    // Lógica para cargar las encuestas de grupo
+    var cuestionarios = await CuestionarioClient.ObtenerCuestionarioPorEquipoAsync(EquipoId);
+    EncuestasDelGrupo = cuestionarios.Where(c => c.UsuarioID != Convert.ToInt32(Id)).ToList();
+  }
+
+  // Método para cargar mis encuestas
+  private async Task CargarMisEncuestas()
+  {
+    // Lógica para cargar mis encuestas
+    var cuestionarios = await CuestionarioClient.ObtenerCuestionarioPorUsuarioAsync(Convert.ToInt32(Id));
+    EncuestasDelGrupo = cuestionarios.ToList();
+  }
+}

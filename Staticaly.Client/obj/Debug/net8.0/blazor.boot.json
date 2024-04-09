@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "Staticaly.Client",
   "resources": {
-    "hash": "sha256-jtdkGqwpshXwf5yAaJSnRiBoEDJQ96iGzTG/59lzRfc=",
+    "hash": "sha256-GD+s0l3Vp8IXcl0vIfNm5KZa97IvNnJwpTSJfsd8hE0=",
     "jsModuleNative": {
       "dotnet.native.8.0.3.e0daib42rq.js": "sha256-D4sYBYmDfH/YekgYRgX959/2RG6k28sJSHmcsn+iikk="
     },
@@ -214,10 +214,10 @@
       "mscorlib.wasm": "sha256-OH3kXneWqQMz6CUSo6POZqIeMqn9+5RR+IgHn5TnIwA=",
       "netstandard.wasm": "sha256-ZOswxXEbR2TmqjpbaBEdgr85Bv1NC4GwOwoJ+oxXM3M=",
       "System.Private.CoreLib.wasm": "sha256-I2w0iHf5nvSQyF1YE1VbgdTzmmz6a4OE6J7vo5wFa/4=",
-      "Staticaly.Client.wasm": "sha256-DAH4zNaZxtfnSqCxxDJ/SqwUKC86IwPOLIl4awQutRM="
+      "Staticaly.Client.wasm": "sha256-/rYRZBEj8rHHaoAZ5Mq/4lSzxeNElfiRVJX1mQWrM64="
     },
     "pdb": {
-      "Staticaly.Client.pdb": "sha256-K1rASgauClR9AKR6Ogu68lH0XMlS+EIiy7NzYB3hh0I="
+      "Staticaly.Client.pdb": "sha256-4LUENUdlLfBpgI/UvWYNvRrjJ8cm25PhIx2gs0Mzdr8="
     }
   },
   "cacheBootResources": true,

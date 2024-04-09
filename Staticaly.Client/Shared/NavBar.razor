@@ -16,7 +16,7 @@
     <hr class="w-7/12 border-t-0 lg:border-t-2 border-Primary-Background my-4 mx-auto" />
     <div
       class="flex justify-start lg:justify-evenly items-center group w-full cursor-pointer transform transition-all duration-300 hover:rounded-r"
-      data-link="@(!string.IsNullOrEmpty(Id) ? $"/{Id}" : "/")">
+      data-link="@(!string.IsNullOrEmpty(Id) ? $"/{Id}/{Equipo}" : "/")">
       <img src="images/foro.svg" alt="Foro" class="h-9 w-9 rounded object-contain" />
       <div class="flex flex-col ml-5 relative lg:absolute">
         <span id="texto-Foro" class="text-md lg:text-xs opacity-1 lg:opacity-0 font-bold">
