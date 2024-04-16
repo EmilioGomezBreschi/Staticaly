@@ -1,0 +1,293 @@
+@page "/crear-Cuestionario/{id}/{Equipo}"
+@using Models
+@using Data
+@using System.Net.Http
+@inject NavigationManager NavigationManager
+@inject CuestionarioClient CuestionarioClient
+@inject PreguntasClient PreguntasClient
+@inject OpcionesCuestionarioClient OpcionesClient
+
+<PageTitle>Editar Cuestionario - Staticaly</PageTitle>
+
+<div class="flex flex-col justify-center items-center px-24 text-primary-50 mb-10">
+  @if (Cuestionario == null)
+  {
+    <p>Cargando...</p>
+  }
+  @if (!TituloGuardado)
+  {
+    <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7">
+      <label for="titulo" class="text-lg font-bold">Título del Cuestionario:</label>
+      <input type="text" id="titulo" @bind="TituloCuestionario"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150" />
+      <label for="descripcion" class="text-lg font-bold mt-2">Descripción del Cuestionario: (opcional)</label>
+      <InputTextArea @bind-Value="DescripcionCuestionario"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 h-48" />
+      <button @onclick="() => GuardarTitulo()"
+        class="bg-primary-800 hover:bg-primary-900 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline">Guardar
+        Título</button>
+    </div>
+  }
+  @if (TituloGuardado)
+  {
+    <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7">
+      <h3 class="text-md font-bold">Título del Cuestionario:</h3>
+      <h4 class="text-lg font-bold">@TituloCuestionario</h4>
+      <h3 class="text-md font-bold mt-2">Descripción del Cuestionario:</h3>
+      <h4 class="text-lg font-bold">@DescripcionCuestionario</h4>
+    </div>
+    <div class="mt-4 flex flex-col items-center">
+      <label for="pregunta" class="text-lg font-bold">Pregunta:</label>
+      <input type="text" id="pregunta" @bind="NuevaPregunta"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
+      <button @onclick="() => AgregarPregunta()"
+        class="bg-primary-800 hover:bg-primary-900 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline">Agregar
+        Pregunta
+      </button>
+      <select @bind="PreguntaSeleccionada" class="bg-primary-700 mt-3 h-12 rounded-md hover:cursor-pointer">
+        <option value="">Selecciona una opción predeterminada...</option>
+        @foreach (var opcionPredeterminada in OpcionesPredeterminadas)
+        {
+          <option value="@opcionPredeterminada">@opcionPredeterminada</option>
+        }
+      </select>
+    </div>
+    @if (Preguntas.Any())
+    {
+      <h4 class="text-lg font-bold mt-4">Preguntas:</h4>
+      @foreach (var pregunta in Preguntas)
+      {
+        <div class="mt-4 flex flex-col items-center p-7 rounded-md bg-primary-500">
+          <div class="flex justify-between w-full">
+            <h5 class="text-lg font-bold">@pregunta.Pregunta</h5>
+            <button @onclick="() => EliminarPregunta(pregunta.PreguntaID)"
+              class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Eliminar
+            </button>
+          </div>
+          @if (Opciones.ContainsKey(pregunta.PreguntaID))
+          {
+            @foreach (var opcion in Opciones[pregunta.PreguntaID])
+            {
+              <div class="mt-2 flex justify-between w-full">
+                <input type="text" @bind="opcion.Opcion"
+                  class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
+                <button @onclick="() => EliminarOpcion(pregunta.PreguntaID, opcion)"
+                  class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Eliminar
+                </button>
+              </div>
+            }
+          }
+          <input type="text" @bind="NuevaOpcion"
+            class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
+          <button @onclick="() => AgregarOpcion(pregunta.PreguntaID, NuevaOpcion)"
+            class="bg-primary-800 hover:bg-primary-900 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline">Agregar
+            Opción
+          </button>
+          <button @onclick="() => AgregarOpcionPredeterminada(pregunta.PreguntaID)"
+            class="bg-primary-800 hover:bg-primary-900 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none
+            focus:shadow-outline">Agregar
+            Opción Predeterminada
+          </button>
+        </div>
+      }
+    }
+    <div class="mt-4" style="text-align:center">
+      <button @onclick="GuardarCuestionario"
+        class="bg-Secondary-700 hover:bg-Secondary-800 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline  hover:cursor-pointer"
+        disabled="@(!SePuedeGuardarCuestionario())">Guardar Cuestionario</button>
+    </div>
+  }
+</div>
+
+@code {
+  [Parameter] public string? id { get; set; }
+  [Parameter] public string? Equipo { get; set; }
+  public List<Preguntas> Preguntas = new List<Preguntas>();
+  public Cuestionarios? Cuestionario = new Cuestionarios();
+  public Cuestionarios? cuestionarioAgregado = new Cuestionarios();
+  public Dictionary<int, List<OpcionesCuestionario>> Opciones { get; set; } = new Dictionary<int,
+  List<OpcionesCuestionario>>();
+  public int EncuestaId;
+  private string NuevaOpcion { get; set; } = "";
+  public string NuevaPregunta { get; set; } = "";
+  public string TituloCuestionario { get; set; } = "";
+  public string DescripcionCuestionario { get; set; } = "";
+  public bool TituloGuardado { get; set; } = false;
+  private List<string> OpcionesPredeterminadas { get; set; } = new List<string>
+{
+"SI,NO",
+"SI,NO,A VECES",
+"MUY PROBABLE,PROBABLE,POCO PROBABLE"
+};
+
+  private string PreguntaSeleccionada { get; set; } = "";
+  private async Task AgregarPregunta()
+  {
+    // Verifica si hay un cuestionario actual disponible
+    if (Cuestionario == null)
+    {
+      return;
+    }
+
+    if (cuestionarioAgregado == null)
+    {
+      return;
+    }
+
+    // Crea la pregunta
+    var pregunta = new Preguntas
+      {
+        Pregunta = NuevaPregunta,
+        CuestionarioID = cuestionarioAgregado.CuestionarioID // Asigna el ID del cuestionario actual
+      };
+
+    var response = await PreguntasClient.CreatePreguntaAsync(pregunta);
+
+    if (response.IsSuccessStatusCode)
+    {
+      var preguntaAgregada = await response.Content.ReadFromJsonAsync<Preguntas>();
+      if (preguntaAgregada != null)
+      {
+        Preguntas.Add(preguntaAgregada);
+
+        // Agrega las opciones predefinidas si se ha seleccionado alguna
+        if (!string.IsNullOrWhiteSpace(PreguntaSeleccionada))
+        {
+          var opciones = PreguntaSeleccionada.Split(',');
+          foreach (var opcion in opciones)
+          {
+            AgregarOpcion(pregunta.PreguntaID, opcion.Trim());
+          }
+        }
+      }
+    }
+  }
+
+  private void AgregarOpcionPredeterminada(int preguntaId)
+  {
+    if (!string.IsNullOrWhiteSpace(PreguntaSeleccionada))
+    {
+      var opciones = PreguntaSeleccionada.Split(',');
+      foreach (var opcion in opciones)
+      {
+        AgregarOpcion(preguntaId, opcion.Trim());
+      }
+    }
+    PreguntaSeleccionada = ""; // Reiniciar la selección después de agregar las opciones
+  }
+
+  private void AgregarOpcion(int preguntaId)
+  {
+    if (!string.IsNullOrWhiteSpace(NuevaOpcion))
+    {
+      AgregarOpcion(preguntaId, NuevaOpcion);
+      NuevaOpcion = ""; // Limpiar el campo de entrada después de agregar la opción
+    }
+  }
+
+  private void AgregarOpcion(int preguntaId, string opcion)
+  {
+    if (!Opciones.ContainsKey(preguntaId))
+    {
+      Opciones[preguntaId] = new List<OpcionesCuestionario>();
+    }
+    Opciones[preguntaId].Add(new OpcionesCuestionario { PreguntaID = preguntaId, Opcion = opcion });
+  }
+
+  private async Task GuardarTitulo()
+  {
+    // Crear el cuestionario
+    var cuestionario = new Cuestionarios
+      {
+        Titulo = TituloCuestionario,
+        Descripcion = DescripcionCuestionario,
+        EquipoID = int.Parse(Equipo ?? "0"),
+        UsuarioID = int.Parse(id ?? "0")
+      };
+    var responseCuestionario = await CuestionarioClient.CrearCuestionarioAsync(cuestionario);
+
+    if (!responseCuestionario.IsSuccessStatusCode) return;
+
+    // Obtener el cuestionario recién creado desde la respuesta
+    cuestionarioAgregado = await responseCuestionario.Content.ReadFromJsonAsync<Cuestionarios>();
+    TituloGuardado = true;
+  }
+
+  private async Task GuardarCuestionario()
+  {
+    // Asignar el ID del cuestionario a las preguntas
+    if (cuestionarioAgregado == null) return;
+    foreach (var pregunta in Preguntas)
+    {
+      pregunta.CuestionarioID = cuestionarioAgregado.CuestionarioID;
+    }
+
+    // Guardar las preguntas
+    foreach (var pregunta in Preguntas)
+    {
+      await PreguntasClient.CreatePreguntaAsync(pregunta);
+    }
+
+    // Guardar las opciones
+    foreach (var kvp in Opciones)
+    {
+      foreach (var opcion in kvp.Value)
+      {
+        await OpcionesClient.CreateOpcionAsync(opcion);
+      }
+    }
+    NavigationManager.NavigateTo($"/Cuestionario/{id}/{Equipo}");
+  }
+
+  private bool SePuedeGuardarCuestionario()
+  {
+    // Verificar si hay al menos una pregunta
+    if (Preguntas.Count == 0)
+    {
+      return false;
+    }
+
+    // Verificar si cada pregunta tiene al menos dos respuestas
+    foreach (var pregunta in Preguntas)
+    {
+      // Verificar si la pregunta tiene opciones asociadas
+      if (!Opciones.ContainsKey(pregunta.PreguntaID) || Opciones[pregunta.PreguntaID].Count < 2)
+      {
+        return false;
+      }
+
+      // Verificar si cada respuesta está vacía
+      foreach (var opcion in Opciones[pregunta.PreguntaID])
+      {
+        if (string.IsNullOrWhiteSpace(opcion.Opcion))
+        {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  private void EliminarPregunta(int preguntaId)
+  {
+    var pregunta = Preguntas.FirstOrDefault(p => p.PreguntaID == preguntaId);
+    if (pregunta != null)
+    {
+      Preguntas.Remove(pregunta);
+      if (Opciones.ContainsKey(preguntaId))
+      {
+        Opciones.Remove(preguntaId);
+      }
+    }
+  }
+
+  private void EliminarOpcion(int preguntaId, OpcionesCuestionario opcion)
+  {
+    if (Opciones.ContainsKey(preguntaId))
+    {
+      Opciones[preguntaId].Remove(opcion);
+    }
+  }
+
+}

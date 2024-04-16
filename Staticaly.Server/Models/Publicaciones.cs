@@ -24,12 +24,9 @@ namespace Staticaly.Server.Models
       [Required]
       public string? Contenido { get; set; }
       public byte[]? Imagen { get; set; }
-      public float Calificacion { get; set; }
       [Required]
       public int Reportes { get; set; }
       [Required]
       public DateTime Fecha { get; set; }
-      [Required]
-      public bool? Aprobado { get; set; }
     }
 }

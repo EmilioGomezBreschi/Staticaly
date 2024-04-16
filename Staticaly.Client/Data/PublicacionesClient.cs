@@ -48,11 +48,6 @@ namespace Staticaly.Client.Data
       return await httpClient.PutAsJsonAsync($"publicaciones/{publicacion.PublicacionID}", publicacion);
     }
 
-    //Actualizar calificacion de publicacion
-    public async Task<HttpResponseMessage> UpdateCalificacionAsync(int publicacionID, float calificacion)
-    {
-      return await httpClient.PutAsJsonAsync($"publicaciones/{publicacionID}/calificacion", calificacion);
-    }
 
     public async Task<RespuestaPaginada<Publicaciones>> ObtenerPublicaciones(int pagina, int porPagina, int equipoId, string? titulo = null)
     {

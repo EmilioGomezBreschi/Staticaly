@@ -530,22 +530,6 @@ publicacionesGroup.MapPut("/{id}", async (StaticalyContext context, int id, Publ
   return Results.NoContent();
 }).Produces<Publicaciones>();
 
-// Actualizar calificación de publicación
-publicacionesGroup.MapPut("/calificacion/{id}/{calificacion}", async (StaticalyContext context, int id, float calificacion) =>
-{
-  var publicacionToUpdate = await context.Publicaciones.FindAsync(id);
-  if (publicacionToUpdate == null)
-  {
-    return Results.NotFound();
-  }
-
-  publicacionToUpdate.Calificacion = calificacion;
-
-  await context.SaveChangesAsync();
-
-  return Results.NoContent();
-});
-
 // Actualizar reportes de publicación
 publicacionesGroup.MapPut("/reportes/{id}/{reportes}", async (StaticalyContext context, int id, int reportes) =>
 {
@@ -599,8 +583,24 @@ comentariosGroup.MapGet("/byPublicacion/{id}", async (StaticalyContext context, 
                                   .ThenInclude(u => u.Rango)
                                   .AsNoTracking()
                                   .Where(c => c.PublicacionID == id)
-                                  .OrderByDescending(c => c.Fecha)
                                   .ToListAsync();
+
+  // Calcular el promedio de calificaciones para cada comentario
+  foreach (var comentario in comentarios)
+  {
+    var calificaciones = await context.Calificaciones
+                                      .Where(c => c.ComentarioID == comentario.ComentarioID)
+                                      .Select(c => c.Calificacion)
+                                      .ToListAsync();
+
+    if (calificaciones.Any())
+    {
+      comentario.Calificacion = calificaciones.Average();
+    }
+  }
+
+  // Ordenar los comentarios por calificación descendente
+  comentarios = comentarios.OrderByDescending(c => c.Calificacion).ToList();
 
   return Results.Ok(comentarios);
 });
@@ -651,6 +651,53 @@ comentariosGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
   await context.SaveChangesAsync();
 
   return Results.NoContent();
+});
+
+#endregion
+
+var calificacionesGroup = app.MapGroup("/calificaciones").WithParameterValidation();
+
+#region Entry Points Calificaciones
+
+// Crear calificacion
+calificacionesGroup.MapPost("/", async (StaticalyContext context, Calificaciones calificacion) =>
+{
+  context.Calificaciones.Add(calificacion);
+  await context.SaveChangesAsync();
+  return Results.Created($"/calificaciones/{calificacion.CalificacionID}", calificacion);
+}).Produces<Calificaciones>();
+
+// editar calificacion by comentario y usuario
+calificacionesGroup.MapPut("/{comentarioID}/{usuarioID}", async (StaticalyContext context, int comentarioID, int usuarioID, Calificaciones calificacion) =>
+{
+  var calificacionToUpdate = await context.Calificaciones
+                                      .FirstOrDefaultAsync(c => c.ComentarioID == comentarioID && c.UsuarioID == usuarioID);
+  if (calificacionToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  calificacionToUpdate.Calificacion = calificacion.Calificacion;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+}).Produces<Calificaciones>();
+
+calificacionesGroup.MapGet("/byComentario/{comentarioID}/{UsuarioID}", async (StaticalyContext context, int comentarioID, int UsuarioID) =>
+{
+  var calificaciones = await context.Calificaciones
+      .Where(c => c.ComentarioID == comentarioID && c.UsuarioID == UsuarioID)
+      .ToListAsync();
+
+  if (calificaciones.Any())
+  {
+    return Results.Ok(calificaciones);
+  }
+  else
+  {
+    return Results.NotFound();
+  }
 });
 
 #endregion

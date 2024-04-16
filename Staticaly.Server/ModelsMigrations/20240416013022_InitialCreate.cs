@@ -133,10 +133,8 @@ namespace Staticaly.Server.ModelsMigrations
                     Titulo = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Contenido = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Imagen = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    Calificacion = table.Column<float>(type: "real", nullable: false),
                     Reportes = table.Column<int>(type: "int", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Aprobado = table.Column<bool>(type: "bit", nullable: false)
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -222,9 +220,9 @@ namespace Staticaly.Server.ModelsMigrations
                     UsuarioID = table.Column<int>(type: "int", nullable: false),
                     Contenido = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Imagen = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Calificacion = table.Column<float>(type: "real", nullable: true),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Reportes = table.Column<int>(type: "int", nullable: false),
-                    Aprobado = table.Column<bool>(type: "bit", nullable: false)
+                    Reportes = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -261,6 +259,33 @@ namespace Staticaly.Server.ModelsMigrations
                         principalTable: "Cuestionarios",
                         principalColumn: "CuestionarioID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Calificaciones",
+                columns: table => new
+                {
+                    CalificacionID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ComentarioID = table.Column<int>(type: "int", nullable: false),
+                    UsuarioID = table.Column<int>(type: "int", nullable: false),
+                    Calificacion = table.Column<float>(type: "real", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Calificaciones", x => x.CalificacionID);
+                    table.ForeignKey(
+                        name: "FK_Calificaciones_Comentarios_ComentarioID",
+                        column: x => x.ComentarioID,
+                        principalTable: "Comentarios",
+                        principalColumn: "ComentarioID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Calificaciones_Usuarios_UsuarioID",
+                        column: x => x.UsuarioID,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -336,6 +361,16 @@ namespace Staticaly.Server.ModelsMigrations
                 values: new object[] { 1, null, "Foro Publico", 1 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Calificaciones_ComentarioID",
+                table: "Calificaciones",
+                column: "ComentarioID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Calificaciones_UsuarioID",
+                table: "Calificaciones",
+                column: "UsuarioID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comentarios_PublicacionID",
                 table: "Comentarios",
                 column: "PublicacionID");
@@ -405,7 +440,7 @@ namespace Staticaly.Server.ModelsMigrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Comentarios");
+                name: "Calificaciones");
 
             migrationBuilder.DropTable(
                 name: "OpcionesCuestionario");
@@ -414,13 +449,16 @@ namespace Staticaly.Server.ModelsMigrations
                 name: "UsuariosEquipos");
 
             migrationBuilder.DropTable(
-                name: "Publicaciones");
+                name: "Comentarios");
 
             migrationBuilder.DropTable(
                 name: "Preguntas");
 
             migrationBuilder.DropTable(
                 name: "Permisos");
+
+            migrationBuilder.DropTable(
+                name: "Publicaciones");
 
             migrationBuilder.DropTable(
                 name: "Cuestionarios");

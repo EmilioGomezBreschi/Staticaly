@@ -3,9 +3,13 @@
 @using Models
 @using Data
 @using Microsoft.JSInterop
+@using System.Text.Json
+@using System.IO
+@using System.Text
 @inject NavigationManager NavigationManager
 @inject PublicacionesClient PublicacionClient
 @inject ComentariosClient ComentariosClient
+@inject CalificacionesClient CalificacionesClient
 @inject IJSRuntime JSRuntime
 
 
@@ -80,6 +84,43 @@
             }
           </div>
         </div>
+        <div class="flex items-center">
+          @if (comentario.Calificacion != null)
+          {
+            <div class="mr-2">
+              @for (int i = 1; i <= 5; i++)
+              {
+                <span class="text-yellow-500 inline-block">@((i <= comentario.Calificacion) ? "★" : "☆")</span>
+              }
+            </div>
+          }
+          @if (Id != null)
+          {
+            <div class="cursor-pointer">
+              @for (int i = 1; i <= 5; i++)
+              {
+                <span class="text-yellow-500 inline-block"
+                  @onclick='() => CalificarComentario(comentario.ComentarioID, i, Id)'
+                  @onmouseover='()=>MostrarEstrellas(comentario.ComentarioID, i)'
+                  @onmouseleave='()=>RestaurarEstrellas(comentario.ComentarioID)'>
+                  @{
+                    var currentRating = hoverRatings.ContainsKey(comentario.ComentarioID) ?
+                    hoverRatings[comentario.ComentarioID] : calificacion;
+                    var isStarFilled = i <= currentRating;
+                  }
+                  @if (isStarFilled)
+                  {
+                    <span>★</span>
+                  }
+                  else
+                  {
+                    <span>☆</span>
+                  }
+                </span>
+              }
+            </div>
+          }
+        </div>
         <p class="text-justify ml-2">@comentario.Fecha?.ToString("dd/MM/yyyy")</p>
         @if (comentario.UsuarioID == (int.Parse(Id ?? "0")))
         {
@@ -104,10 +145,11 @@
   [Parameter]
   public string? Id { get; set; }
   public string? Equipo { get; set; }
-
+  private int calificacion = 0;
+  private Dictionary<int, int?> hoverRatings = new Dictionary<int, int?>();
   public Publicaciones publicacionData { get; set; } = new Publicaciones();
-
   public List<Comentarios> comentariosData { get; set; } = new List<Comentarios>();
+  public float? hoverRating;
 
   protected override async Task OnInitializedAsync()
   {
@@ -151,9 +193,33 @@
   private async Task ObtenerComentarios()
   {
     var response = await ComentariosClient.GetComentariosAsync(int.Parse(publicacion ?? "0"));
+
     if (response != null)
     {
       comentariosData = response.ToList();
     }
+  }
+
+  private async Task CalificarComentario(int ComentarioID, int calificacion, string id)
+  {
+    // Convertir calificacion a float antes de asignarlo
+    float calificacionFloat = calificacion;
+
+    Console.WriteLine(calificacionFloat);
+    Console.WriteLine(ComentarioID);
+    Console.WriteLine(id);
+
+    await CalificacionesClient.CrearOActualizarCalificacionAsync(ComentarioID, int.Parse(id), calificacionFloat);
+    await ObtenerComentarios();
+  }
+
+  private void MostrarEstrellas(int ComentarioID, int calificacion)
+  {
+    hoverRatings[ComentarioID] = calificacion;
+  }
+
+  private void RestaurarEstrellas(int ComentarioID)
+  {
+    hoverRatings.Remove(ComentarioID);
   }
 }

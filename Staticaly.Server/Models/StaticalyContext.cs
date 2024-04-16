@@ -17,6 +17,7 @@ namespace Staticaly.Server.Models
     public DbSet<Cuestionarios> Cuestionarios { get; set; }
     public DbSet<Preguntas> Preguntas { get; set; }
     public DbSet<OpcionesCuestionario> OpcionesCuestionario { get; set; }
+    public DbSet<Calificaciones> Calificaciones { get; set; }
 
     public StaticalyContext(DbContextOptions<StaticalyContext> options) : base(options) { }
 
@@ -38,6 +39,7 @@ namespace Staticaly.Server.Models
       ConfigureCuestionarios(modelBuilder);
       ConfigurePreguntas(modelBuilder);
       ConfigureOpcionesCuestionario(modelBuilder);
+      ConfigureCalificaciones(modelBuilder);
     }
 
     private void ConfigureUser(ModelBuilder modelBuilder)
@@ -129,6 +131,21 @@ namespace Staticaly.Server.Models
           .HasOne(o => o.Pregunta)
           .WithMany()
           .HasForeignKey(o => o.PreguntaID);
+    }
+
+    private void ConfigureCalificaciones(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<Calificaciones>()
+          .HasOne(c => c.Usuario)
+          .WithMany()
+          .HasForeignKey(c => c.UsuarioID)
+          .OnDelete(DeleteBehavior.Restrict); // No realizar acción en cascada si se elimina el usuario
+
+      modelBuilder.Entity<Calificaciones>()
+          .HasOne(c => c.Comentario)
+          .WithMany()
+          .HasForeignKey(c => c.ComentarioID)
+          .OnDelete(DeleteBehavior.Cascade); // Eliminar en cascada si se elimina el comentario
     }
   }
 

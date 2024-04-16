@@ -22,6 +22,33 @@ namespace Staticaly.Server.ModelsMigrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Staticaly.Server.Models.Calificaciones", b =>
+                {
+                    b.Property<int>("CalificacionID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CalificacionID"));
+
+                    b.Property<float?>("Calificacion")
+                        .IsRequired()
+                        .HasColumnType("real");
+
+                    b.Property<int>("ComentarioID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioID")
+                        .HasColumnType("int");
+
+                    b.HasKey("CalificacionID");
+
+                    b.HasIndex("ComentarioID");
+
+                    b.HasIndex("UsuarioID");
+
+                    b.ToTable("Calificaciones");
+                });
+
             modelBuilder.Entity("Staticaly.Server.Models.Comentarios", b =>
                 {
                     b.Property<int>("ComentarioID")
@@ -30,9 +57,8 @@ namespace Staticaly.Server.ModelsMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ComentarioID"));
 
-                    b.Property<bool?>("Aprobado")
-                        .IsRequired()
-                        .HasColumnType("bit");
+                    b.Property<float?>("Calificacion")
+                        .HasColumnType("real");
 
                     b.Property<string>("Contenido")
                         .IsRequired()
@@ -220,13 +246,6 @@ namespace Staticaly.Server.ModelsMigrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PublicacionID"));
-
-                    b.Property<bool?>("Aprobado")
-                        .IsRequired()
-                        .HasColumnType("bit");
-
-                    b.Property<float>("Calificacion")
-                        .HasColumnType("real");
 
                     b.Property<string>("Contenido")
                         .IsRequired()
@@ -509,6 +528,25 @@ namespace Staticaly.Server.ModelsMigrations
                     b.HasIndex("UsuarioID");
 
                     b.ToTable("UsuariosEquipos");
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.Calificaciones", b =>
+                {
+                    b.HasOne("Staticaly.Server.Models.Comentarios", "Comentario")
+                        .WithMany()
+                        .HasForeignKey("ComentarioID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Staticaly.Server.Models.User", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Comentario");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Staticaly.Server.Models.Comentarios", b =>
