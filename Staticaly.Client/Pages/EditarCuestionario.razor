@@ -1,0 +1,261 @@
+@page "/editar-cuestionario/{CuestionarioID}/{UsuarioID}/{GrupoId}"
+@using Models
+@using Data
+@using System.Net.Http
+@inject NavigationManager NavigationManager
+@inject CuestionarioClient CuestionarioClient
+@inject PreguntasClient PreguntasClient
+@inject OpcionesCuestionarioClient OpcionesClient
+
+<PageTitle>Editar Cuestionario - Staticaly</PageTitle>
+
+<div class="flex flex-col justify-center items-center px-24 text-primary-50 mb-10">
+  @if (Cuestionario == null)
+  {
+    <p>Cargando...</p>
+  }
+  @if (!TituloGuardado)
+  {
+    <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7">
+      <label for="titulo" class="text-lg font-bold">Título del Cuestionario:</label>
+      <input type="text" id="titulo" @bind="TituloCuestionario"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150" />
+      <label for="descripcion" class="text-lg font-bold mt-2">Descripción del Cuestionario: (opcional)</label>
+      <InputTextArea @bind-Value="DescripcionCuestionario"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 h-48" />
+      <button @onclick="() => GuardarTitulo()"
+        class="bg-primary-800 hover:bg-primary-900 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline">Guardar
+        Título</button>
+    </div>
+  }
+  @if (TituloGuardado)
+  {
+    
+    <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7">
+      <h3 class="text-md font-bold">Título del Cuestionario:</h3>
+      <h4 class="text-lg font-bold">@TituloCuestionario</h4>
+      <h3 class="text-md font-bold mt-2">Descripción del Cuestionario:</h3>
+      <h4 class="text-lg font-bold">@DescripcionCuestionario</h4>
+    </div>
+    <div class="mt-4 flex flex-col items-center">
+      <label for="pregunta" class="text-lg font-bold">Pregunta:</label>
+      <input type="text" id="pregunta" @bind="NuevaPregunta"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
+      <button @onclick="() => AgregarPregunta()"
+        class="bg-primary-800 hover:bg-primary-900 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline">Agregar
+        Pregunta
+      </button>
+    </div>
+    @if (Preguntas != null && Preguntas.Any())
+    {
+      <h4 class="text-lg font-bold mt-4">Preguntas:</h4>
+      @foreach (var pregunta in Preguntas)
+      {
+        <div class="mt-4 flex flex-col items-center p-7 rounded-md bg-primary-500">
+          <div class="flex justify-between w-full">
+            <input type="text" @bind="pregunta.Pregunta"
+              class="text-lg font-bold border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
+            <button @onclick="() => GuardarPregunta(pregunta)"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Guardar
+            </button>
+          </div>
+          @if (pregunta.Opciones != null && pregunta.Opciones.Any())
+          {
+            @foreach (var opcion in pregunta.Opciones)
+            {
+              <div class="mt-2 flex justify-between w-full">
+                <input type="text" @bind="opcion.Opcion"
+                  class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
+                <button @onclick="() => GuardarOpcion(opcion)"
+                  class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Guardar
+                </button>
+                <button @onclick="() => EliminarOpcion(pregunta, opcion)"
+                  class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Eliminar
+                </button>
+              </div>
+            }
+          }
+          <div class="mt-2 flex justify-between w-full">
+            <input type="text" @bind="NuevaOpcion"
+              class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
+            <button @onclick="() => AgregarOpcion(pregunta)"
+              class="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Agregar
+            </button>
+          </div>
+        </div>
+      }
+    }
+    <div class="mt-4" style="text-align:center">
+      <button @onclick="GuardarCuestionario"
+        class="bg-Secondary-700 hover:bg-Secondary-800 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline  hover:cursor-pointer"
+        disabled="@(!SePuedeGuardarCuestionario())">Guardar Cuestionario</button>
+    </div>
+  }
+</div>
+
+@code {
+  [Parameter] public string? CuestionarioID { get; set; }
+  [Parameter] public string? UsuarioID { get; set; }
+  [Parameter] public string? GrupoId { get; set; }
+  public Cuestionarios? Cuestionario { get; set; }
+  public List<Preguntas>? Preguntas { get; set; }
+  public string NuevaPregunta { get; set; } = "";
+  public string TituloCuestionario { get; set; } = "";
+  public string DescripcionCuestionario { get; set; } = "";
+  private string NuevaOpcion { get; set; } = "";
+  public bool TituloGuardado { get; set; } = false;
+  public string MensajeError { get; set; } = "";
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (CuestionarioID != null)
+    {
+      Cuestionario = await CuestionarioClient.ObtenerCuestionarioPorIDAsync(int.Parse(CuestionarioID));
+      TituloCuestionario = Cuestionario?.Titulo ?? "";
+      DescripcionCuestionario = Cuestionario?.Descripcion ?? "";
+      await CargarPreguntas();
+      await CargarOpcionesParaTodasLasPreguntas();
+    }
+  }
+
+  private async Task CargarPreguntas()
+  {
+    if (CuestionarioID != null)
+    {
+      var preguntas = await PreguntasClient.GetPreguntasAsync(int.Parse(CuestionarioID));
+      Preguntas = preguntas?.ToList();
+    }
+  }
+
+  private async Task GuardarTitulo()
+  {
+    if (Cuestionario != null)
+    {
+      // Actualizar el título y descripción del cuestionario
+      Cuestionario.Titulo = TituloCuestionario;
+      Cuestionario.Descripcion = DescripcionCuestionario;
+      await CuestionarioClient.ActualizarCuestionarioAsync(Cuestionario);
+      TituloGuardado = true;
+    }
+  }
+
+  private async Task AgregarPregunta()
+  {
+    if (CuestionarioID != null)
+    {
+      // Crear la nueva pregunta
+      var pregunta = new Preguntas
+        {
+          Pregunta = NuevaPregunta,
+          CuestionarioID = int.Parse(CuestionarioID)
+        };
+      await PreguntasClient.CreatePreguntaAsync(pregunta);
+      await CargarPreguntas(); // Recargar las preguntas después de agregar una nueva
+      NuevaPregunta = ""; // Limpiar el campo de entrada
+    }
+  }
+
+  private async Task GuardarPregunta(Preguntas pregunta)
+  {
+    await PreguntasClient.UpdatePreguntaAsync(pregunta);
+  }
+
+  private async Task GuardarOpcion(OpcionesCuestionario opcion)
+  {
+    await OpcionesClient.UpdateOpcionAsync(opcion);
+  }
+
+  private void GuardarCuestionario()
+  {
+    if (SePuedeGuardarCuestionario())
+    {
+      if (Preguntas != null)
+      {
+        foreach (var pregunta in Preguntas)
+        {
+          GuardarPregunta(pregunta).Wait(); // Esperar a que se complete la operación antes de continuar
+          if (pregunta.Opciones != null)
+          {
+            foreach (var opcion in pregunta.Opciones)
+            {
+              GuardarOpcion(opcion).Wait(); // Esperar a que se complete la operación antes de continuar
+            }
+          }
+        }
+      }
+    }
+    else
+    {
+      // Mostrar un mensaje de error si no se puede guardar el cuestionario
+    }
+  }
+  private bool SePuedeGuardarCuestionario()
+  {
+    if (string.IsNullOrEmpty(TituloCuestionario) || Preguntas == null || !Preguntas.Any())
+    {
+      return false; // Si no hay título o no hay preguntas, no se puede guardar el cuestionario
+    }
+
+    foreach (var pregunta in Preguntas)
+    {
+      if (pregunta.Opciones == null || pregunta.Opciones.Count < 2)
+      {
+        return false; // Si alguna pregunta no tiene al menos dos opciones, no se puede guardar el cuestionario
+      }
+    }
+
+    return true; // Si todas las preguntas tienen al menos dos opciones, se puede guardar el cuestionario
+  }
+
+  private async Task EliminarPregunta(int preguntaId)
+  {
+    if (preguntaId != 0)
+    {
+      // Eliminar la pregunta
+      await PreguntasClient.DeletePreguntaAsync(preguntaId);
+      await CargarPreguntas(); // Recargar las preguntas después de eliminar una
+    }
+  }
+  private async Task EliminarOpcion(Preguntas pregunta, OpcionesCuestionario opcion)
+  {
+    if (opcion != null)
+    {
+      // Eliminar la opción
+      await OpcionesClient.DeleteOpcionAsync(opcion.OpcionID);
+      await CargarOpciones(pregunta); // Recargar las opciones después de eliminar una
+    }
+  }
+
+  private async Task AgregarOpcion(Preguntas pregunta)
+  {
+    if (pregunta != null)
+    {
+      // Crear la nueva opción
+      var opcion = new OpcionesCuestionario
+        {
+          Opcion = NuevaOpcion,
+          PreguntaID = pregunta.PreguntaID
+        };
+      await OpcionesClient.CreateOpcionAsync(opcion);
+      await CargarOpciones(pregunta); // Recargar las opciones después de agregar una nueva
+      NuevaOpcion = ""; // Limpiar el campo de entrada
+    }
+  }
+  private async Task CargarOpciones(Preguntas pregunta)
+  {
+    if (pregunta != null)
+    {
+      pregunta.Opciones = (await OpcionesClient.GetOpcionesAsync(pregunta.PreguntaID)).ToList();
+    }
+  }
+  private async Task CargarOpcionesParaTodasLasPreguntas()
+  {
+    if (Preguntas != null)
+    {
+      foreach (var pregunta in Preguntas)
+      {
+        await CargarOpciones(pregunta);
+      }
+    }
+  }
+}

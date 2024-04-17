@@ -60,5 +60,11 @@ namespace Staticaly.Client.Data
     {
       return await _httpClient.PutAsync($"cuestionarios/publicado/{id}/{estado}", null);
     }
+
+    //Actualizar Cuestionario
+    public async Task<HttpResponseMessage> ActualizarCuestionarioAsync(Cuestionarios cuestionario)
+    {
+      return await _httpClient.PutAsJsonAsync($"cuestionarios/{cuestionario.CuestionarioID}", cuestionario);
+    }
   }
 }

@@ -53,7 +53,7 @@
                 <div class="flex flex-row w-full justify-between">
                   @if (encuesta.Publicado == false)
                   {
-                  <button @onclick='() => NavigationManager.NavigateTo($"/editar-Cuestionario/{encuesta.CuestionarioID}")'
+                  <button @onclick='() => NavigationManager.NavigateTo($"/editar-Cuestionario/{encuesta.CuestionarioID}/{Id}/{EquipoId}")'
                           class="bg-yellow-600 hover:bg-yellow-700 text-white w-24 font-bold py-2 px-4 rounded-lg mt-4 transition duration-300">
                     Editar
                   </button>

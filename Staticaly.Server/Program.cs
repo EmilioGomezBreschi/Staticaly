@@ -783,6 +783,24 @@ cuestionariosGroup.MapPut("/publicado/{id}/{publicado}", async (StaticalyContext
   return Results.NoContent();
 });
 
+// Editar cuestionario
+
+cuestionariosGroup.MapPut("/{id}", async (StaticalyContext context, int id, Cuestionarios cuestionario) =>
+{
+  var cuestionarioToUpdate = await context.Cuestionarios.FindAsync(id);
+  if (cuestionarioToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  cuestionarioToUpdate.Titulo = cuestionario.Titulo;
+  cuestionarioToUpdate.Descripcion = cuestionario.Descripcion;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+}).Produces<Cuestionarios>();
+
 #endregion
 
 var preguntasGroup = app.MapGroup("/preguntas").WithParameterValidation();
