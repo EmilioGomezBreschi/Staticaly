@@ -30,7 +30,7 @@
   }
   @if (TituloGuardado)
   {
-    
+
     <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7">
       <h3 class="text-md font-bold">Título del Cuestionario:</h3>
       <h4 class="text-lg font-bold">@TituloCuestionario</h4>
@@ -131,6 +131,10 @@
   {
     if (Cuestionario != null)
     {
+      if (string.IsNullOrEmpty(TituloCuestionario))
+      {
+        return; // No se puede guardar un título vacío
+      }
       // Actualizar el título y descripción del cuestionario
       Cuestionario.Titulo = TituloCuestionario;
       Cuestionario.Descripcion = DescripcionCuestionario;
@@ -165,30 +169,44 @@
     await OpcionesClient.UpdateOpcionAsync(opcion);
   }
 
-  private void GuardarCuestionario()
+  private async Task GuardarCuestionario()
   {
-    if (SePuedeGuardarCuestionario())
-    {
-      if (Preguntas != null)
+      if (SePuedeGuardarCuestionario())
       {
-        foreach (var pregunta in Preguntas)
-        {
-          GuardarPregunta(pregunta).Wait(); // Esperar a que se complete la operación antes de continuar
-          if (pregunta.Opciones != null)
+          if (Cuestionario != null)
           {
-            foreach (var opcion in pregunta.Opciones)
-            {
-              GuardarOpcion(opcion).Wait(); // Esperar a que se complete la operación antes de continuar
-            }
+              await GuardarTitulo(); // Guarda el título y descripción del cuestionario
+
+              if (Preguntas != null)
+              {
+                  foreach (var pregunta in Preguntas)
+                  {
+                      await GuardarPregunta(pregunta); // Guarda cada pregunta
+
+                      if (pregunta.Opciones != null)
+                      {
+                          foreach (var opcion in pregunta.Opciones)
+                          {
+                              await GuardarOpcion(opcion); // Guarda cada opción
+                          }
+                      }
+                  }
+              }
+
+              // Redireccionar a la página de cuestionario
+              if (UsuarioID != null && GrupoId != null)
+              {
+                  NavigationManager.NavigateTo($"/cuestionario/{UsuarioID}/{GrupoId}");
+              }
           }
-        }
       }
-    }
-    else
-    {
-      // Mostrar un mensaje de error si no se puede guardar el cuestionario
-    }
+      else
+      {
+          // Mostrar un mensaje de error si no se puede guardar el cuestionario
+          MensajeError = "No se puede guardar el cuestionario. Asegúrate de que haya un título, al menos una pregunta y que cada pregunta tenga al menos dos opciones.";
+      }
   }
+
   private bool SePuedeGuardarCuestionario()
   {
     if (string.IsNullOrEmpty(TituloCuestionario) || Preguntas == null || !Preguntas.Any())
