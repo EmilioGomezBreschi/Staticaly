@@ -17,6 +17,7 @@ namespace Staticaly.Server.Models
         public Ejercicios? Ejercicios { get; set; }
         [Required]
         public string? Pregunta { get; set; }
+        public byte[]? Imagen { get; set; }
         [Required]
         public string? Respuesta { get; set; }
     }

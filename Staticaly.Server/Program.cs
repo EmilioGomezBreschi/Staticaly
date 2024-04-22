@@ -1086,6 +1086,7 @@ ejerciciosPreguntasGroup.MapPut("/{id}", async (StaticalyContext context, int id
   }
 
   preguntaToUpdate.Pregunta = pregunta.Pregunta;
+  preguntaToUpdate.Imagen = pregunta.Imagen;
   preguntaToUpdate.Respuesta = pregunta.Respuesta;
 
   await context.SaveChangesAsync();
