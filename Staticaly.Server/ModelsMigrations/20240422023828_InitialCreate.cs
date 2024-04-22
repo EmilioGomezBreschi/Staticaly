@@ -123,6 +123,29 @@ namespace Staticaly.Server.ModelsMigrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Ejercicios",
+                columns: table => new
+                {
+                    EjerciciosID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UsuarioID = table.Column<int>(type: "int", nullable: false),
+                    EquipoID = table.Column<int>(type: "int", nullable: false),
+                    Titulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Activo = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ejercicios", x => x.EjerciciosID);
+                    table.ForeignKey(
+                        name: "FK_Ejercicios_Usuarios_UsuarioID",
+                        column: x => x.UsuarioID,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Publicaciones",
                 columns: table => new
                 {
@@ -211,6 +234,27 @@ namespace Staticaly.Server.ModelsMigrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EjerciciosPreguntas",
+                columns: table => new
+                {
+                    EjerciciosPreguntasID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EjercicioID = table.Column<int>(type: "int", nullable: false),
+                    Pregunta = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Respuesta = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EjerciciosPreguntas", x => x.EjerciciosPreguntasID);
+                    table.ForeignKey(
+                        name: "FK_EjerciciosPreguntas_Ejercicios_EjercicioID",
+                        column: x => x.EjercicioID,
+                        principalTable: "Ejercicios",
+                        principalColumn: "EjerciciosID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Comentarios",
                 columns: table => new
                 {
@@ -262,6 +306,34 @@ namespace Staticaly.Server.ModelsMigrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EjerciciosRespuestas",
+                columns: table => new
+                {
+                    EjerciciosRespuestasID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UsuarioID = table.Column<int>(type: "int", nullable: false),
+                    EjercicioID = table.Column<int>(type: "int", nullable: false),
+                    EjercicioPreguntaID = table.Column<int>(type: "int", nullable: false),
+                    Respuesta = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EjerciciosRespuestas", x => x.EjerciciosRespuestasID);
+                    table.ForeignKey(
+                        name: "FK_EjerciciosRespuestas_EjerciciosPreguntas_EjercicioPreguntaID",
+                        column: x => x.EjercicioPreguntaID,
+                        principalTable: "EjerciciosPreguntas",
+                        principalColumn: "EjerciciosPreguntasID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EjerciciosRespuestas_Usuarios_UsuarioID",
+                        column: x => x.UsuarioID,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Calificaciones",
                 columns: table => new
                 {
@@ -306,6 +378,34 @@ namespace Staticaly.Server.ModelsMigrations
                         principalTable: "Preguntas",
                         principalColumn: "PreguntaID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RespuestasCuestionarios",
+                columns: table => new
+                {
+                    RespuestasCuestionarioID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CuestionarioID = table.Column<int>(type: "int", nullable: false),
+                    PreguntaID = table.Column<int>(type: "int", nullable: false),
+                    RespuestaID = table.Column<int>(type: "int", nullable: false),
+                    UsuarioID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RespuestasCuestionarios", x => x.RespuestasCuestionarioID);
+                    table.ForeignKey(
+                        name: "FK_RespuestasCuestionarios_OpcionesCuestionario_CuestionarioID",
+                        column: x => x.CuestionarioID,
+                        principalTable: "OpcionesCuestionario",
+                        principalColumn: "OpcionID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RespuestasCuestionarios_Usuarios_UsuarioID",
+                        column: x => x.UsuarioID,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
@@ -391,6 +491,26 @@ namespace Staticaly.Server.ModelsMigrations
                 column: "UsuarioID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Ejercicios_UsuarioID",
+                table: "Ejercicios",
+                column: "UsuarioID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EjerciciosPreguntas_EjercicioID",
+                table: "EjerciciosPreguntas",
+                column: "EjercicioID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EjerciciosRespuestas_EjercicioPreguntaID",
+                table: "EjerciciosRespuestas",
+                column: "EjercicioPreguntaID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EjerciciosRespuestas_UsuarioID",
+                table: "EjerciciosRespuestas",
+                column: "UsuarioID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Equipos_TipoEquipoID",
                 table: "Equipos",
                 column: "TipoEquipoID");
@@ -408,6 +528,16 @@ namespace Staticaly.Server.ModelsMigrations
             migrationBuilder.CreateIndex(
                 name: "IX_Publicaciones_UsuarioID",
                 table: "Publicaciones",
+                column: "UsuarioID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RespuestasCuestionarios_CuestionarioID",
+                table: "RespuestasCuestionarios",
+                column: "CuestionarioID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RespuestasCuestionarios_UsuarioID",
+                table: "RespuestasCuestionarios",
                 column: "UsuarioID");
 
             migrationBuilder.CreateIndex(
@@ -443,7 +573,10 @@ namespace Staticaly.Server.ModelsMigrations
                 name: "Calificaciones");
 
             migrationBuilder.DropTable(
-                name: "OpcionesCuestionario");
+                name: "EjerciciosRespuestas");
+
+            migrationBuilder.DropTable(
+                name: "RespuestasCuestionarios");
 
             migrationBuilder.DropTable(
                 name: "UsuariosEquipos");
@@ -452,13 +585,22 @@ namespace Staticaly.Server.ModelsMigrations
                 name: "Comentarios");
 
             migrationBuilder.DropTable(
-                name: "Preguntas");
+                name: "EjerciciosPreguntas");
+
+            migrationBuilder.DropTable(
+                name: "OpcionesCuestionario");
 
             migrationBuilder.DropTable(
                 name: "Permisos");
 
             migrationBuilder.DropTable(
                 name: "Publicaciones");
+
+            migrationBuilder.DropTable(
+                name: "Ejercicios");
+
+            migrationBuilder.DropTable(
+                name: "Preguntas");
 
             migrationBuilder.DropTable(
                 name: "Cuestionarios");

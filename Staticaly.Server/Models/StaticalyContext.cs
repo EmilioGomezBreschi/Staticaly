@@ -18,6 +18,11 @@ namespace Staticaly.Server.Models
     public DbSet<Preguntas> Preguntas { get; set; }
     public DbSet<OpcionesCuestionario> OpcionesCuestionario { get; set; }
     public DbSet<Calificaciones> Calificaciones { get; set; }
+    public DbSet<RespuestasCuestionario> RespuestasCuestionarios { get; set; }
+    public DbSet<EjerciciosRespuestas> EjerciciosRespuestas { get; set; }
+    public DbSet<EjerciciosPreguntas> EjerciciosPreguntas { get; set; }
+    public DbSet<Ejercicios> Ejercicios { get; set; }
+
 
     public StaticalyContext(DbContextOptions<StaticalyContext> options) : base(options) { }
 
@@ -40,6 +45,10 @@ namespace Staticaly.Server.Models
       ConfigurePreguntas(modelBuilder);
       ConfigureOpcionesCuestionario(modelBuilder);
       ConfigureCalificaciones(modelBuilder);
+      ConfigureRespuestasCuestionario(modelBuilder);
+      ConfigureEjerciciosRespuestas(modelBuilder);
+      ConfigureEjerciciosPreguntas(modelBuilder);
+      ConfigureEjercicios(modelBuilder);
     }
 
     private void ConfigureUser(ModelBuilder modelBuilder)
@@ -146,6 +155,54 @@ namespace Staticaly.Server.Models
           .WithMany()
           .HasForeignKey(c => c.ComentarioID)
           .OnDelete(DeleteBehavior.Cascade); // Eliminar en cascada si se elimina el comentario
+    }
+
+    private void ConfigureRespuestasCuestionario(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<RespuestasCuestionario>()
+          .HasOne(rc => rc.OpcionesCuestionario)
+          .WithMany()
+          .HasForeignKey(rc => rc.CuestionarioID)
+          .OnDelete(DeleteBehavior.Cascade); // Eliminar en cascada si se elimina el cuestionario
+
+      modelBuilder.Entity<RespuestasCuestionario>()
+          .HasOne(rc => rc.User)
+          .WithMany()
+          .HasForeignKey(rc => rc.UsuarioID)
+          .OnDelete(DeleteBehavior.Restrict); // No realizar acción en cascada si se elimina el usuario
+    }
+
+    private void ConfigureEjerciciosRespuestas(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<EjerciciosRespuestas>()
+          .HasOne(er => er.EjerciciosPreguntas)
+          .WithMany()
+          .HasForeignKey(er => er.EjercicioPreguntaID)
+          .OnDelete(DeleteBehavior.Cascade); // Eliminar en cascada si se elimina la pregunta
+
+      modelBuilder.Entity<EjerciciosRespuestas>()
+          .HasOne(er => er.User)
+          .WithMany()
+          .HasForeignKey(er => er.UsuarioID)
+          .OnDelete(DeleteBehavior.Restrict); // No realizar acción en cascada si se elimina el usuario
+    }
+
+    private void ConfigureEjerciciosPreguntas(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<EjerciciosPreguntas>()
+          .HasOne(ep => ep.Ejercicios)
+          .WithMany()
+          .HasForeignKey(ep => ep.EjercicioID)
+          .OnDelete(DeleteBehavior.Cascade); // Eliminar en cascada si se elimina el ejercicio
+    }
+
+    private void ConfigureEjercicios(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<Ejercicios>()
+          .HasOne(e => e.User)
+          .WithMany()
+          .HasForeignKey(e => e.UsuarioID)
+          .OnDelete(DeleteBehavior.Restrict); // No realizar acción en cascada si se elimina el usuario
     }
   }
 

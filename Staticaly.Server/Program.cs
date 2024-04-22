@@ -916,4 +916,225 @@ opcionesCuestionarioGroup.MapDelete("/{id}", async (StaticalyContext context, in
 
 #endregion
 
+var respuestasCuestionarioGroup = app.MapGroup("/respuestascuestionario").WithParameterValidation();
+
+#region Entry Points RespuestasCuestionario
+
+// Crear respuesta de cuestionario
+respuestasCuestionarioGroup.MapPost("/", async (StaticalyContext context, RespuestasCuestionario respuesta) =>
+{
+  context.RespuestasCuestionarios.Add(respuesta);
+  await context.SaveChangesAsync();
+  return Results.Created($"/respuestascuestionario/{respuesta.RespuestasCuestionarioID}", respuesta);
+}).Produces<RespuestasCuestionario>();
+
+// Obtener respuestas de cuestionario por usuario
+respuestasCuestionarioGroup.MapGet("/byUsuario/{id}", async (StaticalyContext context, int id) =>
+{
+  var respuestas = await context.RespuestasCuestionarios
+                              .Include(r => r.User)
+                              .Include(r => r.OpcionesCuestionario)
+                              .AsNoTracking()
+                              .Where(r => r.UsuarioID == id)
+                              .ToListAsync();
+
+  return Results.Ok(respuestas);
+});
+
+//Obtener respuestas de cuestionario por cuestionario
+respuestasCuestionarioGroup.MapGet("/byCuestionario/{id}", async (StaticalyContext context, int id) =>
+{
+  var respuestas = await context.RespuestasCuestionarios
+                              .Include(r => r.User)
+                              .Include(r => r.OpcionesCuestionario)
+                              .AsNoTracking()
+                              .Where(r => r.CuestionarioID == id)
+                              .ToListAsync();
+
+  return Results.Ok(respuestas);
+});
+
+// Eliminar respuesta de cuestionario
+respuestasCuestionarioGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+{
+  var respuesta = await context.RespuestasCuestionarios.FindAsync(id);
+  if (respuesta == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.RespuestasCuestionarios.Remove(respuesta);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+#endregion
+
+var ejerciciosGroup = app.MapGroup("/ejercicios").WithParameterValidation();
+
+#region Entry Points Ejercicios
+
+// Crear ejercicio
+ejerciciosGroup.MapPost("/", async (StaticalyContext context, Ejercicios ejercicio) =>
+{
+  context.Ejercicios.Add(ejercicio);
+  await context.SaveChangesAsync();
+  return Results.Created($"/ejercicios/{ejercicio.EjerciciosID}", ejercicio);
+}).Produces<Ejercicios>();
+
+// Obtener ejercicios por Equipo
+ejerciciosGroup.MapGet("/byEquipo/{id}", async (StaticalyContext context, int id) =>
+{
+  var ejercicios = await context.Ejercicios
+                              .Include(e => e.EquipoID)
+                              .AsNoTracking()
+                              .Where(e => e.EquipoID == id)
+                              .ToListAsync();
+
+  return Results.Ok(ejercicios);
+});
+
+// Obtener ejercicio por ID
+ejerciciosGroup.MapGet("/{id}", async (StaticalyContext context, int id) =>
+{
+  var ejercicio = await context.Ejercicios.FindAsync(id);
+  return ejercicio != null ? Results.Ok(ejercicio) : Results.NotFound();
+}).Produces<Ejercicios>();
+
+// Editar ejercicio
+ejerciciosGroup.MapPut("/{id}", async (StaticalyContext context, int id, Ejercicios ejercicio) =>
+{
+  var ejercicioToUpdate = await context.Ejercicios.FindAsync(id);
+  if (ejercicioToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  ejercicioToUpdate.Titulo = ejercicio.Titulo;
+  ejercicioToUpdate.Descripcion = ejercicio.Descripcion;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+}).Produces<Ejercicios>();
+
+// Eliminar ejercicio
+ejerciciosGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+{
+  var ejercicio = await context.Ejercicios.FindAsync(id);
+  if (ejercicio == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.Ejercicios.Remove(ejercicio);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+// Cambiar estado de publicación de ejercicio
+ejerciciosGroup.MapPut("/publicado/{id}/{publicado}", async (StaticalyContext context, int id, bool activo) =>
+{
+  var ejercicioToUpdate = await context.Ejercicios.FindAsync(id);
+  if (ejercicioToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  ejercicioToUpdate.Activo = activo;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+#endregion
+
+var ejerciciosPreguntasGroup = app.MapGroup("/ejerciciospreguntas").WithParameterValidation();
+
+#region Entry Points EjerciciosPreguntas
+
+// Crear pregunta de ejercicio
+ejerciciosPreguntasGroup.MapPost("/", async (StaticalyContext context, EjerciciosPreguntas pregunta) =>
+{
+  context.EjerciciosPreguntas.Add(pregunta);
+  await context.SaveChangesAsync();
+  return Results.Created($"/ejerciciospreguntas/{pregunta.EjerciciosPreguntasID}", pregunta);
+}).Produces<EjerciciosPreguntas>();
+
+// Obtener preguntas de ejercicio por ejercicio
+ejerciciosPreguntasGroup.MapGet("/byEjercicio/{id}", async (StaticalyContext context, int id) =>
+{
+  var preguntas = await context.EjerciciosPreguntas
+                              .Include(p => p.Ejercicios)
+                              .AsNoTracking()
+                              .Where(p => p.EjercicioID == id)
+                              .ToListAsync();
+
+  return Results.Ok(preguntas);
+});
+
+// Editar pregunta de ejercicio
+ejerciciosPreguntasGroup.MapPut("/{id}", async (StaticalyContext context, int id, EjerciciosPreguntas pregunta) =>
+{
+  var preguntaToUpdate = await context.EjerciciosPreguntas.FindAsync(id);
+  if (preguntaToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  preguntaToUpdate.Pregunta = pregunta.Pregunta;
+  preguntaToUpdate.Respuesta = pregunta.Respuesta;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+}).Produces<EjerciciosPreguntas>();
+
+// Eliminar pregunta de ejercicio
+ejerciciosPreguntasGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+{
+  var pregunta = await context.EjerciciosPreguntas.FindAsync(id);
+  if (pregunta == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.EjerciciosPreguntas.Remove(pregunta);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+#endregion
+
+var ejerciciosRespuestasGroup = app.MapGroup("/ejerciciosrespuestas").WithParameterValidation();
+
+#region Entry Points EjerciciosRespuestas
+
+// Crear respuesta de ejercicio
+ejerciciosRespuestasGroup.MapPost("/", async (StaticalyContext context, EjerciciosRespuestas respuesta) =>
+{
+  context.EjerciciosRespuestas.Add(respuesta);
+  await context.SaveChangesAsync();
+  return Results.Created($"/ejerciciosrespuestas/{respuesta.EjerciciosRespuestasID}", respuesta);
+}).Produces<EjerciciosRespuestas>();
+
+// Obtener respuestas de ejercicio por usuario
+ejerciciosRespuestasGroup.MapGet("/byUsuario/{id}", async (StaticalyContext context, int id) =>
+{
+  var respuestas = await context.EjerciciosRespuestas
+                              .Include(r => r.User)
+                              .Include(r => r.EjerciciosPreguntas)
+                              .AsNoTracking()
+                              .Where(r => r.UsuarioID == id)
+                              .ToListAsync();
+
+  return Results.Ok(respuestas);
+});
+
+#endregion
+
 app.Run();

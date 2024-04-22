@@ -7,8 +7,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Staticaly.Client.Models
 {
-    public class OpcionesCuestionario
-    {
+  public class OpcionesCuestionario
+  {
     [Key]
     public int OpcionID { get; set; }
     [Required]

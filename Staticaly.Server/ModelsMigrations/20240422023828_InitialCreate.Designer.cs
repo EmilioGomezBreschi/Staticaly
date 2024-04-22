@@ -12,7 +12,7 @@ using Staticaly.Server.Models;
 namespace Staticaly.Server.ModelsMigrations
 {
     [DbContext(typeof(StaticalyContext))]
-    [Migration("20240416013022_InitialCreate")]
+    [Migration("20240422023828_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace Staticaly.Server.ModelsMigrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -124,6 +124,93 @@ namespace Staticaly.Server.ModelsMigrations
                     b.HasIndex("UsuarioID");
 
                     b.ToTable("Cuestionarios");
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.Ejercicios", b =>
+                {
+                    b.Property<int>("EjerciciosID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EjerciciosID"));
+
+                    b.Property<bool?>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EquipoID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UsuarioID")
+                        .HasColumnType("int");
+
+                    b.HasKey("EjerciciosID");
+
+                    b.HasIndex("UsuarioID");
+
+                    b.ToTable("Ejercicios");
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.EjerciciosPreguntas", b =>
+                {
+                    b.Property<int>("EjerciciosPreguntasID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EjerciciosPreguntasID"));
+
+                    b.Property<int>("EjercicioID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Pregunta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Respuesta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EjerciciosPreguntasID");
+
+                    b.HasIndex("EjercicioID");
+
+                    b.ToTable("EjerciciosPreguntas");
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.EjerciciosRespuestas", b =>
+                {
+                    b.Property<int>("EjerciciosRespuestasID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EjerciciosRespuestasID"));
+
+                    b.Property<int>("EjercicioID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EjercicioPreguntaID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Respuesta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UsuarioID")
+                        .HasColumnType("int");
+
+                    b.HasKey("EjerciciosRespuestasID");
+
+                    b.HasIndex("EjercicioPreguntaID");
+
+                    b.HasIndex("UsuarioID");
+
+                    b.ToTable("EjerciciosRespuestas");
                 });
 
             modelBuilder.Entity("Staticaly.Server.Models.Equipos", b =>
@@ -377,6 +464,35 @@ namespace Staticaly.Server.ModelsMigrations
                         });
                 });
 
+            modelBuilder.Entity("Staticaly.Server.Models.RespuestasCuestionario", b =>
+                {
+                    b.Property<int>("RespuestasCuestionarioID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RespuestasCuestionarioID"));
+
+                    b.Property<int>("CuestionarioID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PreguntaID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RespuestaID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioID")
+                        .HasColumnType("int");
+
+                    b.HasKey("RespuestasCuestionarioID");
+
+                    b.HasIndex("CuestionarioID");
+
+                    b.HasIndex("UsuarioID");
+
+                    b.ToTable("RespuestasCuestionarios");
+                });
+
             modelBuilder.Entity("Staticaly.Server.Models.Rol", b =>
                 {
                     b.Property<int>("RolID")
@@ -590,6 +706,47 @@ namespace Staticaly.Server.ModelsMigrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("Staticaly.Server.Models.Ejercicios", b =>
+                {
+                    b.HasOne("Staticaly.Server.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UsuarioID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.EjerciciosPreguntas", b =>
+                {
+                    b.HasOne("Staticaly.Server.Models.Ejercicios", "Ejercicios")
+                        .WithMany()
+                        .HasForeignKey("EjercicioID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ejercicios");
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.EjerciciosRespuestas", b =>
+                {
+                    b.HasOne("Staticaly.Server.Models.EjerciciosPreguntas", "EjerciciosPreguntas")
+                        .WithMany()
+                        .HasForeignKey("EjercicioPreguntaID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Staticaly.Server.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UsuarioID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("EjerciciosPreguntas");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Staticaly.Server.Models.Equipos", b =>
                 {
                     b.HasOne("Staticaly.Server.Models.TiposEquipos", "TipoEquipo")
@@ -632,6 +789,25 @@ namespace Staticaly.Server.ModelsMigrations
                         .IsRequired();
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.RespuestasCuestionario", b =>
+                {
+                    b.HasOne("Staticaly.Server.Models.OpcionesCuestionario", "OpcionesCuestionario")
+                        .WithMany()
+                        .HasForeignKey("CuestionarioID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Staticaly.Server.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UsuarioID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("OpcionesCuestionario");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Staticaly.Server.Models.User", b =>
