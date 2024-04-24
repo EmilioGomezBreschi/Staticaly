@@ -20,5 +20,6 @@ namespace Staticaly.Client.Models
     public byte[]? Imagen { get; set; }
     [Required]
     public string? Respuesta { get; set; }
+    public int Puntos { get; set; }
   }
 }

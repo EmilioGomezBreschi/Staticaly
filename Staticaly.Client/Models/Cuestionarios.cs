@@ -25,5 +25,7 @@ namespace Staticaly.Client.Models
     public string? Descripcion { get; set; }
     [Required]
     public bool Publicado { get; set; }
+    public DateTime? FechaCierre { get; set; }
+    public int? RespuestasMaximas { get; set; }
   }
 }

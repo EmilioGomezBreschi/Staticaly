@@ -103,8 +103,14 @@ namespace Staticaly.Server.ModelsMigrations
                     b.Property<int>("EquipoID")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("FechaCierre")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("Publicado")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("RespuestasMaximas")
+                        .HasColumnType("int");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
@@ -140,9 +146,13 @@ namespace Staticaly.Server.ModelsMigrations
                     b.Property<int>("EquipoID")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("FechaCierre")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Titulo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("UsuarioID")
                         .HasColumnType("int");
@@ -152,6 +162,17 @@ namespace Staticaly.Server.ModelsMigrations
                     b.HasIndex("UsuarioID");
 
                     b.ToTable("Ejercicios");
+
+                    b.HasData(
+                        new
+                        {
+                            EjerciciosID = 1,
+                            Activo = true,
+                            Descripcion = "En base a estos ejercicios sera el rango que tengas dentro de la plataforma, hay un total de 100 ejercicios los cuales van a ir incrementando su dificultad conforme vayas avanzando, por cada respuesta incorrecta se restaran puntos y por cada segundo que pase se restaran puntos, por lo que es importante que contestes lo mas rapido posible y de manera correcta.",
+                            EquipoID = 1,
+                            Titulo = "Ejercicios Publicos",
+                            UsuarioID = 1
+                        });
                 });
 
             modelBuilder.Entity("Staticaly.Server.Models.EjerciciosPreguntas", b =>
@@ -164,6 +185,9 @@ namespace Staticaly.Server.ModelsMigrations
 
                     b.Property<int>("EjercicioID")
                         .HasColumnType("int");
+
+                    b.Property<byte[]>("Imagen")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Pregunta")
                         .IsRequired()
@@ -178,6 +202,43 @@ namespace Staticaly.Server.ModelsMigrations
                     b.HasIndex("EjercicioID");
 
                     b.ToTable("EjerciciosPreguntas");
+
+                    b.HasData(
+                        new
+                        {
+                            EjerciciosPreguntasID = 1,
+                            EjercicioID = 1,
+                            Pregunta = "¿Cual es el resultado de 2 + 2?",
+                            Respuesta = "4"
+                        },
+                        new
+                        {
+                            EjerciciosPreguntasID = 2,
+                            EjercicioID = 1,
+                            Pregunta = "¿Cual es el resultado de 5 + 5?",
+                            Respuesta = "10"
+                        },
+                        new
+                        {
+                            EjerciciosPreguntasID = 3,
+                            EjercicioID = 1,
+                            Pregunta = "¿Cual es el resultado de 10 + 10?",
+                            Respuesta = "20"
+                        },
+                        new
+                        {
+                            EjerciciosPreguntasID = 4,
+                            EjercicioID = 1,
+                            Pregunta = "¿Cual es el resultado de 20 + 20?",
+                            Respuesta = "40"
+                        },
+                        new
+                        {
+                            EjerciciosPreguntasID = 5,
+                            EjercicioID = 1,
+                            Pregunta = "¿Cual es el resultado de 40 + 40?",
+                            Respuesta = "80"
+                        });
                 });
 
             modelBuilder.Entity("Staticaly.Server.Models.EjerciciosRespuestas", b =>
@@ -483,8 +544,6 @@ namespace Staticaly.Server.ModelsMigrations
 
                     b.HasKey("RespuestasCuestionarioID");
 
-                    b.HasIndex("CuestionarioID");
-
                     b.HasIndex("UsuarioID");
 
                     b.ToTable("RespuestasCuestionarios");
@@ -613,6 +672,20 @@ namespace Staticaly.Server.ModelsMigrations
                     b.HasIndex("RolID");
 
                     b.ToTable("Usuarios");
+
+                    b.HasData(
+                        new
+                        {
+                            UsuarioID = 1,
+                            Apellido = "Admin",
+                            Email = "staticaly.services@gmail.com",
+                            EmailVerified = true,
+                            Nombre = "Admin",
+                            Password = "$2a$12$wM8vSxJF5IO27LsmTeheheB.durdm4GUJp4RD9pLon4/fYTlR6mbS",
+                            Puntos = 100000,
+                            RangoID = 10,
+                            RolID = 1
+                        });
                 });
 
             modelBuilder.Entity("Staticaly.Server.Models.UsuariosEquipos", b =>
@@ -790,19 +863,11 @@ namespace Staticaly.Server.ModelsMigrations
 
             modelBuilder.Entity("Staticaly.Server.Models.RespuestasCuestionario", b =>
                 {
-                    b.HasOne("Staticaly.Server.Models.OpcionesCuestionario", "OpcionesCuestionario")
-                        .WithMany()
-                        .HasForeignKey("CuestionarioID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Staticaly.Server.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UsuarioID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("OpcionesCuestionario");
 
                     b.Navigation("User");
                 });

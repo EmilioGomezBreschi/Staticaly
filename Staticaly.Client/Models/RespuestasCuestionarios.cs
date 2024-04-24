@@ -7,8 +7,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Staticaly.Client.Models
 {
-    public class RespuestasCuestionarios
-    {
+  public class RespuestasCuestionarios
+  {
     [Key]
     public int RespuestasCuestionarioID { get; set; }
     [ForeignKey("CuestionarioID")]
@@ -17,10 +17,8 @@ namespace Staticaly.Client.Models
     [ForeignKey("PreguntaID")]
     [Required]
     public int PreguntaID { get; set; }
-    [ForeignKey("RespuestaID")]
     [Required]
-    public int RespuestaID { get; set; }
-    public OpcionesCuestionario? OpcionesCuestionario { get; set; }
+    public int RespuestaID { get; set; } // ID de la opción seleccionada
     [ForeignKey("UsuarioID")]
     [Required]
     public int UsuarioID { get; set; }

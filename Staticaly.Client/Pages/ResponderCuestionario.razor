@@ -1,0 +1,131 @@
+@page "/responder-Cuestionario/{CuestionarioID}/{UsuarioId}/{EquipoId}"
+@using Staticaly.Client.Models
+@using Staticaly.Client.Data
+@inject NavigationManager NavigationManager
+@inject CuestionarioClient CuestionarioClient
+@inject PreguntasClient PreguntasClient
+@inject OpcionesCuestionarioClient OpcionesClient
+@inject RespuestasCuestionarioClient RespuestasClient
+
+<PageTitle>Responder Cuestionario - Staticaly</PageTitle>
+
+<div class="flex flex-col justify-center items-center px-24 text-primary-50 mb-10">
+  @if (Cuestionario == null)
+  {
+    <p>Cargando...</p>
+  }
+  <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7 items-center">
+    <h1 class="text-4xl font-bold text-primary-900">@TituloCuestionario</h1>
+    <p class="text-md text-justify">@DescripcionCuestionario</p>
+  </div>
+  @if (Preguntas != null && Preguntas.Any())
+  {
+    <h2 class="text-lg font-bold mt-4">Preguntas:</h2>
+    @foreach (var pregunta in Preguntas)
+    {
+      <form>
+        <div class="mt-4 flex flex-col items-center p-7 rounded-md bg-primary-500">
+          <div class="flex justify-between w-full">
+            <h1 class="text-lg font-bold px-3 py-2 mt-1 w-96">@pregunta.Pregunta</h1>
+          </div>
+          @if (pregunta.Opciones != null && pregunta.Opciones.Any())
+          {
+            <div class="mt-2">
+              <select @onchange="@(e => SeleccionarRespuesta(pregunta.PreguntaID, e.Value?.ToString()))"
+                class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-primary-150 w-96">
+                <option value="">Seleccionar opción</option>
+                @foreach (var opcion in pregunta.Opciones)
+                {
+                  <option value="@opcion.OpcionID">@opcion.Opcion</option>
+                }
+              </select>
+            </div>
+          }
+        </div>
+      </form>
+    }
+    <button class="mt-4 bg-primary-700 text-primary-50 px-4 py-2 rounded-md" @onclick="EnviarCuestionario">Enviar
+      Cuestionario</button>
+  }
+</div>
+
+@code {
+  [Parameter] public string? CuestionarioID { get; set; }
+  [Parameter] public string? UsuarioID { get; set; }
+  [Parameter] public string? EquipoId { get; set; }
+  public Cuestionarios? Cuestionario { get; set; }
+  public List<Preguntas>? Preguntas { get; set; }
+  public string TituloCuestionario { get; set; } = "";
+  public string DescripcionCuestionario { get; set; } = "";
+  public string MensajeError { get; set; } = "";
+  private Dictionary<int, int> RespuestasSeleccionadas = new Dictionary<int, int>();
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (CuestionarioID != null)
+    {
+      Cuestionario = await CuestionarioClient.ObtenerCuestionarioPorIDAsync(int.Parse(CuestionarioID)) ?? new Cuestionarios();
+      TituloCuestionario = Cuestionario.Titulo ?? "";
+      DescripcionCuestionario = Cuestionario.Descripcion ?? "";
+      Preguntas = (await PreguntasClient.GetPreguntasAsync(int.Parse(CuestionarioID)))?.ToList() ?? new List<Preguntas>();
+      await CargarOpcionesParaTodasLasPreguntas();
+    }
+  }
+
+  private async Task CargarOpcionesParaTodasLasPreguntas()
+  {
+    if (Preguntas == null || !Preguntas.Any())
+    {
+      return;
+    }
+    foreach (var pregunta in Preguntas)
+    {
+      pregunta.Opciones = (await OpcionesClient.GetOpcionesAsync(pregunta.PreguntaID))?.ToList() ?? new
+      List<OpcionesCuestionario>();
+    }
+  }
+
+  private void SeleccionarRespuesta(int preguntaId, string? opcionId)
+  {
+    if (!string.IsNullOrEmpty(opcionId))
+    {
+      RespuestasSeleccionadas[preguntaId] = int.Parse(opcionId);
+    }
+    else
+    {
+      RespuestasSeleccionadas.Remove(preguntaId);
+    }
+  }
+
+  private async Task EnviarCuestionario()
+  {
+    if (Preguntas == null || !Preguntas.Any())
+    {
+      return;
+    }
+
+    foreach (var pregunta in Preguntas)
+    {
+      if (!RespuestasSeleccionadas.ContainsKey(pregunta.PreguntaID))
+      {
+        MensajeError = "Por favor selecciona una opción para cada pregunta.";
+        return;
+      }
+
+      if (UsuarioID == null || !int.TryParse(UsuarioID, out int userId))
+      {
+        MensajeError = "El ID de usuario no es válido.";
+        return;
+      }
+
+      var respuesta = new RespuestasCuestionarios
+        {
+          CuestionarioID = pregunta.CuestionarioID,
+          PreguntaID = pregunta.PreguntaID,
+          RespuestaID = RespuestasSeleccionadas[pregunta.PreguntaID],
+          UsuarioID = userId
+        };
+      await RespuestasClient.CrearRespuestaCuestionarioAsync(respuesta);
+    }
+  }
+}

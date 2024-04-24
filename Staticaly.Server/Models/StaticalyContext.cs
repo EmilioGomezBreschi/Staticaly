@@ -160,12 +160,6 @@ namespace Staticaly.Server.Models
     private void ConfigureRespuestasCuestionario(ModelBuilder modelBuilder)
     {
       modelBuilder.Entity<RespuestasCuestionario>()
-          .HasOne(rc => rc.OpcionesCuestionario)
-          .WithMany()
-          .HasForeignKey(rc => rc.CuestionarioID)
-          .OnDelete(DeleteBehavior.Cascade); // Eliminar en cascada si se elimina el cuestionario
-
-      modelBuilder.Entity<RespuestasCuestionario>()
           .HasOne(rc => rc.User)
           .WithMany()
           .HasForeignKey(rc => rc.UsuarioID)
@@ -211,6 +205,22 @@ namespace Staticaly.Server.Models
   {
     public static void Initialize(ModelBuilder modelBuilder)
     {
+      modelBuilder.Entity<User>().HasData(
+          new User
+          {
+            UsuarioID = 1,
+            Nombre = "Admin",
+            Apellido = "Admin",
+            Email = "staticaly.services@gmail.com",
+            Password = "$2a$12$wM8vSxJF5IO27LsmTeheheB.durdm4GUJp4RD9pLon4/fYTlR6mbS",
+            RolID = 1,
+            RangoID = 10,
+            Puntos = 100000,
+            EmailVerified = true,
+            Imagen = null,
+            VerificationToken = null
+          });
+
       modelBuilder.Entity<Rol>().HasData(
           new Rol
           {
@@ -341,6 +351,57 @@ namespace Staticaly.Server.Models
             Nombre = "Foro Publico",
             TipoEquipoID = 1
           }
+      );
+
+      modelBuilder.Entity<Ejercicios>().HasData(
+        new Ejercicios
+        {
+          EjerciciosID = 1,
+          UsuarioID = 1,
+          EquipoID = 1,
+          Titulo = "Ejercicios Publicos",
+          Descripcion = "En base a estos ejercicios sera el rango que tengas dentro de la plataforma, hay un total de 100 ejercicios los cuales van a ir incrementando su dificultad conforme vayas avanzando, por cada respuesta incorrecta se restaran puntos y por cada segundo que pase se restaran puntos, por lo que es importante que contestes lo mas rapido posible y de manera correcta.",
+          Activo = true,
+          FechaCierre = null
+        }
+      );
+
+      modelBuilder.Entity<EjerciciosPreguntas>().HasData(
+        new EjerciciosPreguntas
+        {
+          EjerciciosPreguntasID = 1,
+          EjercicioID = 1,
+          Pregunta = "¿Cual es el resultado de 2 + 2?",
+          Respuesta = "4"
+        },
+        new EjerciciosPreguntas
+        {
+          EjerciciosPreguntasID = 2,
+          EjercicioID = 1,
+          Pregunta = "¿Cual es el resultado de 5 + 5?",
+          Respuesta = "10"
+        },
+        new EjerciciosPreguntas
+        {
+          EjerciciosPreguntasID = 3,
+          EjercicioID = 1,
+          Pregunta = "¿Cual es el resultado de 10 + 10?",
+          Respuesta = "20"
+        },
+        new EjerciciosPreguntas
+        {
+          EjerciciosPreguntasID = 4,
+          EjercicioID = 1,
+          Pregunta = "¿Cual es el resultado de 20 + 20?",
+          Respuesta = "40"
+        },
+        new EjerciciosPreguntas
+        {
+          EjerciciosPreguntasID = 5,
+          EjercicioID = 1,
+          Pregunta = "¿Cual es el resultado de 40 + 40?",
+          Respuesta = "80"
+        }
       );
     }
   }

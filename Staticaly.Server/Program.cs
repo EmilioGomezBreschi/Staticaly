@@ -933,7 +933,6 @@ respuestasCuestionarioGroup.MapGet("/byUsuario/{id}", async (StaticalyContext co
 {
   var respuestas = await context.RespuestasCuestionarios
                               .Include(r => r.User)
-                              .Include(r => r.OpcionesCuestionario)
                               .AsNoTracking()
                               .Where(r => r.UsuarioID == id)
                               .ToListAsync();
@@ -946,7 +945,6 @@ respuestasCuestionarioGroup.MapGet("/byCuestionario/{id}", async (StaticalyConte
 {
   var respuestas = await context.RespuestasCuestionarios
                               .Include(r => r.User)
-                              .Include(r => r.OpcionesCuestionario)
                               .AsNoTracking()
                               .Where(r => r.CuestionarioID == id)
                               .ToListAsync();
@@ -987,7 +985,7 @@ ejerciciosGroup.MapPost("/", async (StaticalyContext context, Ejercicios ejercic
 ejerciciosGroup.MapGet("/byEquipo/{id}", async (StaticalyContext context, int id) =>
 {
   var ejercicios = await context.Ejercicios
-                              .Include(e => e.EquipoID)
+                              .Include(e => e.User)
                               .AsNoTracking()
                               .Where(e => e.EquipoID == id)
                               .ToListAsync();

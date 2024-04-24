@@ -24,5 +24,7 @@ namespace Staticaly.Client.Models
     public EjerciciosPreguntas? EjerciciosPreguntas { get; set; }
     [Required]
     public string? Respuesta { get; set; }
+    public bool? Correcta { get; set; }
+    public int Puntos { get; set; }
   }
 }

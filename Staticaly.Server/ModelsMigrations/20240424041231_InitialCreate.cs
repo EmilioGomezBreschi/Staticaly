@@ -130,9 +130,10 @@ namespace Staticaly.Server.ModelsMigrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UsuarioID = table.Column<int>(type: "int", nullable: false),
                     EquipoID = table.Column<int>(type: "int", nullable: false),
-                    Titulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Titulo = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Activo = table.Column<bool>(type: "bit", nullable: true)
+                    Activo = table.Column<bool>(type: "bit", nullable: true),
+                    FechaCierre = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -171,6 +172,28 @@ namespace Staticaly.Server.ModelsMigrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RespuestasCuestionarios",
+                columns: table => new
+                {
+                    RespuestasCuestionarioID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CuestionarioID = table.Column<int>(type: "int", nullable: false),
+                    PreguntaID = table.Column<int>(type: "int", nullable: false),
+                    RespuestaID = table.Column<int>(type: "int", nullable: false),
+                    UsuarioID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RespuestasCuestionarios", x => x.RespuestasCuestionarioID);
+                    table.ForeignKey(
+                        name: "FK_RespuestasCuestionarios_Usuarios_UsuarioID",
+                        column: x => x.UsuarioID,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Cuestionarios",
                 columns: table => new
                 {
@@ -180,7 +203,9 @@ namespace Staticaly.Server.ModelsMigrations
                     UsuarioID = table.Column<int>(type: "int", nullable: false),
                     Titulo = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Publicado = table.Column<bool>(type: "bit", nullable: false)
+                    Publicado = table.Column<bool>(type: "bit", nullable: false),
+                    FechaCierre = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RespuestasMaximas = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -241,6 +266,7 @@ namespace Staticaly.Server.ModelsMigrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EjercicioID = table.Column<int>(type: "int", nullable: false),
                     Pregunta = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Imagen = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     Respuesta = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -380,34 +406,6 @@ namespace Staticaly.Server.ModelsMigrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "RespuestasCuestionarios",
-                columns: table => new
-                {
-                    RespuestasCuestionarioID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CuestionarioID = table.Column<int>(type: "int", nullable: false),
-                    PreguntaID = table.Column<int>(type: "int", nullable: false),
-                    RespuestaID = table.Column<int>(type: "int", nullable: false),
-                    UsuarioID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RespuestasCuestionarios", x => x.RespuestasCuestionarioID);
-                    table.ForeignKey(
-                        name: "FK_RespuestasCuestionarios_OpcionesCuestionario_CuestionarioID",
-                        column: x => x.CuestionarioID,
-                        principalTable: "OpcionesCuestionario",
-                        principalColumn: "OpcionID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RespuestasCuestionarios_Usuarios_UsuarioID",
-                        column: x => x.UsuarioID,
-                        principalTable: "Usuarios",
-                        principalColumn: "UsuarioID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.InsertData(
                 table: "Permisos",
                 columns: new[] { "PermisoID", "Nombre" },
@@ -459,6 +457,28 @@ namespace Staticaly.Server.ModelsMigrations
                 table: "Equipos",
                 columns: new[] { "EquipoID", "Descripcion", "Nombre", "TipoEquipoID" },
                 values: new object[] { 1, null, "Foro Publico", 1 });
+
+            migrationBuilder.InsertData(
+                table: "Usuarios",
+                columns: new[] { "UsuarioID", "Apellido", "Email", "EmailVerified", "Imagen", "Nombre", "Password", "Puntos", "RangoID", "RolID", "VerificationToken" },
+                values: new object[] { 1, "Admin", "staticaly.services@gmail.com", true, null, "Admin", "$2a$12$wM8vSxJF5IO27LsmTeheheB.durdm4GUJp4RD9pLon4/fYTlR6mbS", 100000, 10, 1, null });
+
+            migrationBuilder.InsertData(
+                table: "Ejercicios",
+                columns: new[] { "EjerciciosID", "Activo", "Descripcion", "EquipoID", "FechaCierre", "Titulo", "UsuarioID" },
+                values: new object[] { 1, true, "En base a estos ejercicios sera el rango que tengas dentro de la plataforma, hay un total de 100 ejercicios los cuales van a ir incrementando su dificultad conforme vayas avanzando, por cada respuesta incorrecta se restaran puntos y por cada segundo que pase se restaran puntos, por lo que es importante que contestes lo mas rapido posible y de manera correcta.", 1, null, "Ejercicios Publicos", 1 });
+
+            migrationBuilder.InsertData(
+                table: "EjerciciosPreguntas",
+                columns: new[] { "EjerciciosPreguntasID", "EjercicioID", "Imagen", "Pregunta", "Respuesta" },
+                values: new object[,]
+                {
+                    { 1, 1, null, "¿Cual es el resultado de 2 + 2?", "4" },
+                    { 2, 1, null, "¿Cual es el resultado de 5 + 5?", "10" },
+                    { 3, 1, null, "¿Cual es el resultado de 10 + 10?", "20" },
+                    { 4, 1, null, "¿Cual es el resultado de 20 + 20?", "40" },
+                    { 5, 1, null, "¿Cual es el resultado de 40 + 40?", "80" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Calificaciones_ComentarioID",
@@ -531,11 +551,6 @@ namespace Staticaly.Server.ModelsMigrations
                 column: "UsuarioID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RespuestasCuestionarios_CuestionarioID",
-                table: "RespuestasCuestionarios",
-                column: "CuestionarioID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_RespuestasCuestionarios_UsuarioID",
                 table: "RespuestasCuestionarios",
                 column: "UsuarioID");
@@ -576,6 +591,9 @@ namespace Staticaly.Server.ModelsMigrations
                 name: "EjerciciosRespuestas");
 
             migrationBuilder.DropTable(
+                name: "OpcionesCuestionario");
+
+            migrationBuilder.DropTable(
                 name: "RespuestasCuestionarios");
 
             migrationBuilder.DropTable(
@@ -588,7 +606,7 @@ namespace Staticaly.Server.ModelsMigrations
                 name: "EjerciciosPreguntas");
 
             migrationBuilder.DropTable(
-                name: "OpcionesCuestionario");
+                name: "Preguntas");
 
             migrationBuilder.DropTable(
                 name: "Permisos");
@@ -598,9 +616,6 @@ namespace Staticaly.Server.ModelsMigrations
 
             migrationBuilder.DropTable(
                 name: "Ejercicios");
-
-            migrationBuilder.DropTable(
-                name: "Preguntas");
 
             migrationBuilder.DropTable(
                 name: "Cuestionarios");

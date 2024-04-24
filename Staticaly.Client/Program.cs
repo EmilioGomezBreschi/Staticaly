@@ -20,5 +20,9 @@ builder.Services.AddScoped<CuestionarioClient>();
 builder.Services.AddScoped<PreguntasClient>();
 builder.Services.AddScoped<OpcionesCuestionarioClient>();
 builder.Services.AddScoped<CalificacionesClient>();
+builder.Services.AddScoped<RespuestasCuestionarioClient>();
+builder.Services.AddScoped<EjerciciosClient>();
+builder.Services.AddScoped<EjerciciosRespuestasClient>();
+builder.Services.AddScoped<EjerciciosPreguntasClient>();
 
 await builder.Build().RunAsync();

@@ -4,12 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Staticaly.Client.Models;
 
 namespace Staticaly.Client.Models
 {
-    public class Ejercicios
-    {
+  public class Ejercicios
+  {
     [Key]
     public int EjerciciosID { get; set; }
     [Required]
@@ -20,8 +19,11 @@ namespace Staticaly.Client.Models
     [ForeignKey("EquipoID")]
     public int EquipoID { get; set; }
     [Required]
+    [StringLength(255)]
     public string? Titulo { get; set; }
     public string? Descripcion { get; set; }
+    [Required]
     public bool? Activo { get; set; }
+    public DateTime? FechaCierre { get; set; }
   }
 }
