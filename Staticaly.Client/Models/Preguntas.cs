@@ -22,5 +22,7 @@ namespace Staticaly.Client.Models
 
     // Lista de respuestas asociadas a esta pregunta
     public List<OpcionesCuestionario> Opciones { get; set; } = new List<OpcionesCuestionario>();
+    // Propiedad para mantener las opciones originales
+    public List<string> OpcionesOriginales { get; set; } = new List<string>();
   }
 }

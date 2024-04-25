@@ -53,26 +53,26 @@
       {
         <div class="mt-4 flex flex-col items-center p-7 rounded-md bg-primary-500">
           <div class="flex justify-between w-full">
-            <input type="text" @bind="pregunta.Pregunta"
-              class="text-lg font-bold border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
-            <button @onclick="() => GuardarPregunta(pregunta)"
-              class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Guardar
-            </button>
+              <input type="text" @bind="pregunta.Pregunta"
+                    class="text-lg font-bold border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
+
+              <button @onclick="() => EliminarPregunta(pregunta.PreguntaID)"
+                      class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Eliminar
+              </button>
           </div>
           @if (pregunta.Opciones != null && pregunta.Opciones.Any())
           {
+            <h5 class="text-md font-bold mt-2">Opciones:</h5>
             @foreach (var opcion in pregunta.Opciones)
             {
-              <div class="mt-2 flex justify-between w-full">
-                <input type="text" @bind="opcion.Opcion"
-                  class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
-                <button @onclick="() => GuardarOpcion(opcion)"
-                  class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Guardar
-                </button>
-                <button @onclick="() => EliminarOpcion(pregunta, opcion)"
-                  class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Eliminar
-                </button>
-              </div>
+                <div class="mt-2 flex justify-between w-full">
+                    <input type="text" value="@opcion.Opcion"
+                          class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96"
+                          @oninput="(e) => { opcion.Opcion = e.Value.ToString(); CambiarTextoOpcion(pregunta, opcion); }" />
+                    <button @onclick="() => EliminarOpcion(pregunta, opcion)"
+                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Eliminar
+                    </button>
+                </div>
             }
           }
           <div class="mt-2 flex justify-between w-full">
@@ -86,9 +86,9 @@
       }
     }
     <div class="mt-4" style="text-align:center">
-      <button @onclick="GuardarCuestionario"
-        class="bg-Secondary-700 hover:bg-Secondary-800 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline  hover:cursor-pointer"
-        disabled="@(!SePuedeGuardarCuestionario())">Guardar Cuestionario</button>
+        <button @onclick="GuardarCuestionario"
+                class="@($"bg-Secondary-700 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline {(CambiosRealizados ? string.Empty : "bg-gray-300 cursor-not-allowed")}")"
+                disabled="@(!CambiosRealizados)">Guardar Cuestionario</button>
     </div>
   }
 </div>
@@ -105,6 +105,8 @@
   private string NuevaOpcion { get; set; } = "";
   public bool TituloGuardado { get; set; } = false;
   public string MensajeError { get; set; } = "";
+  public bool CambiosRealizados { get; set; } = false;
+
 
   protected override async Task OnInitializedAsync()
   {
@@ -118,13 +120,23 @@
     }
   }
 
+  // Modifica el método CargarPreguntas para copiar las opciones originales
   private async Task CargarPreguntas()
   {
-    if (CuestionarioID != null)
-    {
-      var preguntas = await PreguntasClient.GetPreguntasAsync(int.Parse(CuestionarioID));
-      Preguntas = preguntas?.ToList();
-    }
+      if (CuestionarioID != null)
+      {
+          var preguntas = await PreguntasClient.GetPreguntasAsync(int.Parse(CuestionarioID));
+          Preguntas = preguntas?.ToList();
+
+          // Copiar las opciones originales
+          if (Preguntas != null)
+          {
+              foreach (var pregunta in Preguntas)
+              {
+                  pregunta.OpcionesOriginales = pregunta.Opciones?.Select(opcion => opcion.Opcion).ToList() ?? new List<string>();
+              }
+          }
+      }
   }
 
   private async Task GuardarTitulo()
@@ -234,30 +246,38 @@
       await CargarPreguntas(); // Recargar las preguntas después de eliminar una
     }
   }
+  // Modifica los métodos para agregar y eliminar opciones
   private async Task EliminarOpcion(Preguntas pregunta, OpcionesCuestionario opcion)
   {
-    if (opcion != null)
-    {
-      // Eliminar la opción
-      await OpcionesClient.DeleteOpcionAsync(opcion.OpcionID);
-      await CargarOpciones(pregunta); // Recargar las opciones después de eliminar una
-    }
+      if (opcion != null)
+      {
+          // Eliminar la opción
+          await OpcionesClient.DeleteOpcionAsync(opcion.OpcionID);
+          await CargarOpciones(pregunta); // Recargar las opciones después de eliminar una
+          // Marcar la pregunta como modificada
+          MarcarPreguntaComoModificada(pregunta);
+      }
   }
 
   private async Task AgregarOpcion(Preguntas pregunta)
   {
-    if (pregunta != null)
-    {
-      // Crear la nueva opción
-      var opcion = new OpcionesCuestionario
-        {
-          Opcion = NuevaOpcion,
-          PreguntaID = pregunta.PreguntaID
-        };
-      await OpcionesClient.CreateOpcionAsync(opcion);
-      await CargarOpciones(pregunta); // Recargar las opciones después de agregar una nueva
-      NuevaOpcion = ""; // Limpiar el campo de entrada
-    }
+      if (pregunta != null)
+      {
+          // Crear la nueva opción
+          var opcion = new OpcionesCuestionario
+          {
+              Opcion = NuevaOpcion,
+              PreguntaID = pregunta.PreguntaID
+          };
+
+          // Verificar si la nueva opción es igual a alguna de las opciones originales
+          if (!pregunta.OpcionesOriginales.Contains(NuevaOpcion))
+          {
+              await OpcionesClient.CreateOpcionAsync(opcion);
+              await CargarOpciones(pregunta); // Recargar las opciones después de agregar una nueva
+              NuevaOpcion = ""; // Limpiar el campo de entrada
+          }
+      }
   }
   private async Task CargarOpciones(Preguntas pregunta)
   {
@@ -275,5 +295,26 @@
         await CargarOpciones(pregunta);
       }
     }
+  }
+
+  private void CambiarTextoPregunta(Preguntas pregunta)
+  {
+      CambiosRealizados = true;
+  }
+
+  private void CambiarTextoOpcion(Preguntas pregunta, OpcionesCuestionario opcion)
+  {
+      // Verificar si el texto de la opción ha cambiado desde su valor original
+      if (opcion != null && !pregunta.OpcionesOriginales.Contains(opcion.Opcion))
+      {
+          MarcarPreguntaComoModificada(pregunta);
+      }
+          Console.WriteLine("Opción modificada: " + opcion.Opcion);
+  }
+
+  // Método auxiliar para marcar la pregunta como modificada
+  private void MarcarPreguntaComoModificada(Preguntas pregunta)
+  {
+      CambiosRealizados = true;
   }
 }
