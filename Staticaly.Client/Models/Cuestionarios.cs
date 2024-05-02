@@ -7,8 +7,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Staticaly.Client.Models
 {
-    public class Cuestionarios
-    {
+  public class Cuestionarios
+  {
     [Key]
     public int CuestionarioID { get; set; }
     [Required]
@@ -25,6 +25,7 @@ namespace Staticaly.Client.Models
     public string? Descripcion { get; set; }
     [Required]
     public bool Publicado { get; set; }
+    public int Respuestas { get; set; }
     public DateTime? FechaCierre { get; set; }
     public int? RespuestasMaximas { get; set; }
   }

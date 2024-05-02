@@ -46,7 +46,7 @@
               @if (ejercicio.UsuarioID == Convert.ToInt32(Id))
               {
                 <div class="flex flex-row w-full justify-between">
-                  @if (ejercicio.Activo == false)
+                  @if (ejercicio.Publicado == false)
                   {
                   <button @onclick='() => NavigationManager.NavigateTo($"/editar-Cuestionario/{ejercicio.EjerciciosID}/{Id}/{EquipoId}")'
                           class="bg-yellow-600 hover:bg-yellow-700 text-white w-24 font-bold py-2 px-4 rounded-lg mt-4 transition duration-300">
@@ -65,7 +65,7 @@
               }
               else
               {
-                <button @onclick='() => NavigationManager.NavigateTo($"/responder-Cuestionario/{ejercicio.EjerciciosID}/{Id}/{EquipoId}")'
+                <button @onclick='() => NavigationManager.NavigateTo($"/responder-Ejercicio/{ejercicio.EjerciciosID}/{Id}/{EquipoId}")'
                         class="bg-primary-700 hover:bg-primary-800 text-white font-bold py-2 px-4 rounded-lg mt-4 transition duration-300">
                   Responder
                 </button>
@@ -77,7 +77,7 @@
       @if (user != null &&  UsuariosEquipos != null && equipo?.TipoEquipoID == 3 && UsuariosEquipos.Any(u => u.UsuarioID == Convert.ToInt32(Id) && u.PermisoID == 1))
       {
           <div class="fixed bottom-0 right-0 mr-4 mb-4">
-            <button @onclick='() => NavigationManager.NavigateTo($"/crear-Cuestionario/{Id}/{EquipoId}")'
+            <button @onclick='() => NavigationManager.NavigateTo($"/crear-Ejercicio/{Id}/{EquipoId}")'
                     class="bg-primary-500 inline-flex items-center justify-center hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-full md:rounded-md transition duration-300 text-center">
               <img src="Images/plus.svg" alt="Crear Publicación" class="h-6 w-6 inline-block" />
               <span class="ml-2 md:inline hidden">Crear ejercicio</span>
@@ -122,7 +122,7 @@ private async Task CargarEjerciciosGrupo()
 {
     // Lógica para cargar los Ejercicios del grupo
     var ejercicios = await EjerciciosClient.ObtenerEjerciciosPorEquipoAsync(EquipoId);
-    EjerciciosDelGrupo = ejercicios.Where(c => c.Activo == true).ToList();
+    EjerciciosDelGrupo = ejercicios.Where(c => c.Publicado == true).ToList();
 }
 
   // Método para eliminar una Cuestionario

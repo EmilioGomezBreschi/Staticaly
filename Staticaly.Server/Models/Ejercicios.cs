@@ -23,7 +23,11 @@ namespace Staticaly.Server.Models
     public string? Titulo { get; set; }
     public string? Descripcion { get; set; }
     [Required]
-    public bool? Activo { get; set; }
+    public bool Publicado { get; set; }
     public DateTime? FechaCierre { get; set; }
+    public int Timer { get; set; }
+    public int PuntosAquitar { get; set; }
+    public bool permitirMasDeUnaRespuesta { get; set; }
+    public int PuntosMin { get; set; }
   }
 }

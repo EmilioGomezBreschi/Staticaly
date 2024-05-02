@@ -361,8 +361,12 @@ namespace Staticaly.Server.Models
           EquipoID = 1,
           Titulo = "Ejercicios Publicos",
           Descripcion = "En base a estos ejercicios sera el rango que tengas dentro de la plataforma, hay un total de 100 ejercicios los cuales van a ir incrementando su dificultad conforme vayas avanzando, por cada respuesta incorrecta se restaran puntos y por cada segundo que pase se restaran puntos, por lo que es importante que contestes lo mas rapido posible y de manera correcta.",
-          Activo = true,
-          FechaCierre = null
+          Publicado = true,
+          FechaCierre = null,
+          Timer = 1000,
+          PuntosAquitar = 100,
+          permitirMasDeUnaRespuesta = true,
+          PuntosMin = 100,
         }
       );
 
@@ -371,36 +375,41 @@ namespace Staticaly.Server.Models
         {
           EjerciciosPreguntasID = 1,
           EjercicioID = 1,
-          Pregunta = "¿Cual es el resultado de 2 + 2?",
-          Respuesta = "4"
+          Pregunta = "Media (Promedio) Datos: 15, 20, 25, 30, 35.",
+          Respuesta = "25",
+          Puntos = 1000
         },
         new EjerciciosPreguntas
         {
           EjerciciosPreguntasID = 2,
           EjercicioID = 1,
-          Pregunta = "¿Cual es el resultado de 5 + 5?",
-          Respuesta = "10"
+          Pregunta = "Mediana Datos: 8, 4, 6, 12, 10",
+          Respuesta = "8",
+          Puntos = 1000
         },
         new EjerciciosPreguntas
         {
           EjerciciosPreguntasID = 3,
           EjercicioID = 1,
-          Pregunta = "¿Cual es el resultado de 10 + 10?",
-          Respuesta = "20"
+          Pregunta = "Moda Datos: 7, 4, 7, 9, 2, 4.",
+          Respuesta = "7",
+          Puntos = 1000
         },
         new EjerciciosPreguntas
         {
           EjerciciosPreguntasID = 4,
           EjercicioID = 1,
-          Pregunta = "¿Cual es el resultado de 20 + 20?",
-          Respuesta = "40"
+          Pregunta = "Varianza Datos: 5, 10, 15, 20, 25. ",
+          Respuesta = "50",
+          Puntos = 1000
         },
         new EjerciciosPreguntas
         {
           EjerciciosPreguntasID = 5,
           EjercicioID = 1,
-          Pregunta = "¿Cual es el resultado de 40 + 40?",
-          Respuesta = "80"
+          Pregunta = "5.	Desviación Estándar Datos: 9, 12, 15, 18, 21",
+          Respuesta = "7.07",
+          Puntos = 1000
         }
       );
     }

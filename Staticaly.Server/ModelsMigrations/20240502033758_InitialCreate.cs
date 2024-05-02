@@ -132,8 +132,12 @@ namespace Staticaly.Server.ModelsMigrations
                     EquipoID = table.Column<int>(type: "int", nullable: false),
                     Titulo = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Activo = table.Column<bool>(type: "bit", nullable: true),
-                    FechaCierre = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Publicado = table.Column<bool>(type: "bit", nullable: false),
+                    FechaCierre = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Timer = table.Column<int>(type: "int", nullable: false),
+                    PuntosAquitar = table.Column<int>(type: "int", nullable: false),
+                    permitirMasDeUnaRespuesta = table.Column<bool>(type: "bit", nullable: false),
+                    PuntosMin = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -204,6 +208,7 @@ namespace Staticaly.Server.ModelsMigrations
                     Titulo = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Publicado = table.Column<bool>(type: "bit", nullable: false),
+                    Respuestas = table.Column<int>(type: "int", nullable: false),
                     FechaCierre = table.Column<DateTime>(type: "datetime2", nullable: true),
                     RespuestasMaximas = table.Column<int>(type: "int", nullable: true)
                 },
@@ -267,7 +272,8 @@ namespace Staticaly.Server.ModelsMigrations
                     EjercicioID = table.Column<int>(type: "int", nullable: false),
                     Pregunta = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Imagen = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    Respuesta = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Respuesta = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Puntos = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -340,7 +346,9 @@ namespace Staticaly.Server.ModelsMigrations
                     UsuarioID = table.Column<int>(type: "int", nullable: false),
                     EjercicioID = table.Column<int>(type: "int", nullable: false),
                     EjercicioPreguntaID = table.Column<int>(type: "int", nullable: false),
-                    Respuesta = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Respuesta = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Correcta = table.Column<bool>(type: "bit", nullable: true),
+                    Puntos = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -465,19 +473,19 @@ namespace Staticaly.Server.ModelsMigrations
 
             migrationBuilder.InsertData(
                 table: "Ejercicios",
-                columns: new[] { "EjerciciosID", "Activo", "Descripcion", "EquipoID", "FechaCierre", "Titulo", "UsuarioID" },
-                values: new object[] { 1, true, "En base a estos ejercicios sera el rango que tengas dentro de la plataforma, hay un total de 100 ejercicios los cuales van a ir incrementando su dificultad conforme vayas avanzando, por cada respuesta incorrecta se restaran puntos y por cada segundo que pase se restaran puntos, por lo que es importante que contestes lo mas rapido posible y de manera correcta.", 1, null, "Ejercicios Publicos", 1 });
+                columns: new[] { "EjerciciosID", "Descripcion", "EquipoID", "FechaCierre", "Publicado", "PuntosAquitar", "PuntosMin", "Timer", "Titulo", "UsuarioID", "permitirMasDeUnaRespuesta" },
+                values: new object[] { 1, "En base a estos ejercicios sera el rango que tengas dentro de la plataforma, hay un total de 100 ejercicios los cuales van a ir incrementando su dificultad conforme vayas avanzando, por cada respuesta incorrecta se restaran puntos y por cada segundo que pase se restaran puntos, por lo que es importante que contestes lo mas rapido posible y de manera correcta.", 1, null, true, 100, 100, 1000, "Ejercicios Publicos", 1, true });
 
             migrationBuilder.InsertData(
                 table: "EjerciciosPreguntas",
-                columns: new[] { "EjerciciosPreguntasID", "EjercicioID", "Imagen", "Pregunta", "Respuesta" },
+                columns: new[] { "EjerciciosPreguntasID", "EjercicioID", "Imagen", "Pregunta", "Puntos", "Respuesta" },
                 values: new object[,]
                 {
-                    { 1, 1, null, "¿Cual es el resultado de 2 + 2?", "4" },
-                    { 2, 1, null, "¿Cual es el resultado de 5 + 5?", "10" },
-                    { 3, 1, null, "¿Cual es el resultado de 10 + 10?", "20" },
-                    { 4, 1, null, "¿Cual es el resultado de 20 + 20?", "40" },
-                    { 5, 1, null, "¿Cual es el resultado de 40 + 40?", "80" }
+                    { 1, 1, null, "Media (Promedio) Datos: 15, 20, 25, 30, 35.", 1000, "25" },
+                    { 2, 1, null, "Mediana Datos: 8, 4, 6, 12, 10", 1000, "8" },
+                    { 3, 1, null, "Moda Datos: 7, 4, 7, 9, 2, 4.", 1000, "7" },
+                    { 4, 1, null, "Varianza Datos: 5, 10, 15, 20, 25. ", 1000, "50" },
+                    { 5, 1, null, "5.	Desviación Estándar Datos: 9, 12, 15, 18, 21", 1000, "7.07" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -1,0 +1,262 @@
+@page "/responder-Ejercicio/{EjercicioID}/{UsuarioID}/{EquipoID}"
+@using Staticaly.Client.Models
+@using Staticaly.Client.Data
+@inject NavigationManager NavigationManager
+@inject EjerciciosPreguntasClient EjerciciosPreguntasClient
+@inject EjerciciosRespuestasClient EjerciciosRespuestasClient
+@inject EjerciciosClient EjerciciosClient
+@using System.Threading.Tasks
+@using System.Timers
+
+<PageTitle>Responder Ejercicio - Staticaly</PageTitle>
+
+<div class="flex flex-col justify-center items-center px-24 text-primary-50 mb-10">
+  @if (Ejercicio == null || Preguntas == null || !Preguntas.Any())
+  {
+    <p>Cargando...</p>
+  }
+  else
+  {
+    @if (TodasLasPreguntasContestadas)
+    {
+      <div class="h-screen absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-20">
+        <div class="flex flex-col items-center bg-green-600 p-6 rounded-lg">
+          <img src="/images/prohibido.svg" alt="Acceso denegado" class="w-32 h-32" />
+          <h2 class="text-xl font-bold">¡Has contestado todas las preguntas!</h2>
+          <button class="bg-white hover:bg-gray-300 transition duration-300 text-white font-bold py-2 px-4 rounded-lg mt-4"
+            @onclick='() => NavigationManager.NavigateTo($"/ejercicios/{UsuarioID}/{EquipoID}")'>Volver</button>
+        </div>
+      </div>
+    }
+    <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7 items-center">
+      <h2 class="text-lg font-bold mt-4">Puntaje Actual: @timer?.Interval</h2>
+    </div>
+    @if (Preguntas != null && Preguntas.Any())
+    {
+      <h2 class="text-lg font-bold mt-4">Pregunta @(IndicePreguntaDeUsuario + 1):</h2>
+      <div class="mt-4 flex flex-col items-center p-7 rounded-md bg-primary-500">
+        <div class="flex justify-between w-full">
+          <h1 class="text-lg font-bold px-3 py-2 mt-1 w-96">@PreguntaActual.Pregunta</h1>
+        </div>
+        <input type="text" @bind="RespuestaActual" class="mt-2 p-2 rounded-md w-96 text-primary-800">
+      </div>
+      <button class="mt-4 bg-primary-700 text-primary-50 px-4 py-2 rounded-md"
+        @onclick="@(async () => await EnviarRespuesta())">Enviar</button>
+    }
+    else
+    {
+      <p>No hay preguntas disponibles para este ejercicio.</p>
+    }
+  }
+</div>
+
+@code {
+  [Parameter] public string? EjercicioID { get; set; }
+  [Parameter] public string? UsuarioID { get; set; }
+  [Parameter] public string? EquipoID { get; set; }
+
+  private Models.Ejercicios Ejercicio = new Models.Ejercicios();
+  private List<EjerciciosPreguntas> Preguntas = new List<EjerciciosPreguntas>();
+  private EjerciciosPreguntas PreguntaActual = new EjerciciosPreguntas();
+  private int IndicePreguntaDeUsuario = 0;
+  private string RespuestaActual = "";
+  private Timer? timer;
+  private bool TodasLasPreguntasContestadas = false;
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (EjercicioID == null || UsuarioID == null || EquipoID == null)
+    {
+      return;
+    }
+
+    // Cargar el ejercicio y las preguntas
+    Ejercicio = await ObtenerEjercicio(EjercicioID);
+    Preguntas = await ObtenerPreguntasPorEjercicio(EjercicioID);
+
+    // Obtener las respuestas previas del usuario
+    var respuestasUsuario = await ObtenerRespuestasUsuario(int.Parse(UsuarioID), int.Parse(EjercicioID));
+
+    // Configurar el temporizador para que disminuya el puntaje cada segundo
+    if (Ejercicio.Timer != 0)
+    {
+      timer = new System.Timers.Timer();
+      timer.Elapsed += TimerElapsed;
+      timer.Interval = (double)Ejercicio.Timer; // Intervalo en milisegundos
+      timer.AutoReset = true;
+      timer.Enabled = true;
+    }
+
+    // Verificar si hay preguntas disponibles
+    // Verificar si hay preguntas disponibles
+    if (Preguntas != null && Preguntas.Any())
+    {
+      // Verificar si el usuario ha respondido alguna pregunta
+      if (respuestasUsuario.Any())
+      {
+        // Obtener el índice de la última pregunta respondida por el usuario
+        var indiceUltimaPreguntaRespondida = respuestasUsuario
+        .Where(r => r.UsuarioID == int.Parse(UsuarioID)) // Filtrar por el usuario actual
+        .OrderByDescending(r => r.EjercicioPreguntaID)
+        .Select(r => Preguntas.FindIndex(p => p.EjerciciosPreguntasID == r.EjercicioPreguntaID))
+        .FirstOrDefault();
+
+        // Si se encontró el índice de la última pregunta respondida, establecer el índice de la siguiente pregunta
+        IndicePreguntaDeUsuario = indiceUltimaPreguntaRespondida != -1 ? indiceUltimaPreguntaRespondida + 1 : 0;
+      }
+      else
+      {
+        // Si el usuario no ha respondido ninguna pregunta, comenzar desde la primera pregunta
+        IndicePreguntaDeUsuario = 0;
+      }
+
+      // Obtener la pregunta actual
+      PreguntaActual = Preguntas.ElementAtOrDefault(IndicePreguntaDeUsuario) ?? Preguntas.First();
+    }
+    else
+    {
+      // Si no hay preguntas disponibles, establecer el índice en -1 y la pregunta actual en null
+      IndicePreguntaDeUsuario = -1;
+      PreguntaActual = null!;
+    }
+
+    // Establecer el puntaje inicial
+    if (timer != null && PreguntaActual != null)
+    {
+      timer.Interval = PreguntaActual.Puntos;
+    }
+
+    // Verificar si todas las preguntas ya han sido contestadas
+    if (respuestasUsuario != null && respuestasUsuario.Count == Preguntas?.Count)
+    {
+      MostrarMensajeTodasLasPreguntasContestadas();
+    }
+  }
+
+
+  private void TimerElapsed(object? sender, ElapsedEventArgs e)
+  {
+    if (timer == null)
+    {
+      return;
+    }
+    if (timer.Interval > 100)
+    {
+      timer.Interval--; // Disminuir el puntaje cada segundo
+      StateHasChanged(); // Actualizar la interfaz de usuario
+    }
+    else
+    {
+      timer?.Dispose(); // Detener el temporizador si el puntaje es 0
+    }
+  }
+  private async Task<Models.Ejercicios> ObtenerEjercicio(string ejercicioID)
+  {
+    return await EjerciciosClient.ObtenerEjercicioPorIDAsync(int.Parse(ejercicioID));
+  }
+
+  private async Task<List<EjerciciosPreguntas>> ObtenerPreguntasPorEjercicio(string ejercicioID)
+  {
+    return await EjerciciosPreguntasClient.ObtenerEjerciciosPreguntasPorEjercicioAsync(int.Parse(ejercicioID));
+  }
+
+  private async Task<List<EjerciciosRespuestas>> ObtenerRespuestasUsuario(int usuarioID, int ejercicioID)
+  {
+    return await EjerciciosRespuestasClient.ObtenerEjerciciosRespuestasPorUsuarioAsync(usuarioID);
+  }
+
+  private async Task EnviarRespuesta()
+  {
+    // Verificar si la respuesta es correcta
+    bool respuestaCorrecta = RespuestaActual == PreguntaActual.Respuesta;
+
+    // Si el ejercicio permite más de una respuesta, guardar la respuesta siempre
+    if (Ejercicio.permitirMasDeUnaRespuesta == false)
+    {
+      // Guardar la respuesta en la base de datos
+      await GuardarRespuestaEnBaseDeDatos(RespuestaActual, respuestaCorrecta);
+      // Mostrar la siguiente pregunta
+      await MostrarSiguientePregunta();
+    }
+    else
+    {
+      // Actualizar el puntaje si la respuesta es incorrecta
+      if (!respuestaCorrecta)
+      {
+        if (timer?.Interval > Ejercicio.PuntosMin)
+        {
+          timer.Interval -= Ejercicio.PuntosAquitar; // Disminuir el intervalo del temporizador
+        }
+        else
+        {
+          if (timer != null)
+          {
+            timer.Interval = Ejercicio.PuntosMin; // Establecer el intervalo mínimo
+          }
+        }
+      }
+      else
+      {
+        // Guardar la respuesta en la base de datos
+        await GuardarRespuestaEnBaseDeDatos(RespuestaActual, true);
+        // Mostrar la siguiente pregunta solo si la respuesta es correcta
+        await MostrarSiguientePregunta();
+      }
+    }
+
+    StateHasChanged(); // Actualizar la interfaz de usuario
+
+    timer?.Start(); // Reiniciar el temporizador
+  }
+
+  private async Task GuardarRespuestaEnBaseDeDatos(string respuesta, bool respuestaCorrecta)
+  {
+    if (UsuarioID == null || EjercicioID == null)
+    {
+      return;
+    }
+
+    if (timer == null)
+    {
+      return;
+    }
+    int puntos = (int)timer.Interval; // Puntos obtenidos por la respuesta
+
+    await EjerciciosRespuestasClient.CrearEjercicioRespuestaAsync(new EjerciciosRespuestas
+      {
+        UsuarioID = int.Parse(UsuarioID),
+        EjercicioID = int.Parse(EjercicioID),
+        EjercicioPreguntaID = PreguntaActual.EjerciciosPreguntasID,
+        Respuesta = respuesta,
+        Correcta = respuestaCorrecta,
+        Puntos = puntos
+      });
+  }
+
+  private Task MostrarSiguientePregunta()
+  {
+    IndicePreguntaDeUsuario++;
+    if (IndicePreguntaDeUsuario < Preguntas.Count)
+    {
+      PreguntaActual = Preguntas[IndicePreguntaDeUsuario];
+      RespuestaActual = ""; // Reinicia la respuesta actual
+      if (timer != null)
+      {
+        timer.Interval = PreguntaActual.Puntos; // Actualiza el puntaje máximo disponible
+      }
+    }
+    else
+    {
+      MostrarMensajeTodasLasPreguntasContestadas();
+      NavigationManager.NavigateTo($"/ejercicios/{UsuarioID}/{EquipoID}");
+    }
+
+    return Task.CompletedTask;
+  }
+
+  private void MostrarMensajeTodasLasPreguntasContestadas()
+  {
+    TodasLasPreguntasContestadas = true;
+    Console.WriteLine("¡Has contestado todas las preguntas!");
+  }
+}

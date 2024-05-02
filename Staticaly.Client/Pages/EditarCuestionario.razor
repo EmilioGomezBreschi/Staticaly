@@ -68,7 +68,7 @@
                 <div class="mt-2 flex justify-between w-full">
                     <input type="text" value="@opcion.Opcion"
                           class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96"
-                          @oninput="(e) => { opcion.Opcion = e.Value.ToString(); CambiarTextoOpcion(pregunta, opcion); }" />
+                          @oninput="(e) => { opcion.Opcion = e.Value?.ToString(); CambiarTextoOpcion(pregunta, opcion); }" />
                     <button @onclick="() => EliminarOpcion(pregunta, opcion)"
                             class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Eliminar
                     </button>
@@ -133,7 +133,7 @@
           {
               foreach (var pregunta in Preguntas)
               {
-                  pregunta.OpcionesOriginales = pregunta.Opciones?.Select(opcion => opcion.Opcion).ToList() ?? new List<string>();
+                  pregunta.OpcionesOriginales = pregunta.Opciones.Select(opcion => opcion.Opcion ?? "").ToList() ?? new List<string>();
               }
           }
       }
@@ -305,11 +305,11 @@
   private void CambiarTextoOpcion(Preguntas pregunta, OpcionesCuestionario opcion)
   {
       // Verificar si el texto de la opción ha cambiado desde su valor original
-      if (opcion != null && !pregunta.OpcionesOriginales.Contains(opcion.Opcion))
+      if (opcion != null && !pregunta.OpcionesOriginales.Contains(opcion.Opcion ?? ""))
       {
           MarcarPreguntaComoModificada(pregunta);
       }
-          Console.WriteLine("Opción modificada: " + opcion.Opcion);
+          Console.WriteLine("Opción modificada: " + opcion?.Opcion);
   }
 
   // Método auxiliar para marcar la pregunta como modificada

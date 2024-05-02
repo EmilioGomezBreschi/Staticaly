@@ -23,6 +23,14 @@
       <label for="descripcion" class="text-lg font-bold mt-2">Descripción del Cuestionario: (opcional)</label>
       <InputTextArea @bind-Value="DescripcionCuestionario"
         class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 h-48" />
+      <label for="fechaCierre" class="text-lg font-bold">Fecha de Cierre:</label>
+      <input type="date" id="fechaCierre" @bind="FechaCierre"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150"
+        style="@(RespuestasMaximas.HasValue ? "display: none;" : "")" />
+      <label for="respuestasMaximas" class="text-lg font-bold mt-2">Límite de Respuestas:</label>
+      <input type="number" id="respuestasMaximas" @bind="RespuestasMaximas"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150"
+        style="@(FechaCierre.HasValue ? "display: none;" : "")" />
       <button @onclick="() => GuardarTitulo()"
         class="bg-primary-800 hover:bg-primary-900 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline">Guardar
         Título</button>
@@ -36,6 +44,12 @@
       <h3 class="text-md font-bold mt-2">Descripción del Cuestionario:</h3>
       <h4 class="text-lg font-bold">@DescripcionCuestionario</h4>
     </div>
+    @if (errorMessage != "")
+    {
+      <div class="relative mt-1 text-xs text-center bg-red-500 font-bold text-white px-4 py-2 rounded-md mb-4">
+        @errorMessage
+      </div>
+    }
     <div class="mt-4 flex flex-col items-center">
       <label for="pregunta" class="text-lg font-bold">Pregunta:</label>
       <input type="text" id="pregunta" @bind="NuevaPregunta"
@@ -72,19 +86,19 @@
                 <input type="text" @bind="opcion.Opcion"
                   class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
                 <button @onclick="() => EliminarOpcion(pregunta.PreguntaID, opcion)"
-                  class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Eliminar
+                  class="bg-red-600 hover:bg-red-700 text-white font-bold ml-3 py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Eliminar
                 </button>
               </div>
             }
           }
+          <p class="justify-center w-96 px-3 py-2 mt-1">Agregar opcion:</p>
           <input type="text" @bind="NuevaOpcion"
             class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
           <button @onclick="() => AgregarOpcion(pregunta.PreguntaID, NuevaOpcion)"
             class="bg-primary-800 hover:bg-primary-900 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline">Agregar
             Opción
           </button>
-          <button @onclick="() => AgregarOpcionPredeterminada(pregunta.PreguntaID)"
-            class="bg-primary-800 hover:bg-primary-900 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none
+          <button @onclick="() => AgregarOpcionPredeterminada(pregunta.PreguntaID)" class="bg-primary-800 hover:bg-primary-900 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none
             focus:shadow-outline">Agregar
             Opción Predeterminada
           </button>
@@ -93,7 +107,7 @@
     }
     <div class="mt-4" style="text-align:center">
       <button @onclick="GuardarCuestionario"
-        class="bg-Secondary-700 hover:bg-Secondary-800 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline  hover:cursor-pointer"
+        class="@(SePuedeGuardarCuestionario() ? "bg-Secondary-700 hover:bg-Secondary-800 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline" : "bg-gray-400 text-white font-bold py-2 px-4 rounded-md mt-2 cursor-not-allowed")"
         disabled="@(!SePuedeGuardarCuestionario())">Guardar Cuestionario</button>
     </div>
   }
@@ -108,11 +122,14 @@
   public Dictionary<int, List<OpcionesCuestionario>> Opciones { get; set; } = new Dictionary<int,
   List<OpcionesCuestionario>>();
   public int EncuestaId;
+  public string errorMessage = "";
   private string NuevaOpcion { get; set; } = "";
   public string NuevaPregunta { get; set; } = "";
   public string TituloCuestionario { get; set; } = "";
   public string DescripcionCuestionario { get; set; } = "";
   public bool TituloGuardado { get; set; } = false;
+  public DateTime? FechaCierre { get; set; }
+  public int? RespuestasMaximas { get; set; }
   private List<string> OpcionesPredeterminadas { get; set; } = new List<string>
 {
 "SI,NO",
@@ -126,11 +143,19 @@
     // Verifica si hay un cuestionario actual disponible
     if (Cuestionario == null)
     {
+      errorMessage = "No se ha seleccionado un cuestionario.";
       return;
     }
 
     if (cuestionarioAgregado == null)
     {
+      errorMessage = "No se ha guardado el título del cuestionario.";
+      return;
+    }
+
+    if (Preguntas.Count >= 15)
+    {
+      errorMessage = "No se pueden agregar más de 15 preguntas.";
       return;
     }
 
@@ -159,8 +184,21 @@
             AgregarOpcion(pregunta.PreguntaID, opcion.Trim());
           }
         }
+        else
+        {
+          errorMessage = "No se ha seleccionado una opción predeterminada.";
+        }
+      }
+      else
+      {
+        errorMessage = "No se pudo agregar la pregunta.";
       }
     }
+    else
+    {
+      errorMessage = "No se pudo agregar la pregunta.";
+    }
+    errorMessage = "";
   }
 
   private void AgregarOpcionPredeterminada(int preguntaId)
@@ -172,26 +210,32 @@
       {
         AgregarOpcion(preguntaId, opcion.Trim());
       }
+      errorMessage = "";
+    }
+    else
+    {
+      errorMessage = "No se ha seleccionado una opción predeterminada.";
     }
     PreguntaSeleccionada = ""; // Reiniciar la selección después de agregar las opciones
   }
 
-  private void AgregarOpcion(int preguntaId)
-  {
-    if (!string.IsNullOrWhiteSpace(NuevaOpcion))
-    {
-      AgregarOpcion(preguntaId, NuevaOpcion);
-      NuevaOpcion = ""; // Limpiar el campo de entrada después de agregar la opción
-    }
-  }
-
   private void AgregarOpcion(int preguntaId, string opcion)
   {
-    if (!Opciones.ContainsKey(preguntaId))
+    if (!string.IsNullOrWhiteSpace(opcion)
+    && Preguntas.Any(p => p.PreguntaID == preguntaId))
     {
-      Opciones[preguntaId] = new List<OpcionesCuestionario>();
+      if (!Opciones.ContainsKey(preguntaId))
+      {
+        Opciones[preguntaId] = new List<OpcionesCuestionario>();
+      }
+      Opciones[preguntaId].Add(new OpcionesCuestionario { PreguntaID = preguntaId, Opcion = opcion });
+      errorMessage = "";
+      NuevaOpcion = "";
     }
-    Opciones[preguntaId].Add(new OpcionesCuestionario { PreguntaID = preguntaId, Opcion = opcion });
+    else
+    {
+      errorMessage = "No se puede agregar una opción vacía.";
+    }
   }
 
   private async Task GuardarTitulo()
@@ -204,6 +248,16 @@
         EquipoID = int.Parse(Equipo ?? "0"),
         UsuarioID = int.Parse(id ?? "0")
       };
+    // Verificar si se ha especificado la fecha de cierre o el límite de respuestas
+    if (FechaCierre.HasValue)
+    {
+      cuestionario.FechaCierre = FechaCierre;
+    }
+    else if (RespuestasMaximas.HasValue)
+    {
+      cuestionario.RespuestasMaximas = RespuestasMaximas;
+    }
+
     var responseCuestionario = await CuestionarioClient.CrearCuestionarioAsync(cuestionario);
 
     if (!responseCuestionario.IsSuccessStatusCode) return;
@@ -279,6 +333,14 @@
       {
         Opciones.Remove(preguntaId);
       }
+      else
+      {
+        errorMessage = "No se pudo eliminar la pregunta.";
+      }
+    }
+    else
+    {
+      errorMessage = "No se pudo eliminar la pregunta.";
     }
   }
 
@@ -287,6 +349,10 @@
     if (Opciones.ContainsKey(preguntaId))
     {
       Opciones[preguntaId].Remove(opcion);
+    }
+    else
+    {
+      errorMessage = "No se pudo eliminar la opción.";
     }
   }
 

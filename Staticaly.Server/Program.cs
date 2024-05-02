@@ -783,6 +783,22 @@ cuestionariosGroup.MapPut("/publicado/{id}/{publicado}", async (StaticalyContext
   return Results.NoContent();
 });
 
+//Actualizar respuestas de cuestionario
+cuestionariosGroup.MapPut("/respuestas/{id}", async (StaticalyContext context, int id) =>
+{
+  var cuestionarioToUpdate = await context.Cuestionarios.FindAsync(id);
+  if (cuestionarioToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  cuestionarioToUpdate.Respuestas = cuestionarioToUpdate.Respuestas + 1;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
 // Editar cuestionario
 
 cuestionariosGroup.MapPut("/{id}", async (StaticalyContext context, int id, Cuestionarios cuestionario) =>
@@ -1033,7 +1049,7 @@ ejerciciosGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
 });
 
 // Cambiar estado de publicación de ejercicio
-ejerciciosGroup.MapPut("/publicado/{id}/{publicado}", async (StaticalyContext context, int id, bool activo) =>
+ejerciciosGroup.MapPut("/publicado/{id}/{publicado}", async (StaticalyContext context, int id, bool publicado) =>
 {
   var ejercicioToUpdate = await context.Ejercicios.FindAsync(id);
   if (ejercicioToUpdate == null)
@@ -1041,7 +1057,7 @@ ejerciciosGroup.MapPut("/publicado/{id}/{publicado}", async (StaticalyContext co
     return Results.NotFound();
   }
 
-  ejercicioToUpdate.Activo = activo;
+  ejercicioToUpdate.Publicado = publicado;
 
   await context.SaveChangesAsync();
 
@@ -1132,6 +1148,21 @@ ejerciciosRespuestasGroup.MapGet("/byUsuario/{id}", async (StaticalyContext cont
                               .ToListAsync();
 
   return Results.Ok(respuestas);
+});
+
+// Eliminar respuesta de ejercicio
+ejerciciosRespuestasGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+{
+  var respuesta = await context.EjerciciosRespuestas.FindAsync(id);
+  if (respuesta == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.EjerciciosRespuestas.Remove(respuesta);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
 });
 
 #endregion

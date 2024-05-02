@@ -109,6 +109,9 @@ namespace Staticaly.Server.ModelsMigrations
                     b.Property<bool>("Publicado")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Respuestas")
+                        .HasColumnType("int");
+
                     b.Property<int?>("RespuestasMaximas")
                         .HasColumnType("int");
 
@@ -137,9 +140,6 @@ namespace Staticaly.Server.ModelsMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EjerciciosID"));
 
-                    b.Property<bool?>("Activo")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
@@ -149,6 +149,18 @@ namespace Staticaly.Server.ModelsMigrations
                     b.Property<DateTime?>("FechaCierre")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("Publicado")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PuntosAquitar")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PuntosMin")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Timer")
+                        .HasColumnType("int");
+
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -156,6 +168,9 @@ namespace Staticaly.Server.ModelsMigrations
 
                     b.Property<int>("UsuarioID")
                         .HasColumnType("int");
+
+                    b.Property<bool>("permitirMasDeUnaRespuesta")
+                        .HasColumnType("bit");
 
                     b.HasKey("EjerciciosID");
 
@@ -167,11 +182,15 @@ namespace Staticaly.Server.ModelsMigrations
                         new
                         {
                             EjerciciosID = 1,
-                            Activo = true,
                             Descripcion = "En base a estos ejercicios sera el rango que tengas dentro de la plataforma, hay un total de 100 ejercicios los cuales van a ir incrementando su dificultad conforme vayas avanzando, por cada respuesta incorrecta se restaran puntos y por cada segundo que pase se restaran puntos, por lo que es importante que contestes lo mas rapido posible y de manera correcta.",
                             EquipoID = 1,
+                            Publicado = true,
+                            PuntosAquitar = 100,
+                            PuntosMin = 100,
+                            Timer = 1000,
                             Titulo = "Ejercicios Publicos",
-                            UsuarioID = 1
+                            UsuarioID = 1,
+                            permitirMasDeUnaRespuesta = true
                         });
                 });
 
@@ -193,6 +212,9 @@ namespace Staticaly.Server.ModelsMigrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Puntos")
+                        .HasColumnType("int");
+
                     b.Property<string>("Respuesta")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -208,36 +230,41 @@ namespace Staticaly.Server.ModelsMigrations
                         {
                             EjerciciosPreguntasID = 1,
                             EjercicioID = 1,
-                            Pregunta = "¿Cual es el resultado de 2 + 2?",
-                            Respuesta = "4"
+                            Pregunta = "Media (Promedio) Datos: 15, 20, 25, 30, 35.",
+                            Puntos = 1000,
+                            Respuesta = "25"
                         },
                         new
                         {
                             EjerciciosPreguntasID = 2,
                             EjercicioID = 1,
-                            Pregunta = "¿Cual es el resultado de 5 + 5?",
-                            Respuesta = "10"
+                            Pregunta = "Mediana Datos: 8, 4, 6, 12, 10",
+                            Puntos = 1000,
+                            Respuesta = "8"
                         },
                         new
                         {
                             EjerciciosPreguntasID = 3,
                             EjercicioID = 1,
-                            Pregunta = "¿Cual es el resultado de 10 + 10?",
-                            Respuesta = "20"
+                            Pregunta = "Moda Datos: 7, 4, 7, 9, 2, 4.",
+                            Puntos = 1000,
+                            Respuesta = "7"
                         },
                         new
                         {
                             EjerciciosPreguntasID = 4,
                             EjercicioID = 1,
-                            Pregunta = "¿Cual es el resultado de 20 + 20?",
-                            Respuesta = "40"
+                            Pregunta = "Varianza Datos: 5, 10, 15, 20, 25. ",
+                            Puntos = 1000,
+                            Respuesta = "50"
                         },
                         new
                         {
                             EjerciciosPreguntasID = 5,
                             EjercicioID = 1,
-                            Pregunta = "¿Cual es el resultado de 40 + 40?",
-                            Respuesta = "80"
+                            Pregunta = "5.	Desviación Estándar Datos: 9, 12, 15, 18, 21",
+                            Puntos = 1000,
+                            Respuesta = "7.07"
                         });
                 });
 
@@ -249,10 +276,16 @@ namespace Staticaly.Server.ModelsMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EjerciciosRespuestasID"));
 
+                    b.Property<bool?>("Correcta")
+                        .HasColumnType("bit");
+
                     b.Property<int>("EjercicioID")
                         .HasColumnType("int");
 
                     b.Property<int>("EjercicioPreguntaID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Puntos")
                         .HasColumnType("int");
 
                     b.Property<string>("Respuesta")

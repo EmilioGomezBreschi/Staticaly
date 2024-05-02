@@ -6,6 +6,7 @@
 @inject PreguntasClient PreguntasClient
 @inject OpcionesCuestionarioClient OpcionesClient
 @inject RespuestasCuestionarioClient RespuestasClient
+@inject CuestionarioClient CuestionarioClient
 
 <PageTitle>Responder Cuestionario - Staticaly</PageTitle>
 
@@ -126,6 +127,9 @@
           UsuarioID = userId
         };
       await RespuestasClient.CrearRespuestaCuestionarioAsync(respuesta);
+      int.TryParse(CuestionarioID, out int cuestionarioId);
+      await CuestionarioClient.ActualizarRespuestasCuestionarioAsync(cuestionarioId);
+      NavigationManager.NavigateTo($"/cuestionario/{UsuarioID}/{EquipoId}");
     }
   }
 }
