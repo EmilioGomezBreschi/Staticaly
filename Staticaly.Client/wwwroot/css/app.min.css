@@ -721,6 +721,9 @@ video {
 .h-9 {
   height: 2.25rem;
 }
+.h-\[430px\] {
+  height: 430px;
+}
 .h-auto {
   height: auto;
 }
@@ -777,6 +780,9 @@ video {
 }
 .w-96 {
   width: 24rem;
+}
+.w-\[430px\] {
+  width: 430px;
 }
 .w-auto {
   width: auto;
@@ -984,6 +990,10 @@ video {
 .bg-primary-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(148 184 215 / var(--tw-bg-opacity));
+}
+.bg-primary-150 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(82 136 164 / var(--tw-bg-opacity));
 }
 .bg-primary-200 {
   --tw-bg-opacity: 1;

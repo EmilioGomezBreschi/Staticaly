@@ -48,16 +48,12 @@
                 <div class="flex flex-row w-full justify-between">
                   @if (ejercicio.Publicado == false)
                   {
-                  <button @onclick='() => NavigationManager.NavigateTo($"/editar-Cuestionario/{ejercicio.EjerciciosID}/{Id}/{EquipoId}")'
-                          class="bg-yellow-600 hover:bg-yellow-700 text-white w-24 font-bold py-2 px-4 rounded-lg mt-4 transition duration-300">
-                    Editar
-                  </button>
-                    <button @onclick='() => PublicarCuestionario(ejercicio.EjerciciosID)'
+                    <button @onclick='() => PublicarEjercicios(ejercicio.EjerciciosID)'
                             class="bg-green-500 hover:bg-green-600 text-white w-24 font-bold py-2 px-4 rounded-lg mt-4 transition duration-300">
                       Publicar
                     </button>
                   }
-                  <button @onclick='() => EliminarCuestionario(ejercicio.EjerciciosID)'
+                  <button @onclick='() => EliminarEjercicio(ejercicio.EjerciciosID)'
                           class="bg-red-500 hover:bg-red-600 text-white w-24 font-bold py-2 px-4 rounded-lg mt-4 transition duration-300">
                     Eliminar
                   </button>
@@ -117,16 +113,27 @@
     }
   }
 
-  // Método para cargar las Cuestionarios de grupo
-private async Task CargarEjerciciosGrupo()
-{
-    // Lógica para cargar los Ejercicios del grupo
-    var ejercicios = await EjerciciosClient.ObtenerEjerciciosPorEquipoAsync(EquipoId);
-    EjerciciosDelGrupo = ejercicios.Where(c => c.Publicado == true).ToList();
-}
+    // Método para cargar los Ejercicios del grupo
+    private async Task CargarEjerciciosGrupo()
+    {
+        // Lógica para cargar los Ejercicios del grupo
+        var ejercicios = await EjerciciosClient.ObtenerEjerciciosPorEquipoAsync(EquipoId);
 
-  // Método para eliminar una Cuestionario
-  private async Task EliminarCuestionario(int id)
+        // Filtrar los ejercicios no publicados para usuarios que no son el creador
+        if (user?.UsuarioID != null)
+        {
+            var usuarioId = user.UsuarioID;
+            EjerciciosDelGrupo = ejercicios.Where(c => c.Publicado || c.UsuarioID == usuarioId).ToList();
+        }
+        else
+        {
+            // Si no hay usuario autenticado, solo mostrar ejercicios publicados
+            EjerciciosDelGrupo = ejercicios.Where(c => c.Publicado).ToList();
+        }
+    }
+
+  // Método para eliminar un Ejercicio
+  private async Task EliminarEjercicio(int id)
   {
     var result = await EjerciciosClient.EliminarEjercicioAsync(id);
     if (result != null)
@@ -135,8 +142,8 @@ private async Task CargarEjerciciosGrupo()
     }
   }
 
-  // Método para publicar una Cuestionario
-  private async Task PublicarCuestionario(int id)
+  // Método para publicar un Ejercicio
+  private async Task PublicarEjercicios(int id)
   {
     var result = await EjerciciosClient.ActualizarEstadoEjercicioAsync(id,"true");
     if (result != null)

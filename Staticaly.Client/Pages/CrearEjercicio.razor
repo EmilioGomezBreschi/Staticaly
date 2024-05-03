@@ -1,0 +1,268 @@
+@page "/crear-Ejercicio/{id}/{Equipo}"
+@using Models
+@using Data
+@using System.Net.Http
+@inject NavigationManager NavigationManager
+@inject EjerciciosClient EjerciciosClient
+@inject EjerciciosPreguntasClient EjerciciosPreguntasClient
+@inject ImageServiceClient ImageServiceClient
+
+<PageTitle>Crear Ejercicio - Staticaly</PageTitle>
+
+<div class="flex flex-col justify-center items-center px-24 text-primary-50 mb-10">
+  @if (Ejercicio == null)
+  {
+    <p>Cargando...</p>
+  }
+  @if (!TituloGuardado)
+  {
+    <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7">
+      <label for="titulo" class="text-lg font-bold">Título del Ejercicio:</label>
+      <input type="text" id="titulo" @bind="TituloEjercicio"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150" />
+      <label for="descripcion" class="text-lg font-bold mt-2">Descripción del Ejercicio: (opcional)</label>
+      <InputTextArea @bind-Value="DescripcionEjercicio"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 h-48" />
+      <label for="fechaCierre" class="text-lg font-bold">Fecha de Cierre (opcional):</label>
+      <input type="date" id="fechaCierre" @bind="FechaCierre"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150" />
+      <label for="Timer" class="text-lg font-bold mt-2">Tiempo en milisegundos para quitar un punto (opcional):</label>
+      <input type="number" id="Timer" @bind="Timer"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150" />
+      <label for="PuntosAquitar" class="text-lg font-bold mt-2">Puntos a quitar por respuesta incorrecta
+        (opcional):</label>
+      <input type="number" id="PuntosAquitar" @bind="PuntosAquitar"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150" />
+      <label for="permitirMasDeUnaRespuesta" class="text-lg font-bold mt-2">Permitir más de una respuesta
+        (opcional):</label>
+      <input type="checkbox" id="permitirMasDeUnaRespuesta" @bind="permitirMasDeUnaRespuesta"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150" />
+      <button @onclick="() => GuardarTitulo()"
+        class="bg-primary-800 hover:bg-primary-900 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline">Guardar
+        Título</button>
+    </div>
+  }
+  @if (TituloGuardado)
+  {
+    <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7">
+      <h3 class="text-md font-bold">Título del Ejercicio:</h3>
+      <h4 class="text-lg font-bold">@TituloEjercicio</h4>
+      <h3 class="text-md font-bold mt-2">Descripción del Ejercicio:</h3>
+      <h4 class="text-lg font-bold">@DescripcionEjercicio</h4>
+    </div>
+    @if (errorMessage != "")
+    {
+      <div class="relative mt-1 text-xs text-center bg-red-500 font-bold text-white px-4 py-2 rounded-md mb-4">
+        @errorMessage
+      </div>
+    }
+    <div class="mt-4 flex flex-col items-center bg-primary-150 rounded-md p-4">
+      <label for="pregunta" class="text-lg font-bold">Pregunta:</label>
+      <input type="text" id="pregunta" @bind="NuevaPregunta"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
+      <label for="respuesta" class="text-lg font-bold mt-2">Respuesta:</label>
+      <input type="text" id="respuesta" @bind="NuevaRespuesta"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
+      <label for="puntos" class="text-lg font-bold mt-2">Puntos:</label>
+      <input type="number" id="puntos" @bind="NuevosPuntos"
+        class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />
+      <div class="relative mt-3 bg-primary-100 rounded-md font-bold flex items-center justify-center text-center">
+        <label for="fotoEjercicio" class="absolute left-3">
+          <img src="images/camera.svg" alt="Icono de cámara" class="h-6 w-6" />
+        </label>
+        <InputFile id="fotoEjercicio"
+          class="w-full h-12 border-2 border-Primary-Background rounded-md pl-12 pr-4 placeholder-primary-400 bg-transparent"
+          accept=".jpg,.jpeg,.png" OnChange="HandleFileSelected" />
+      </div>
+      <div class="px-5 py-2 mb-3 bg-primary-50 rounded-md font-bold text-xs text-primary-400 text-center max-w-full">
+        <p>Esta imagen es opcional</p>
+      </div>
+      @if (ValidateFoto == false)
+      {
+        <div class="px-5 py-2 bg-red-500 rounded-md font-bold text-xs text-white text-left max-w-full">
+          <p class="mb-1">La Imagen debe ser:</p>
+          <ul class="list-decimal">
+            <li>Archivo ".jpg .png .jpeg"</li>
+            <li>Archivo menor a 480x480px</li>
+          </ul>
+        </div>
+      }
+      @if (FotoEjercicio != null)
+      {
+        <div class="flex justify-center items-center">
+          <img src="data:image;base64,@(Convert.ToBase64String(FotoEjercicio))" alt="Foto seleccionada"
+            class="my-3 max-w-24 max-h-24 hover:max-w-[430px] hover:max-h-[430px]" />
+        </div>
+      }
+      <button @onclick="() => AgregarPregunta()"
+        class="bg-primary-800 hover:bg-primary-900 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline">Agregar
+        Pregunta
+      </button>
+    </div>
+    @if (Preguntas.Any())
+    {
+      <h4 class="text-lg font-bold mt-4">Preguntas:</h4>
+      @foreach (var pregunta in Preguntas)
+      {
+        <div class="mt-4 flex flex-col items-center justify-center p-7 rounded-md bg-primary-500">
+          <h5 class="text-lg font-bold">Pregunta:</h5>
+          <p class="text-md font-semibold text-primary-100">@pregunta.Pregunta</p>
+          <h5 class="text-lg font-bold mt-2">Respuesta:</h5>
+          <p class="text-md font-semibold text-primary-100">@pregunta.Respuesta</p>
+          <h5 class="text-lg font-bold">Puntos</h5>
+          <p class="text-md font-semibold text-primary-100">Puntos: @pregunta.Puntos</p>
+          @if (@pregunta.Imagen != null)
+          {
+            <img src="data:image;base64,@(Convert.ToBase64String(pregunta.Imagen))" alt="Foto seleccionada"
+              class="my-3 w-[430px] h-[430px]" />
+          }
+          <button @onclick="() => EliminarPregunta(pregunta.EjerciciosPreguntasID)"
+            class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline">Eliminar
+          </button>
+        </div>
+      }
+    }
+    <div class="mt-4" style="text-align:center">
+      <button @onclick="GuardarCuestionario"
+        class="@(SePuedeGuardarCuestionario() ? "bg-Secondary-700 hover:bg-Secondary-800 text-white font-bold py-2 px-4 rounded-md mt-2 focus:outline-none focus:shadow-outline" : "bg-gray-400 text-white font-bold py-2 px-4 rounded-md mt-2 cursor-not-allowed")"
+        disabled="@(!SePuedeGuardarCuestionario())">Guardar Cuestionario</button>
+    </div>
+  }
+</div>
+
+@code {
+  [Parameter] public string? id { get; set; }
+  [Parameter] public string? Equipo { get; set; }
+  public List<EjerciciosPreguntas> Preguntas = new List<EjerciciosPreguntas>();
+  public Models.Ejercicios? Ejercicio = new Models.Ejercicios();
+  public Models.Ejercicios? EjercicioAgregado = new Models.Ejercicios();
+  public string errorMessage = "";
+  public string NuevaPregunta { get; set; } = "";
+  public string NuevaRespuesta { get; set; } = "";
+  public int NuevosPuntos { get; set; } = 0;
+  public byte[]? FotoEjercicio;
+  public bool ValidateFoto = true;
+  public string TituloEjercicio { get; set; } = "";
+  public string DescripcionEjercicio { get; set; } = "";
+  public int Timer { get; set; } = 0;
+  public int PuntosAquitar { get; set; } = 0;
+  public bool permitirMasDeUnaRespuesta { get; set; } = false;
+  public int PuntosMinimos { get; set; } = 0;
+  public bool TituloGuardado { get; set; } = false;
+  public DateTime? FechaCierre { get; set; }
+
+  private async Task AgregarPregunta()
+  {
+    // Verifica si hay un ejercicio actual disponible
+    if (Ejercicio == null)
+    {
+      errorMessage = "No se ha seleccionado un ejercicio.";
+      return;
+    }
+
+    if (EjercicioAgregado == null)
+    {
+      errorMessage = "No se ha guardado el título del ejercicio.";
+      return;
+    }
+
+    if (string.IsNullOrWhiteSpace(NuevaPregunta) || string.IsNullOrWhiteSpace(NuevaRespuesta) || NuevosPuntos == 0)
+    {
+      errorMessage = "Llena los campos de pregunta, respuesta y puntos.";
+      return;
+    }
+
+    // Crea la pregunta
+    var pregunta = new EjerciciosPreguntas
+      {
+        EjercicioID = EjercicioAgregado.EjerciciosID, // Asigna el ID del ejercicio actual
+        Pregunta = NuevaPregunta,
+        Respuesta = NuevaRespuesta,
+        Imagen = FotoEjercicio,
+        Puntos = NuevosPuntos
+      };
+
+    var response = await EjerciciosPreguntasClient.CrearEjercicioPreguntaAsync(pregunta);
+
+    if (response.IsSuccessStatusCode)
+    {
+      var preguntaAgregada = await response.Content.ReadFromJsonAsync<EjerciciosPreguntas>();
+      if (preguntaAgregada != null)
+      {
+        Preguntas.Add(preguntaAgregada);
+        NuevaPregunta = "";
+        NuevaRespuesta = "";
+        NuevosPuntos = 0;
+        FotoEjercicio = null;
+      }
+      else
+      {
+        errorMessage = "No se pudo agregar la pregunta.";
+      }
+    }
+    else
+    {
+      errorMessage = "No se pudo agregar la pregunta.";
+    }
+    errorMessage = "";
+  }
+
+  private async Task GuardarTitulo()
+  {
+    // Crear el ejercicio
+    var ejercicio = new Models.Ejercicios
+      {
+        UsuarioID = int.Parse(id ?? "0"),
+        EquipoID = int.Parse(Equipo ?? "0"),
+        Titulo = TituloEjercicio,
+        Descripcion = DescripcionEjercicio,
+        FechaCierre = FechaCierre,
+        Timer = Timer,
+        PuntosAquitar = PuntosAquitar,
+        permitirMasDeUnaRespuesta = permitirMasDeUnaRespuesta,
+        PuntosMin = PuntosMinimos
+      };
+
+    var responseEjercicio = await EjerciciosClient.CrearEjercicioAsync(ejercicio);
+
+    if (!responseEjercicio.IsSuccessStatusCode) return;
+
+    // Obtener el ejercicio recién creado desde la respuesta
+    EjercicioAgregado = await responseEjercicio.Content.ReadFromJsonAsync<Models.Ejercicios>();
+    TituloGuardado = true;
+  }
+
+  private void GuardarCuestionario()
+  {
+    // No se guarda nada en este caso
+    NavigationManager.NavigateTo($"/ejercicios/{id}/{Equipo}");
+  }
+
+  private bool SePuedeGuardarCuestionario()
+  {
+    // Verificar si hay al menos una pregunta
+    return Preguntas.Count > 0;
+  }
+
+  private void EliminarPregunta(int preguntaId)
+  {
+    var pregunta = Preguntas.FirstOrDefault(p => p.EjerciciosPreguntasID == preguntaId);
+    if (pregunta != null)
+    {
+      Preguntas.Remove(pregunta);
+    }
+    else
+    {
+      errorMessage = "No se pudo eliminar la pregunta.";
+    }
+  }
+
+  private async Task HandleFileSelected(InputFileChangeEventArgs e)
+  {
+    FotoEjercicio = await ImageServiceClient.HandleFileSelected(e);
+    if (FotoEjercicio is null)
+    {
+      ValidateFoto = false;
+    }
+  }
+}

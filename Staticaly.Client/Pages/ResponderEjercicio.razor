@@ -28,9 +28,18 @@
         </div>
       </div>
     }
-    <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7 items-center">
-      <h2 class="text-lg font-bold mt-4">Puntaje Actual: @timer?.Interval</h2>
-    </div>
+    @if (Ejercicio.Timer == 0)
+    {
+      <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7 items-center">
+        <h2 class="text-lg font-bold mt-4">Puntaje Actual: @PreguntaActual.Puntos</h2>
+      </div>
+    }
+    else
+    {
+      <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7 items-center">
+        <h2 class="text-lg font-bold mt-4">Puntaje Actual: @timer?.Interval</h2>
+      </div>
+    }
     @if (Preguntas != null && Preguntas.Any())
     {
       <h2 class="text-lg font-bold mt-4">Pregunta @(IndicePreguntaDeUsuario + 1):</h2>
@@ -140,7 +149,7 @@
     {
       return;
     }
-    if (timer.Interval > 100)
+    if (timer.Interval > Ejercicio.PuntosMin)
     {
       timer.Interval--; // Disminuir el puntaje cada segundo
       StateHasChanged(); // Actualizar la interfaz de usuario
@@ -170,57 +179,81 @@
     // Verificar si la respuesta es correcta
     bool respuestaCorrecta = RespuestaActual == PreguntaActual.Respuesta;
 
-    // Si el ejercicio permite más de una respuesta, guardar la respuesta siempre
-    if (Ejercicio.permitirMasDeUnaRespuesta == false)
+    // Si el ejercicio no tiene contador de tiempo, calcular los puntos manualmente
+    if (Ejercicio.Timer == 0)
     {
-      // Guardar la respuesta en la base de datos
-      await GuardarRespuestaEnBaseDeDatos(RespuestaActual, respuestaCorrecta);
-      // Mostrar la siguiente pregunta
-      await MostrarSiguientePregunta();
-    }
-    else
-    {
-      // Actualizar el puntaje si la respuesta es incorrecta
-      if (!respuestaCorrecta)
+      if (Ejercicio.permitirMasDeUnaRespuesta == false)
       {
-        if (timer?.Interval > Ejercicio.PuntosMin)
-        {
-          timer.Interval -= Ejercicio.PuntosAquitar; // Disminuir el intervalo del temporizador
-        }
-        else
-        {
-          if (timer != null)
-          {
-            timer.Interval = Ejercicio.PuntosMin; // Establecer el intervalo mínimo
-          }
-        }
+        // Establecer los puntos como 0 si la respuesta es incorrecta
+        int puntos = respuestaCorrecta ? PreguntaActual.Puntos : 0;
+
+        // Guardar la respuesta en la base de datos
+        await GuardarRespuestaEnBaseDeDatos(RespuestaActual, respuestaCorrecta, puntos);
       }
       else
       {
+        if (!respuestaCorrecta)
+        {
+          if (PreguntaActual.Puntos > Ejercicio.PuntosMin)
+          {
+            PreguntaActual.Puntos = PreguntaActual.Puntos - Ejercicio.PuntosAquitar; // Disminuir el puntaje si la respuesta es incorrecta
+          }
+          else
+          {
+            PreguntaActual.Puntos = Ejercicio.PuntosMin;
+          }
+        }
+        else
+        {
+          await GuardarRespuestaEnBaseDeDatos(RespuestaActual, respuestaCorrecta, PreguntaActual.Puntos);
+
+          // Mostrar la siguiente pregunta
+          await MostrarSiguientePregunta();
+        }
+      }
+    }
+    else
+    {
+      if (Ejercicio.permitirMasDeUnaRespuesta == false)
+      {
+        // Establecer los puntos como 0 si la respuesta es incorrecta
+        int puntos = respuestaCorrecta ? (int)timer.Interval : 0;
+
         // Guardar la respuesta en la base de datos
-        await GuardarRespuestaEnBaseDeDatos(RespuestaActual, true);
-        // Mostrar la siguiente pregunta solo si la respuesta es correcta
-        await MostrarSiguientePregunta();
+        await GuardarRespuestaEnBaseDeDatos(RespuestaActual, respuestaCorrecta, puntos);
+      }
+      else
+      {
+        if (!respuestaCorrecta)
+        {
+          if (timer.Interval > Ejercicio.PuntosMin)
+          {
+            timer.Interval = timer.Interval - Ejercicio.PuntosAquitar; // Disminuir el puntaje si la respuesta es incorrecta
+          }
+          else
+          {
+            timer.Interval = Ejercicio.PuntosMin;
+          }
+        }
+        else
+        {
+          await GuardarRespuestaEnBaseDeDatos(RespuestaActual, respuestaCorrecta, (int)timer.Interval);
+
+          // Mostrar la siguiente pregunta
+          await MostrarSiguientePregunta();
+        }
       }
     }
 
     StateHasChanged(); // Actualizar la interfaz de usuario
-
-    timer?.Start(); // Reiniciar el temporizador
   }
 
-  private async Task GuardarRespuestaEnBaseDeDatos(string respuesta, bool respuestaCorrecta)
+  private async Task GuardarRespuestaEnBaseDeDatos(string respuesta, bool respuestaCorrecta, int puntos)
   {
     if (UsuarioID == null || EjercicioID == null)
     {
       return;
     }
-
-    if (timer == null)
-    {
-      return;
-    }
-    int puntos = (int)timer.Interval; // Puntos obtenidos por la respuesta
 
     await EjerciciosRespuestasClient.CrearEjercicioRespuestaAsync(new EjerciciosRespuestas
       {
