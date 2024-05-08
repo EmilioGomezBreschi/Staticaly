@@ -22,6 +22,7 @@ namespace Staticaly.Server.Models
     public DbSet<EjerciciosRespuestas> EjerciciosRespuestas { get; set; }
     public DbSet<EjerciciosPreguntas> EjerciciosPreguntas { get; set; }
     public DbSet<Ejercicios> Ejercicios { get; set; }
+    public DbSet<Reportes> Reportes { get; set; }
 
 
     public StaticalyContext(DbContextOptions<StaticalyContext> options) : base(options) { }
@@ -197,6 +198,27 @@ namespace Staticaly.Server.Models
           .WithMany()
           .HasForeignKey(e => e.UsuarioID)
           .OnDelete(DeleteBehavior.Restrict); // No realizar acción en cascada si se elimina el usuario
+    }
+
+    private void ConfigureReportes(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<Reportes>()
+          .HasOne(r => r.User)
+          .WithMany()
+          .HasForeignKey(r => r.UsuarioID)
+          .OnDelete(DeleteBehavior.Restrict); // No realizar acción en cascada si se elimina el usuario
+
+      modelBuilder.Entity<Reportes>()
+          .HasOne(r => r.Comentarios)
+          .WithMany()
+          .HasForeignKey(r => r.ComentarioID)
+          .OnDelete(DeleteBehavior.Cascade); // Eliminar en cascada si se elimina el comentario
+
+      modelBuilder.Entity<Reportes>()
+          .HasOne(r => r.publicaciones)
+          .WithMany()
+          .HasForeignKey(r => r.PublicacionID)
+          .OnDelete(DeleteBehavior.Cascade); // Eliminar en cascada si se elimina la publicación
     }
   }
 

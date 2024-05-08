@@ -469,6 +469,13 @@ publicacionesGroup.MapGet("/byEquipo/{id}", async (StaticalyContext context, int
       .Take(pageSize)
       .ToListAsync();
 
+  foreach (var publicacion in publicaciones)
+  {
+    publicacion.Reportes = await context.Reportes
+                                      .Where(r => r.PublicacionID == publicacion.PublicacionID)
+                                      .CountAsync();
+  }
+
   var totalPublicaciones = await context.Publicaciones
       .Where(p => p.ForoID == id)
       .CountAsync();
@@ -482,6 +489,26 @@ publicacionesGroup.MapGet("/byEquipo/{id}", async (StaticalyContext context, int
   });
 });
 
+// Obtener publicaciones de equipo sin paginar
+publicacionesGroup.MapGet("/byEquipo/{id}/all", async (StaticalyContext context, int id) =>
+{
+  var publicaciones = await context.Publicaciones
+      .Include(p => p.Usuario)
+      .ThenInclude(u => u.Rango)
+      .AsNoTracking()
+      .Where(p => p.ForoID == id)
+      .ToListAsync();
+
+  foreach (var publicacion in publicaciones)
+  {
+    publicacion.Reportes = await context.Reportes
+                                      .Where(r => r.PublicacionID == publicacion.PublicacionID)
+                                      .CountAsync();
+  }
+
+  return Results.Ok(publicaciones);
+});
+
 
 
 // Obtener publicaciones de equipo por parte del título paginadas
@@ -493,15 +520,22 @@ publicacionesGroup.MapGet("/byEquipo/{id}/{titulo}", async (StaticalyContext con
       .Include(p => p.Usuario)
       .ThenInclude(u => u.Rango)
       .AsNoTracking()
-      .Where(p => p.ForoID == id && p.Titulo != null && p.Titulo.Contains(titulo))
+      .Where(p => p.ForoID == id && p.Titulo != null && (p.Titulo.Contains(titulo) || p.Titulo.Contains(titulo.ToLower()) || p.Titulo.Contains(titulo.ToUpper()) || p.Contenido.Contains(titulo) || p.Contenido.Contains(titulo.ToLower()) || p.Contenido.Contains(titulo.ToUpper()) || p.Usuario.Nombre.Contains(titulo) || p.Usuario.Nombre.Contains(titulo.ToLower()) || p.Usuario.Nombre.Contains(titulo.ToUpper())))
       .OrderByDescending(p => p.Fecha) // Ordena por Fecha descendente
       .Skip(skipAmount)
       .Take(pageSize)
       .ToListAsync();
 
   var totalPublicaciones = await context.Publicaciones
-      .Where(p => p.ForoID == id && p.Titulo != null && p.Titulo.Contains(titulo))
+      .Where(p => p.ForoID == id && p.Titulo != null && (p.Titulo.Contains(titulo) || p.Titulo.Contains(titulo.ToLower()) || p.Titulo.Contains(titulo.ToUpper()) || p.Contenido.Contains(titulo) || p.Contenido.Contains(titulo.ToLower()) || p.Contenido.Contains(titulo.ToUpper()) || p.Usuario.Nombre.Contains(titulo) || p.Usuario.Nombre.Contains(titulo.ToLower()) || p.Usuario.Nombre.Contains(titulo.ToUpper())))
       .CountAsync();
+
+  foreach (var publicacion in publicaciones)
+  {
+    publicacion.Reportes = await context.Reportes
+                                      .Where(r => r.PublicacionID == publicacion.PublicacionID)
+                                      .CountAsync();
+  }
 
   var totalPages = (int)Math.Ceiling(totalPublicaciones / (double)pageSize);
 
@@ -597,6 +631,48 @@ comentariosGroup.MapGet("/byPublicacion/{id}", async (StaticalyContext context, 
     {
       comentario.Calificacion = calificaciones.Average();
     }
+
+    // Obtener el número de reportes para cada comentario
+    comentario.Reportes = await context.Reportes
+                                      .Where(r => r.ComentarioID == comentario.ComentarioID)
+                                      .CountAsync();
+
+  }
+
+  // Ordenar los comentarios por calificación descendente
+  comentarios = comentarios.OrderByDescending(c => c.Calificacion).ToList();
+
+  return Results.Ok(comentarios);
+});
+
+// Obtener comentarios de un Foro
+comentariosGroup.MapGet("/byForo/{id}", async (StaticalyContext context, int id) =>
+{
+  var comentarios = await context.Comentarios
+                                  .Include(c => c.Usuario)
+                                  .ThenInclude(u => u.Rango)
+                                  .AsNoTracking()
+                                  .Where(c => c.Publicacion.ForoID == id)
+                                  .ToListAsync();
+
+  // Calcular el promedio de calificaciones para cada comentario
+  foreach (var comentario in comentarios)
+  {
+    var calificaciones = await context.Calificaciones
+                                      .Where(c => c.ComentarioID == comentario.ComentarioID)
+                                      .Select(c => c.Calificacion)
+                                      .ToListAsync();
+
+    if (calificaciones.Any())
+    {
+      comentario.Calificacion = calificaciones.Average();
+    }
+
+    // Obtener el número de reportes para cada comentario
+    comentario.Reportes = await context.Reportes
+                                      .Where(r => r.ComentarioID == comentario.ComentarioID)
+                                      .CountAsync();
+
   }
 
   // Ordenar los comentarios por calificación descendente
@@ -621,22 +697,6 @@ comentariosGroup.MapPut("/{id}", async (StaticalyContext context, int id, Coment
 
   return Results.NoContent();
 }).Produces<Comentarios>();
-
-// Actualizar reportes de comentario
-comentariosGroup.MapPut("/reportes/{id}/{reportes}", async (StaticalyContext context, int id, int reportes) =>
-{
-  var comentarioToUpdate = await context.Comentarios.FindAsync(id);
-  if (comentarioToUpdate == null)
-  {
-    return Results.NotFound();
-  }
-
-  comentarioToUpdate.Reportes = reportes;
-
-  await context.SaveChangesAsync();
-
-  return Results.NoContent();
-});
 
 // Eliminar comentario
 comentariosGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
@@ -684,6 +744,8 @@ calificacionesGroup.MapPut("/{comentarioID}/{usuarioID}", async (StaticalyContex
   return Results.NoContent();
 }).Produces<Calificaciones>();
 
+// Obtener calificaciones por comentario y usuario
+
 calificacionesGroup.MapGet("/byComentario/{comentarioID}/{UsuarioID}", async (StaticalyContext context, int comentarioID, int UsuarioID) =>
 {
   var calificaciones = await context.Calificaciones
@@ -698,6 +760,120 @@ calificacionesGroup.MapGet("/byComentario/{comentarioID}/{UsuarioID}", async (St
   {
     return Results.NotFound();
   }
+});
+
+#endregion
+
+var ReportesGroup = app.MapGroup("/reportes").WithParameterValidation();
+
+#region Entry Points Reportes
+
+// Crear reporte
+ReportesGroup.MapPost("/", async (StaticalyContext context, Reportes reporte) =>
+{
+  context.Reportes.Add(reporte);
+  await context.SaveChangesAsync();
+  return Results.Created($"/reportes/{reporte.ReportesID}", reporte);
+}).Produces<Reportes>();
+
+// Obtener reportes por usuario
+ReportesGroup.MapGet("/byUsuario/{id}", async (StaticalyContext context, int id) =>
+{
+  var reportes = await context.Reportes
+                          .AsNoTracking()
+                          .Where(r => r.UsuarioID == id)
+                          .ToListAsync();
+
+  return Results.Ok(reportes);
+});
+
+// Obtener reportes por publicacion
+ReportesGroup.MapGet("/byPublicacion/{id}", async (StaticalyContext context, int id) =>
+{
+  var reportes = await context.Reportes
+                          .Include(r => r.User)
+                          .AsNoTracking()
+                          .Where(r => r.PublicacionID == id)
+                          .ToListAsync();
+
+  return Results.Ok(reportes);
+});
+
+
+// Obtener conteo de reportes por comentario y por publicacion con más de 3 reportes por el ID del grupo
+ReportesGroup.MapGet("/byGrupo/{id}", async (StaticalyContext context, int id) =>
+{
+  // Obtener el conteo de reportes por comentario
+  var reportesComentarios = await context.Comentarios
+  .Include(c => c.Publicacion)
+      .Where(c => c.Publicacion.ForoID == id)
+      .Select(c => new
+      {
+        c = c.ComentarioID,
+        Reportes = context.Reportes.Count(r => r.ComentarioID == c.ComentarioID)
+      })
+      .Where(c => c.Reportes >= 3)
+      .CountAsync(); // Cambiar a CountAsync para obtener el conteo directamente
+
+  // Obtener el conteo de reportes por publicación
+  var reportesPublicaciones = await context.Publicaciones
+      .Where(p => p.ForoID == id)
+      .Select(p => new
+      {
+        p = p.PublicacionID,
+        Reportes = context.Reportes.Count(r => r.PublicacionID == p.PublicacionID)
+      })
+      .Where(p => p.Reportes >= 3)
+      .CountAsync(); // Cambiar a CountAsync para obtener el conteo directamente
+
+  return Results.Ok(new
+  {
+    ReportesGenerales = reportesComentarios + reportesPublicaciones
+  });
+});
+
+// Obtener reportes por comentario
+ReportesGroup.MapGet("/byComentario/{id}", async (StaticalyContext context, int id) =>
+{
+  var reportes = await context.Reportes
+                          .Include(r => r.User)
+                          .AsNoTracking()
+                          .Where(r => r.ComentarioID == id)
+                          .ToListAsync();
+
+  return Results.Ok(reportes);
+});
+
+// Eliminar reporte por Publicacion y Usuario
+ReportesGroup.MapDelete("/byPublicacion/{id}/{usuarioID}", async (StaticalyContext context, int id, int usuarioID) =>
+{
+  var reporte = await context.Reportes
+                          .FirstOrDefaultAsync(r => r.PublicacionID == id && r.UsuarioID == usuarioID);
+  if (reporte == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.Reportes.Remove(reporte);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+// Eliminar reporte por Comentario y Usuario
+ReportesGroup.MapDelete("/byComentario/{id}/{usuarioID}", async (StaticalyContext context, int id, int usuarioID) =>
+{
+  var reporte = await context.Reportes
+                          .FirstOrDefaultAsync(r => r.ComentarioID == id && r.UsuarioID == usuarioID);
+  if (reporte == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.Reportes.Remove(reporte);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
 });
 
 #endregion

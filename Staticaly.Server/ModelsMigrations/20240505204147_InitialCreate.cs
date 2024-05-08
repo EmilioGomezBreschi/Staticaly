@@ -395,6 +395,39 @@ namespace Staticaly.Server.ModelsMigrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Reportes",
+                columns: table => new
+                {
+                    ReportesID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UsuarioID = table.Column<int>(type: "int", nullable: false),
+                    UserUsuarioID = table.Column<int>(type: "int", nullable: true),
+                    ComentarioID = table.Column<int>(type: "int", nullable: false),
+                    ComentariosComentarioID = table.Column<int>(type: "int", nullable: true),
+                    PublicacionID = table.Column<int>(type: "int", nullable: false),
+                    publicacionesPublicacionID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reportes", x => x.ReportesID);
+                    table.ForeignKey(
+                        name: "FK_Reportes_Comentarios_ComentariosComentarioID",
+                        column: x => x.ComentariosComentarioID,
+                        principalTable: "Comentarios",
+                        principalColumn: "ComentarioID");
+                    table.ForeignKey(
+                        name: "FK_Reportes_Publicaciones_publicacionesPublicacionID",
+                        column: x => x.publicacionesPublicacionID,
+                        principalTable: "Publicaciones",
+                        principalColumn: "PublicacionID");
+                    table.ForeignKey(
+                        name: "FK_Reportes_Usuarios_UserUsuarioID",
+                        column: x => x.UserUsuarioID,
+                        principalTable: "Usuarios",
+                        principalColumn: "UsuarioID");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OpcionesCuestionario",
                 columns: table => new
                 {
@@ -559,6 +592,21 @@ namespace Staticaly.Server.ModelsMigrations
                 column: "UsuarioID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reportes_ComentariosComentarioID",
+                table: "Reportes",
+                column: "ComentariosComentarioID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reportes_publicacionesPublicacionID",
+                table: "Reportes",
+                column: "publicacionesPublicacionID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reportes_UserUsuarioID",
+                table: "Reportes",
+                column: "UserUsuarioID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RespuestasCuestionarios_UsuarioID",
                 table: "RespuestasCuestionarios",
                 column: "UsuarioID");
@@ -602,13 +650,13 @@ namespace Staticaly.Server.ModelsMigrations
                 name: "OpcionesCuestionario");
 
             migrationBuilder.DropTable(
+                name: "Reportes");
+
+            migrationBuilder.DropTable(
                 name: "RespuestasCuestionarios");
 
             migrationBuilder.DropTable(
                 name: "UsuariosEquipos");
-
-            migrationBuilder.DropTable(
-                name: "Comentarios");
 
             migrationBuilder.DropTable(
                 name: "EjerciciosPreguntas");
@@ -617,16 +665,19 @@ namespace Staticaly.Server.ModelsMigrations
                 name: "Preguntas");
 
             migrationBuilder.DropTable(
-                name: "Permisos");
+                name: "Comentarios");
 
             migrationBuilder.DropTable(
-                name: "Publicaciones");
+                name: "Permisos");
 
             migrationBuilder.DropTable(
                 name: "Ejercicios");
 
             migrationBuilder.DropTable(
                 name: "Cuestionarios");
+
+            migrationBuilder.DropTable(
+                name: "Publicaciones");
 
             migrationBuilder.DropTable(
                 name: "Equipos");

@@ -24,5 +24,6 @@ builder.Services.AddScoped<RespuestasCuestionarioClient>();
 builder.Services.AddScoped<EjerciciosClient>();
 builder.Services.AddScoped<EjerciciosRespuestasClient>();
 builder.Services.AddScoped<EjerciciosPreguntasClient>();
+builder.Services.AddScoped<ReportesClient>();
 
 await builder.Build().RunAsync();

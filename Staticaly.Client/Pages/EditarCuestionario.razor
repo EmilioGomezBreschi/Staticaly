@@ -9,14 +9,15 @@
 
 <PageTitle>Editar Cuestionario - Staticaly</PageTitle>
 
-<div class="flex flex-col justify-center items-center px-24 text-primary-50 mb-10">
+<div class="flex flex-col justify-center items-center text-primary-50 p-3">
+  <h1 class="text-4xl font-bold mt-3">Editar Cuestionario</h1>
   @if (Cuestionario == null)
   {
     <p>Cargando...</p>
   }
   @if (!TituloGuardado)
   {
-    <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7">
+    <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full lg:w-96 p-7">
       <label for="titulo" class="text-lg font-bold">Título del Cuestionario:</label>
       <input type="text" id="titulo" @bind="TituloCuestionario"
         class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150" />
@@ -51,7 +52,7 @@
       <h4 class="text-lg font-bold mt-4">Preguntas:</h4>
       @foreach (var pregunta in Preguntas)
       {
-        <div class="mt-4 flex flex-col items-center p-7 rounded-md bg-primary-500">
+        <div class="mt-4 w-full flex flex-col items-center p-7 rounded-md bg-primary-500">
           <div class="flex justify-between w-full">
               <input type="text" @bind="pregunta.Pregunta"
                     class="text-lg font-bold border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150 w-96" />

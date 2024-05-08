@@ -76,6 +76,12 @@ namespace Staticaly.Client.Data
       }
     }
 
+    //Obtener publicaciones de Equipo sin paginar
+    public async Task<List<Publicaciones>?> ObtenerPublicaciones(int equipoId)
+    {
+      var result = await httpClient.GetFromJsonAsync<List<Publicaciones>>($"publicaciones/byEquipo/{equipoId}/all");
+      return result ?? new List<Publicaciones>();
+    }
 
   }
 }

@@ -9,6 +9,7 @@
 @inject EquiposClient EquiposClient
 @inject PublicacionesClient PublicacionesClient
 @inject ComentariosClient ComentariosClient
+@inject ReportesClient ReportesClient
 
 <PageTitle>Foro - Staticaly</PageTitle>
 
@@ -18,28 +19,27 @@
 
 <div class="pt-16 lg:pl-20 lg:pt-0 text-primary-100 flex flex-col justify-normal text-center items-center">
 
-  <div class="flex flex-col items-center my-2 p-3 bg-primary-800 rounded-md text-white">
     @if (equipo == null)
     {
-      <h2 class="text-2xl font-bold">Este es un equipo que no existe</h2>
+      <h2 class="text-2xl font-bold mt-3">Este es un equipo que no existe</h2>
     }
     else
     {
-      <h2 class="text-2xl font-bold">@equipo.Nombre</h2>
+      <h2 class="text-2xl font-bold mt-3">@equipo.Nombre</h2>
     }
-  </div>
+
   <div class="w-full max-w-72 md:max-w-md mt-4  text-black">
-      <input type="text" @oninput="BuscarPublicaciones" placeholder="Buscar publicaciones..." class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-primary-500" />
+      <input type="text" @oninput="BuscarPublicaciones" placeholder="Buscar publicaciones..." class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-primary-50" />
   </div>
 
-  <div class="h-full flex flex-col justify-center items-center">
+  <div class="h-full w-full flex flex-col justify-center items-center">
   @if (Publicaciones == null || Publicaciones.Count <= 0)
   {
       <h3 class="text-lg font-bold">No hay publicaciones en este grupo</h3>
   }
   else
   {
-<div class="rounded-md p-4">
+<div class="rounded-md p-4 w-full md:w-[600px]">
     <ul>
     @foreach (var publicacion in Publicaciones)
     {
@@ -51,7 +51,7 @@
                     <p class="font-bold text-primary-500">@publicacion.Usuario?.Nombre</p>
                     <p class="font-light">@publicacion.Usuario?.Rango?.NombreRango</p>
                 </div>
-                <div class="flex flex-col w-full md:w-96 max-w-[600px]">
+                <div class="flex flex-col w-full md:w-96">
                     <p class="text-justify w-full mr-5 mb-4 text-wrap break-words">@publicacion.Contenido</p>
                     @if (publicacion.Imagen != null)
                     {
@@ -114,9 +114,9 @@
         </div>
     }
     </ul>
-    <div class="mt-4 flex justify-evenly">
+    <div class="mt-4 flex justify-start md:justify-evenly">
         <button @onclick="IrAPaginaAnterior" class="bg-primary-500 text-white font-bold py-2 px-4 rounded-md">◄-</button>
-        <span>Página @PaginaActual de @TotalPaginas</span>
+        <span class="mx-3">Página @PaginaActual de @TotalPaginas</span>
         <button @onclick="IrAPaginaSiguiente" class="bg-primary-500 text-white font-bold py-2 px-4 rounded-md">-►</button>
     </div>
 </div>
@@ -125,27 +125,38 @@
 
 </div>
 
-  @if (usuario != null)
-  {
-    <div class="fixed bottom-0 right-0 mr-4 mb-4 text-right">
-      @if (equipoId != 1)
-      {
-      <button @onclick="MostrarListaUsuarios"
-        class="bg-primary-500 hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-md transition duration-300 mb-2 block text-center">
-        <span class="md:inline hidden">@((MostrarUsuarios) ? "Ocultar lista de usuarios" : "Mostrar lista de usuarios")</span>
-        <span class="md:hidden inline">Usuarios</span>
-      </button>
-      }
-      @if (usuario != null && EquipoUsuario != null && (equipoId==1 || EquipoUsuario.Any(u=>u.UsuarioID == usuario.UsuarioID && u.PermisoID != 2)))
-      {
-      <button @onclick="CrearPublicacion"
-        class="bg-primary-500 inline-flex items-center justify-center hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-full md:rounded-md transition duration-300 text-center">
-        <img src="Images/plus.svg" alt="Crear Publicación" class="h-6 w-6 inline-block" />
-        <span class="ml-2 md:inline hidden">Nueva publicación</span>
-      </button>
-      }
+@if (usuario != null)
+{
+    <div class="fixed bottom-2 right-0 mr-4 mb-4 text-right">
+        <div class="flex flex-col items-end">
+            @if (equipoId != 1)
+            {
+                <button @onclick="MostrarListaUsuarios"
+                        class="bg-primary-500 hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-md transition duration-300 mb-2 block text-center">
+                    <span class="md:inline hidden">@((MostrarUsuarios) ? "Ocultar lista de usuarios" : "Mostrar lista de usuarios")</span>
+                    <span class="md:hidden inline">Usuarios</span>
+                </button>
+            }
+            @if (usuario != null && EquipoUsuario != null && (equipoId == 1 || EquipoUsuario.Any(u => u.UsuarioID == usuario.UsuarioID && u.PermisoID != 2)))
+            {
+                <button @onclick="CrearPublicacion"
+                        class="bg-primary-500 items-center justify-end hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-full md:rounded-md transition duration-300 text-center">
+                    <img src="Images/plus.svg" alt="Crear Publicación" class="h-6 w-6 inline-block" />
+                    <span class="ml-2 md:inline hidden">Nueva publicación</span>
+                </button>
+            }
+            @if (usuario != null && EquipoUsuario != null && ((equipoId == 1 && int.Parse(Id ?? "0") == 1) || (EquipoUsuario.Any(u => u.UsuarioID == usuario.UsuarioID && u.PermisoID == 1) && equipoId != 1)))
+            {
+                <button @onclick="RevisarReportes"
+                        class="bg-primary-500 hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-md transition duration-300 mt-2 block text-center">
+                    <p class="inline-block h-6 w-6 rounded-full bg-red-600 text-white">@Conteo</p>
+                    <span class="md:inline hidden">Revisar Reportes</span>
+                    <span class="md:hidden inline">Reportes</span>
+                </button>
+            }
+        </div>
     </div>
-  }
+}
 
 </div>
 
@@ -197,6 +208,7 @@
   int equipoId;
   private int PaginaActual = 1;
   private int TotalPaginas = 1;
+  private int Conteo = 0;
   private const int PublicacionesPorPagina = 3;
   private User? usuario;
   private Equipos? equipo;
@@ -231,6 +243,7 @@
           // Obtener todos los usuarios del grupo
           EquipoUsuario = (await EquiposClient.GetUsuariosFromEquipoAsync(equipoId)).ToList();
           await CargarPublicaciones();
+          await ConteoDeReportes();
       }
   }
 
@@ -247,8 +260,10 @@ private async Task CargarPublicaciones(string? terminoBusqueda = null)
     var resultado = await PublicacionesClient.ObtenerPublicaciones(PaginaActual, PublicacionesPorPagina, equipoId, terminoBusqueda);
     if (resultado != null)
     {
-        Publicaciones = resultado.Publicaciones;
+        // Filtrar las publicaciones que tienen menos de 3 reportes
+        Publicaciones = resultado.Publicaciones?.Where(publicacion => publicacion.Reportes < 3).ToList();
         TotalPaginas = resultado.TotalPaginas;
+
         // Si hay al menos una publicación, cargar los comentarios de todas las publicaciones de manera asincrónica
         if (Publicaciones != null && Publicaciones.Count > 0)
         {
@@ -263,7 +278,18 @@ private async Task CargarPublicaciones(string? terminoBusqueda = null)
 private async Task CargarComentariosAsync(int publicacionId)
 {
     var comentarios = await ComentariosClient.GetComentariosAsync(publicacionId);
-    ComentariosPorPublicacion[publicacionId] = comentarios;
+
+    // Filtrar los comentarios que tienen menos de 3 reportes
+    var comentariosFiltrados = new List<Comentarios>();
+    foreach (var comentario in comentarios)
+    {
+        if (comentario.Reportes < 3)
+        {
+            comentariosFiltrados.Add(comentario); // Agregar el comentario individual si tiene menos de 3 reportes
+        }
+    }
+
+    ComentariosPorPublicacion[publicacionId] = comentariosFiltrados.ToArray();
 }
 
 private async Task IrAPaginaAnterior()
@@ -311,6 +337,11 @@ private async Task IrAPaginaAnterior()
       }
   }
 
+  private void RevisarReportes()
+  {
+    NavigationManager.NavigateTo($"/Reportes/{Id}/{equipoId}");
+  }
+
   private async Task BorrarPublicacion(int publicacionId)
   {
     await PublicacionesClient.DeletePublicacionAsync(publicacionId);
@@ -320,5 +351,11 @@ private async Task IrAPaginaAnterior()
   private void MostrarListaUsuarios()
   {
     MostrarUsuarios = !MostrarUsuarios;
+  }
+
+  private async Task<int> ConteoDeReportes()
+  {
+    Conteo = await ReportesClient.GetReportesCountByGrupoAsync(equipoId);
+    return Conteo;
   }
 }

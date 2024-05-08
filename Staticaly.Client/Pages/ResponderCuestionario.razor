@@ -10,12 +10,12 @@
 
 <PageTitle>Responder Cuestionario - Staticaly</PageTitle>
 
-<div class="flex flex-col justify-center items-center px-24 text-primary-50 mb-10">
+<div class="flex flex-col justify-center items-center text-primary-50 p-3">
   @if (Cuestionario == null)
   {
     <p>Cargando...</p>
   }
-  <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7 items-center">
+  <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full lg-w-96 p-7 items-center">
     <h1 class="text-4xl font-bold text-primary-900">@TituloCuestionario</h1>
     <p class="text-md text-justify">@DescripcionCuestionario</p>
   </div>
@@ -27,13 +27,13 @@
       <form>
         <div class="mt-4 flex flex-col items-center p-7 rounded-md bg-primary-500">
           <div class="flex justify-between w-full">
-            <h1 class="text-lg font-bold px-3 py-2 mt-1 w-96">@pregunta.Pregunta</h1>
+            <h1 class="text-lg font-bold px-3 py-3">@pregunta.Pregunta</h1>
           </div>
           @if (pregunta.Opciones != null && pregunta.Opciones.Any())
           {
             <div class="mt-2">
               <select @onchange="@(e => SeleccionarRespuesta(pregunta.PreguntaID, e.Value?.ToString()))"
-                class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-primary-150 w-96">
+                class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-primary-150">
                 <option value="">Seleccionar opción</option>
                 @foreach (var opcion in pregunta.Opciones)
                 {

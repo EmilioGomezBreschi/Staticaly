@@ -555,6 +555,43 @@ namespace Staticaly.Server.ModelsMigrations
                         });
                 });
 
+            modelBuilder.Entity("Staticaly.Server.Models.Reportes", b =>
+                {
+                    b.Property<int>("ReportesID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportesID"));
+
+                    b.Property<int>("ComentarioID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ComentariosComentarioID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PublicacionID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserUsuarioID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("publicacionesPublicacionID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReportesID");
+
+                    b.HasIndex("ComentariosComentarioID");
+
+                    b.HasIndex("UserUsuarioID");
+
+                    b.HasIndex("publicacionesPublicacionID");
+
+                    b.ToTable("Reportes");
+                });
+
             modelBuilder.Entity("Staticaly.Server.Models.RespuestasCuestionario", b =>
                 {
                     b.Property<int>("RespuestasCuestionarioID")
@@ -892,6 +929,27 @@ namespace Staticaly.Server.ModelsMigrations
                         .IsRequired();
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.Reportes", b =>
+                {
+                    b.HasOne("Staticaly.Server.Models.Comentarios", "Comentarios")
+                        .WithMany()
+                        .HasForeignKey("ComentariosComentarioID");
+
+                    b.HasOne("Staticaly.Server.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserUsuarioID");
+
+                    b.HasOne("Staticaly.Server.Models.Publicaciones", "publicaciones")
+                        .WithMany()
+                        .HasForeignKey("publicacionesPublicacionID");
+
+                    b.Navigation("Comentarios");
+
+                    b.Navigation("User");
+
+                    b.Navigation("publicaciones");
                 });
 
             modelBuilder.Entity("Staticaly.Server.Models.RespuestasCuestionario", b =>

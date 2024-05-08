@@ -10,7 +10,7 @@
 
 <PageTitle>Responder Ejercicio - Staticaly</PageTitle>
 
-<div class="flex flex-col justify-center items-center px-24 text-primary-50 mb-10">
+<div class="flex flex-col justify-center items-center text-primary-50 p-3">
   @if (Ejercicio == null || Preguntas == null || !Preguntas.Any())
   {
     <p>Cargando...</p>
@@ -21,36 +21,37 @@
     {
       <div class="h-screen absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-20">
         <div class="flex flex-col items-center bg-green-600 p-6 rounded-lg">
-          <img src="/images/prohibido.svg" alt="Acceso denegado" class="w-32 h-32" />
+          <img src="/Gifs/Success.gif" alt="Felicidades" class="w-32 h-32" />
           <h2 class="text-xl font-bold">¡Has contestado todas las preguntas!</h2>
-          <button class="bg-white hover:bg-gray-300 transition duration-300 text-white font-bold py-2 px-4 rounded-lg mt-4"
+          <button
+            class="bg-green-800 hover:bg-green-900 transition duration-300 text-white font-bold py-2 px-4 rounded-lg mt-4"
             @onclick='() => NavigationManager.NavigateTo($"/ejercicios/{UsuarioID}/{EquipoID}")'>Volver</button>
         </div>
       </div>
     }
     @if (Ejercicio.Timer == 0)
     {
-      <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7 items-center">
+      <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full lg:w-96 p-3 items-center">
         <h2 class="text-lg font-bold mt-4">Puntaje Actual: @PreguntaActual.Puntos</h2>
       </div>
     }
     else
     {
-      <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full md:w-[600px] p-7 items-center">
+      <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full lg:w-96 p-3 items-center">
         <h2 class="text-lg font-bold mt-4">Puntaje Actual: @timer?.Interval</h2>
       </div>
     }
     @if (Preguntas != null && Preguntas.Any())
     {
       <h2 class="text-lg font-bold mt-4">Pregunta @(IndicePreguntaDeUsuario + 1):</h2>
-      <div class="mt-4 flex flex-col items-center p-7 rounded-md bg-primary-500">
+      <div class="mt-4 flex flex-col items-center p-5 w-full lg:w-96 rounded-md bg-primary-500">
         <div class="flex justify-between w-full">
           <h1 class="text-lg font-bold px-3 py-2 mt-1 w-96">@PreguntaActual.Pregunta</h1>
         </div>
-        <input type="text" @bind="RespuestaActual" class="mt-2 p-2 rounded-md w-96 text-primary-800">
+        <input type="text" @bind="RespuestaActual" class="mt-2 p-2 rounded-md w-full text-primary-800">
+        <button class="mt-4 bg-primary-700 text-primary-50 px-4 py-2 rounded-md"
+          @onclick="@(async () => await EnviarRespuesta())">Enviar</button>
       </div>
-      <button class="mt-4 bg-primary-700 text-primary-50 px-4 py-2 rounded-md"
-        @onclick="@(async () => await EnviarRespuesta())">Enviar</button>
     }
     else
     {
@@ -83,7 +84,7 @@
     Ejercicio = await ObtenerEjercicio(EjercicioID);
     Preguntas = await ObtenerPreguntasPorEjercicio(EjercicioID);
 
-    // Obtener las respuestas previas del usuario
+    // Obtener las respuestas previas del usuario para este ejercicio
     var respuestasUsuario = await ObtenerRespuestasUsuario(int.Parse(UsuarioID), int.Parse(EjercicioID));
 
     // Configurar el temporizador para que disminuya el puntaje cada segundo
@@ -97,15 +98,16 @@
     }
 
     // Verificar si hay preguntas disponibles
-    // Verificar si hay preguntas disponibles
     if (Preguntas != null && Preguntas.Any())
     {
-      // Verificar si el usuario ha respondido alguna pregunta
+      // Filtrar las respuestas del usuario por el ejercicio actual
+      respuestasUsuario = respuestasUsuario.Where(r => r.EjercicioID == int.Parse(EjercicioID)).ToList();
+
+      // Verificar si el usuario ha respondido alguna pregunta para este ejercicio
       if (respuestasUsuario.Any())
       {
         // Obtener el índice de la última pregunta respondida por el usuario
         var indiceUltimaPreguntaRespondida = respuestasUsuario
-        .Where(r => r.UsuarioID == int.Parse(UsuarioID)) // Filtrar por el usuario actual
         .OrderByDescending(r => r.EjercicioPreguntaID)
         .Select(r => Preguntas.FindIndex(p => p.EjerciciosPreguntasID == r.EjercicioPreguntaID))
         .FirstOrDefault();
@@ -115,7 +117,7 @@
       }
       else
       {
-        // Si el usuario no ha respondido ninguna pregunta, comenzar desde la primera pregunta
+        // Si el usuario no ha respondido ninguna pregunta para este ejercicio, comenzar desde la primera pregunta
         IndicePreguntaDeUsuario = 0;
       }
 
@@ -141,7 +143,6 @@
       MostrarMensajeTodasLasPreguntasContestadas();
     }
   }
-
 
   private void TimerElapsed(object? sender, ElapsedEventArgs e)
   {
@@ -214,6 +215,11 @@
     }
     else
     {
+      if (timer == null)
+      {
+        return;
+      }
+      timer.Stop(); // Detener el temporizador
       if (Ejercicio.permitirMasDeUnaRespuesta == false)
       {
         // Establecer los puntos como 0 si la respuesta es incorrecta
@@ -234,12 +240,14 @@
           {
             timer.Interval = Ejercicio.PuntosMin;
           }
+          timer.Start(); // Iniciar el temporizador nuevamente
         }
         else
         {
           await GuardarRespuestaEnBaseDeDatos(RespuestaActual, respuestaCorrecta, (int)timer.Interval);
 
-          // Mostrar la siguiente pregunta
+          timer.Start(); // Iniciar el temporizador nuevamente
+                         // Mostrar la siguiente pregunta
           await MostrarSiguientePregunta();
         }
       }

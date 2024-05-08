@@ -10,6 +10,7 @@
 @inject PublicacionesClient PublicacionClient
 @inject ComentariosClient ComentariosClient
 @inject CalificacionesClient CalificacionesClient
+@inject ReportesClient ReportesClient
 @inject IJSRuntime JSRuntime
 
 
@@ -25,6 +26,18 @@
     <h1 class="text-3xl text-logo-text">Statica.ly</h1>
   </div>
   <div class="bg-primary-300 rounded-lg p-8 text-primary-100 w-full max-w-[600px]">
+    <div class="mt-2 rounded-md p-5 relative">
+      @if (publicacionData.Reportada ?? false)
+      {
+        <img src="images/redflag.svg" class="absolute top-0 right-0 w-6 h-6 cursor-pointer" alt="Banderita"
+          @onclick="() => EliminarReportePublicacion()" />
+      }
+      else
+      {
+        <img src="images/flag.svg" class="absolute top-0 right-0 w-6 h-6 cursor-pointer" alt="Banderita"
+          @onclick="() => ReportarPublicacion(publicacionData.PublicacionID)" />
+      }
+    </div>
     @if (ErrorMessage != "")
     {
       <div class="bg-red-500 text-white p-4 rounded-md text-center">
@@ -33,6 +46,7 @@
     }
     <h2 class="text-center font-bold text-2xl text-primary-600">@publicacionData.Titulo</h2>
     <div class="mt-1 px-3 flex flex-row justify-around mb-4">
+
       <div class="text-center flex flex-col mr-5">
         @if (publicacionData.Usuario != null && publicacionData.Usuario.Rango != null)
         {
@@ -63,6 +77,18 @@
     @foreach (var comentario in comentariosData)
     {
       <div class="mt-2 bg-primary-500 rounded-md p-5">
+        <div class="mt-2 bg-primary-500 rounded-md p-5 relative">
+          @if (comentario.Reportado ?? false)
+          {
+            <img src="images/redflag.svg" class="absolute top-0 right-0 w-6 h-6 cursor-pointer" alt="Banderita"
+              @onclick="() => EliminarReporteComentario(comentario.ComentarioID)" />
+          }
+          else
+          {
+            <img src="images/flag.svg" class="absolute top-0 right-0 w-6 h-6 cursor-pointer" alt="Banderita"
+              @onclick="() => ReportarComentario(comentario.ComentarioID)" />
+          }
+        </div>
         <div class="flex flex-row">
           <div class="mr-2">
             @if (comentario.Usuario != null && comentario.Usuario.Rango != null)
@@ -159,19 +185,15 @@
     }
     else
     {
-      var response = await PublicacionClient.GetPublicacionAsync(int.Parse(publicacion));
-      if (response == null)
+      await ObtenerPublicacion();
+      if (publicacionData == null)
       {
         NavigationManager.NavigateTo("/");
       }
       else
       {
-        publicacionData = response;
         Equipo = publicacionData.ForoID.ToString();
-
-        //Obtener comentarios de la publicación
         await ObtenerComentarios();
-
       }
     }
   }
@@ -196,7 +218,45 @@
 
     if (response != null)
     {
+      var comentariosFiltrados = new List<Comentarios>();
       comentariosData = response.ToList();
+
+      foreach (var comentario in comentariosData)
+      {
+        var reportesComentarios = await ReportesClient.GetReportesByComentarioAsync(comentario.ComentarioID);
+        if (reportesComentarios != null)
+        {
+          comentario.Reportado = reportesComentarios.Any(r => r.UsuarioID == int.Parse(Id ?? "0"));
+          // Contar el número de reportes para este comentario
+          var numReportes = reportesComentarios.Count();
+          // Verificar si el número de reportes es menor que 3
+          if (numReportes < 3)
+          {
+            // Si hay menos de 3 reportes, agregar el comentario a la lista filtrada
+            comentariosFiltrados.Add(comentario);
+          }
+        }
+      }
+
+      // Asignar la lista filtrada a comentariosData
+      comentariosData = comentariosFiltrados;
+    }
+  }
+  private async Task ObtenerPublicacion()
+  {
+    var response = await PublicacionClient.GetPublicacionAsync(int.Parse(publicacion ?? "0"));
+
+    if (response != null)
+    {
+      publicacionData = response;
+
+      // Obtener todos los reportes relacionados con la publicación
+      var reportesPublicacion = await ReportesClient.GetReportesByPublicacionAsync(publicacionData.PublicacionID);
+      if (reportesPublicacion != null)
+      {
+        // Verificar si alguno de los reportes pertenece al usuario actual
+        publicacionData.Reportada = reportesPublicacion.Any(r => r.UsuarioID == int.Parse(Id ?? "0"));
+      }
     }
   }
 
@@ -221,5 +281,83 @@
   private void RestaurarEstrellas(int ComentarioID)
   {
     hoverRatings.Remove(ComentarioID);
+  }
+
+  private async Task ReportarPublicacion(int publicacionID)
+  {
+    Reportes nuevoReporte = new Reportes
+      {
+        UsuarioID = int.Parse(Id ?? "0"), // Suponiendo que Id es el ID del usuario actual
+        PublicacionID = publicacionID
+      };
+
+    var response = await ReportesClient.CreateReporteAsync(nuevoReporte);
+
+    if (response.IsSuccessStatusCode)
+    {
+      // Actualizar el estado de la publicación para mostrar la banderita roja
+      publicacionData.Reportada = true;
+    }
+    else
+    {
+      ErrorMessage = "No se pudo reportar la publicación";
+    }
+  }
+
+  private async Task ReportarComentario(int comentarioID)
+  {
+    Reportes nuevoReporte = new Reportes
+      {
+        UsuarioID = int.Parse(Id ?? "0"), // Suponiendo que Id es el ID del usuario actual
+        ComentarioID = comentarioID
+      };
+
+    var response = await ReportesClient.CreateReporteAsync(nuevoReporte);
+
+    if (response.IsSuccessStatusCode)
+    {
+      // Actualizar el estado del comentario para mostrar la banderita roja
+      var comentario = comentariosData.FirstOrDefault(c => c.ComentarioID == comentarioID);
+      if (comentario != null)
+      {
+        comentario.Reportado = true;
+      }
+    }
+    else
+    {
+      ErrorMessage = "No se pudo reportar el comentario";
+    }
+  }
+
+  private async Task EliminarReportePublicacion()
+  {
+    var response = await ReportesClient.DeleteReporteByPublicacionAsync(int.Parse(publicacion ?? "0"), int.Parse(Id ?? "0"));
+    if (response.IsSuccessStatusCode)
+    {
+      // Actualizar el estado de la publicación para mostrar la banderita blanca
+      publicacionData.Reportada = false;
+    }
+    else
+    {
+      ErrorMessage = "No se pudo eliminar el reporte de la publicación";
+    }
+  }
+
+  private async Task EliminarReporteComentario(int comentarioID)
+  {
+    var response = await ReportesClient.DeleteReporteByComentarioAsync(comentarioID, int.Parse(Id ?? "0"));
+    if (response.IsSuccessStatusCode)
+    {
+      // Actualizar el estado del comentario para mostrar la banderita blanca
+      var comentario = comentariosData.FirstOrDefault(c => c.ComentarioID == comentarioID);
+      if (comentario != null)
+      {
+        comentario.Reportado = false;
+      }
+    }
+    else
+    {
+      ErrorMessage = "No se pudo eliminar el reporte del comentario";
+    }
   }
 }

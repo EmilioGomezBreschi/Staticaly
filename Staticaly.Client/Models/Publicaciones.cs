@@ -28,5 +28,6 @@ namespace Staticaly.Client.Models
     public int Reportes { get; set; }
     [Required]
     public DateTime Fecha { get; set; }
+    public bool? Reportada { get; set; }
   }
 }

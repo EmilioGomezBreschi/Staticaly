@@ -44,6 +44,29 @@
         </button>
       </div>
 
+      @if (BotonActivo == 1)
+      {
+        <h1 class="text-4xl font-bold mt-3">Cuestionarios</h1>
+        @if (CuestionariosDelGrupo.Count == 0)
+        {
+          <div class="mt-4">
+            <h2 class="text-2xl font-bold">No hay cuestionarios disponibles</h2>
+            <p>Espera a que se publiquen nuevos cuestionarios</p>
+          </div>
+        }
+      }
+      else
+      {
+        <h1 class="text-4xl font-bold mt-3">Mis Cuestionarios</h1>
+        @if (CuestionariosDelGrupo.Count == 0)
+        {
+          <div class="mt-4">
+            <h2 class="text-2xl font-bold">No has creado cuestionarios</h2>
+            <p>Crea un cuestionario para que los demás usuarios puedan responderlo</p>
+          </div>
+        }
+      }
+
       @if (CuestionariosDelGrupo.Count > 0)
       {
         <div class="flex flex-col h-full items-center mt-3">
