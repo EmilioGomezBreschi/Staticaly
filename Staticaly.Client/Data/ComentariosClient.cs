@@ -24,6 +24,12 @@ namespace Staticaly.Client.Data
             return await httpClient.GetFromJsonAsync<Comentarios[]>($"comentarios/byPublicacion/{id}") ?? Array.Empty<Comentarios>();
         }
 
+        //Get Comentario by Foro
+        public async Task<List<Comentarios>> GetComentariosByForoAsync(int id)
+        {
+            return await httpClient.GetFromJsonAsync<List<Comentarios>>($"comentarios/byForo/{id}") ?? new List<Comentarios>();
+        }
+
         //Create Comentario
         public async Task<HttpResponseMessage> CreateComentarioAsync(Comentarios comentario)
         {

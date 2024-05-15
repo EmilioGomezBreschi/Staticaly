@@ -1,0 +1,186 @@
+@page "/Reportes/{Id}/{equipoId}"
+
+@using Models
+@using Data
+@inject PublicacionesClient PublicacionesClient
+@inject ComentariosClient ComentariosClient
+@inject ReportesClient ReportesClient
+@inject NavigationManager NavigationManager
+
+<div class="flex flex-col justify-center items-center text-primary-50 p-3">
+
+  <h1 class="text-4xl font-bold mt-3">Reportes</h1>
+
+  @if (Publicaciones != null && Publicaciones.Any())
+  {
+    <h3>Publicaciones</h3>
+    @foreach (var publicacion in Publicaciones)
+    {
+      <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full lg:w-96 p-7">
+        <label for="Contenido" class="text-lg font-bold">Titulo de la Publicación:</label>
+        <input type="text" id="Contenido" @bind="@publicacion.Titulo"
+          class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150" />
+        <label for="Contenido" class="text-lg font-bold">Contenido de la Publicación:</label>
+        <input type="text" id="Contenido" @bind="@publicacion.Contenido"
+          class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150" />
+        <button
+          class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-2 my-1 rounded-md focus:outline-none focus:shadow-outline"
+          @onclick="() => EditarPublicacion(publicacion)">Editar Publicación</button>
+        <button
+          class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md focus:outline-none focus:shadow-outline"
+          @onclick="() => EliminarPublicacion(publicacion.PublicacionID)">Eliminar Publicación</button>
+      </div>
+    }
+  }
+  else if (Comentarios != null && Comentarios.Any())
+  {
+    <h3>Comentarios</h3>
+    @foreach (var comentario in Comentarios)
+    {
+      <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full lg:w-96 p-7">
+        <label for="Contenido" class="text-lg font-bold">Contenido del comentario:</label>
+        <input type="text" id="Contenido" @bind="@comentario.Contenido"
+          class="border bg-primary-700 border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:border-primary-150" />
+        <button
+          class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-2 my-1 rounded-md focus:outline-none focus:shadow-outline"
+          @onclick="() => EditarComentario(comentario)">Editar</button>
+        <button
+          class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 my-1 rounded-md focus:outline-none focus:shadow-outline"
+          @onclick="() => EliminarComentario(comentario.ComentarioID)">Eliminar</button>
+      </div>
+    }
+  }
+  else
+  {
+    <p>No hay publicaciones ni comentarios para mostrar.</p>
+  }
+
+</div>
+
+@code {
+  [Parameter] public string? Id { get; set; }
+  [Parameter] public string? equipoId { get; set; }
+  private List<Publicaciones> Publicaciones { get; set; } = new List<Publicaciones>();
+  private List<Comentarios> Comentarios { get; set; } = new List<Comentarios>();
+  private string ContenidoComentario { get; set; } = string.Empty;
+  private string TituloPublicacion { get; set; } = string.Empty;
+  private string ContenidoPublicacion { get; set; } = string.Empty;
+
+  protected override async Task OnInitializedAsync()
+  {
+    await CargarDatos();
+  }
+
+  private async Task CargarDatos()
+  {
+    await CargarPublicaciones();
+    await CargarComentarios();
+  }
+
+  private async Task CargarPublicaciones()
+  {
+    var resultado = await PublicacionesClient.ObtenerPublicaciones(int.Parse(equipoId ?? "0"));
+
+    if (resultado != null)
+    {
+      var publicacionesFiltradas = new List<Publicaciones>();
+      foreach (var publicacion in resultado)
+      {
+        var reportes = await ReportesClient.GetReportesByPublicacionAsync(publicacion.PublicacionID);
+        if (publicacion.Reportes >= 3)
+        {
+          publicacionesFiltradas.Add(publicacion);
+        }
+      }
+      Publicaciones = publicacionesFiltradas;
+    }
+  }
+
+  private async Task CargarComentarios()
+  {
+    var resultado = await ComentariosClient.GetComentariosByForoAsync(int.Parse(equipoId ?? "0"));
+
+    var comentariosFiltrados = new List<Comentarios>();
+    foreach (var comentario in resultado)
+    {
+      var reportes = await ReportesClient.GetReportesByComentarioAsync(comentario.ComentarioID);
+      if (comentario.Reportes >= 3)
+      {
+        comentariosFiltrados.Add(comentario);
+      }
+    }
+    Comentarios = comentariosFiltrados;
+  }
+
+  private async Task EditarComentario(Comentarios comentarios)
+  {
+    var updateModel = new Comentarios
+    {
+      Contenido = comentarios.Contenido,
+      ComentarioID = comentarios.ComentarioID,
+      PublicacionID = comentarios.PublicacionID,
+      UsuarioID = comentarios.UsuarioID,
+      Fecha = comentarios.Fecha,
+      Imagen = comentarios.Imagen
+
+
+
+    };
+
+    var Result = ComentariosClient.UpdateComentarioAsync(updateModel);
+    if (Result != null)
+    {
+      await ReportesClient.DeleteReportesByComentarioAsync(comentarios.ComentarioID);
+      await CargarDatos();
+    }
+    else
+    {
+      Console.WriteLine("Error al editar el comentario");
+    }
+  }
+
+  private async Task EliminarComentario(int comentarioId)
+  {
+    var response = await ComentariosClient.DeleteComentarioAsync(comentarioId);
+    if (response.IsSuccessStatusCode)
+    {
+      await ReportesClient.DeleteReportesByComentarioAsync(comentarioId);
+      await CargarDatos();
+    }
+  }
+
+  private async Task EditarPublicacion(Publicaciones publicacion)
+  {
+    var updateModel = new Publicaciones
+      {
+        PublicacionID = publicacion.PublicacionID,
+        ForoID = publicacion.ForoID,
+        UsuarioID = publicacion.UsuarioID,
+        Titulo = publicacion.Titulo,
+        Contenido = publicacion.Contenido,
+        Imagen = publicacion.Imagen,
+        Fecha = publicacion.Fecha
+      };
+
+    var result = PublicacionesClient.EditPublicacionAsync(updateModel);
+    if (result != null)
+    {
+      await ReportesClient.DeleteReportesByPublicacionAsync(publicacion.PublicacionID);
+      await CargarDatos();
+    }
+    else
+    {
+      Console.WriteLine("Error al editar la publicación");
+    }
+  }
+
+  private async Task EliminarPublicacion(int publicacionId)
+  {
+    var response = await PublicacionesClient.DeletePublicacionAsync(publicacionId);
+    if (response.IsSuccessStatusCode)
+    {
+      await ReportesClient.DeleteReportesByPublicacionAsync(publicacionId);
+      await CargarDatos();
+    }
+  }
+}

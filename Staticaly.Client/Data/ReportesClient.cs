@@ -84,5 +84,17 @@ namespace Staticaly.Client.Data
     {
       return await httpClient.DeleteAsync($"reportes/byComentario/{comentarioID}/{usuarioID}");
     }
+
+    // Eliminar reporte por Publicacion
+    public async Task<HttpResponseMessage> DeleteReportesByPublicacionAsync(int publicacionID)
+    {
+      return await httpClient.DeleteAsync($"reportes/byPublicacion/{publicacionID}");
+    }
+
+    // Eliminar reporte por Comentario
+    public async Task<HttpResponseMessage> DeleteReportesByComentarioAsync(int comentarioID)
+    {
+      return await httpClient.DeleteAsync($"reportes/byComentario/{comentarioID}");
+    }
   }
 }

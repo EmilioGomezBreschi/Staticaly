@@ -876,6 +876,42 @@ ReportesGroup.MapDelete("/byComentario/{id}/{usuarioID}", async (StaticalyContex
   return Results.NoContent();
 });
 
+//Eliminar todos los reportes de una publicacion
+ReportesGroup.MapDelete("/byPublicacion/{id}", async (StaticalyContext context, int id) =>
+{
+  var reportes = await context.Reportes
+                          .Where(r => r.PublicacionID == id)
+                          .ToListAsync();
+
+  if (reportes == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.Reportes.RemoveRange(reportes);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+//Eliminar todos los reportes de un comentario
+ReportesGroup.MapDelete("/byComentario/{id}", async (StaticalyContext context, int id) =>
+{
+  var reportes = await context.Reportes
+                          .Where(r => r.ComentarioID == id)
+                          .ToListAsync();
+
+  if (reportes == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.Reportes.RemoveRange(reportes);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
 #endregion
 
 var cuestionariosGroup = app.MapGroup("/cuestionarios").WithParameterValidation();
