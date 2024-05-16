@@ -23,6 +23,9 @@ namespace Staticaly.Server.Models
     public DbSet<EjerciciosPreguntas> EjerciciosPreguntas { get; set; }
     public DbSet<Ejercicios> Ejercicios { get; set; }
     public DbSet<Reportes> Reportes { get; set; }
+    public DbSet<Proyectos> Proyectos { get; set; }
+    public DbSet<SubProyectos> SubProyectos { get; set; }
+    public DbSet<DatosSubProyecto> DatosSubProyecto { get; set; }
 
 
     public StaticalyContext(DbContextOptions<StaticalyContext> options) : base(options) { }
@@ -50,6 +53,10 @@ namespace Staticaly.Server.Models
       ConfigureEjerciciosRespuestas(modelBuilder);
       ConfigureEjerciciosPreguntas(modelBuilder);
       ConfigureEjercicios(modelBuilder);
+      ConfigureReportes(modelBuilder);
+      ConfigureProyectos(modelBuilder);
+      ConfigureSubProyectos(modelBuilder);
+      ConfigureDatosSubProyecto(modelBuilder);
     }
 
     private void ConfigureUser(ModelBuilder modelBuilder)
@@ -218,7 +225,45 @@ namespace Staticaly.Server.Models
           .HasOne(r => r.publicaciones)
           .WithMany()
           .HasForeignKey(r => r.PublicacionID)
-          .OnDelete(DeleteBehavior.Cascade); // Eliminar en cascada si se elimina la publicación
+          .OnDelete(DeleteBehavior.Restrict); // Eliminar en cascada si se elimina la publicación
+    }
+
+    private void ConfigureProyectos(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<Proyectos>()
+          .HasOne(p => p.Usuario)
+          .WithMany()
+          .HasForeignKey(p => p.UsuarioID)
+          .OnDelete(DeleteBehavior.Restrict); // No realizar acción en cascada si se elimina el usuario
+
+      modelBuilder.Entity<Proyectos>()
+          .HasOne(p => p.Equipo)
+          .WithMany()
+          .HasForeignKey(p => p.EquipoID)
+          .OnDelete(DeleteBehavior.Restrict); // No realizar acción en cascada si se elimina el equipo
+    }
+    private void ConfigureSubProyectos(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<SubProyectos>()
+          .HasOne(sp => sp.Proyecto)
+          .WithMany()
+          .HasForeignKey(sp => sp.ProyectoID)
+          .OnDelete(DeleteBehavior.Cascade); // Eliminar en cascada si se elimina el proyecto
+
+      modelBuilder.Entity<SubProyectos>()
+          .HasOne(sp => sp.Usuario)
+          .WithMany()
+          .HasForeignKey(sp => sp.UsuarioID)
+          .OnDelete(DeleteBehavior.Restrict); // No realizar acción en cascada si se elimina el usuario
+    }
+
+    private void ConfigureDatosSubProyecto(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Entity<DatosSubProyecto>()
+          .HasOne(dsp => dsp.Subproyecto)
+          .WithMany()
+          .HasForeignKey(dsp => dsp.SubproyectoID)
+          .OnDelete(DeleteBehavior.Cascade); // Eliminar en cascada si se elimina el subproyecto
     }
   }
 

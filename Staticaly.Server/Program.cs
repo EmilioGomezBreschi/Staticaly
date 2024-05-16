@@ -1379,4 +1379,206 @@ ejerciciosRespuestasGroup.MapDelete("/{id}", async (StaticalyContext context, in
 
 #endregion
 
+var proyectosGroup = app.MapGroup("/proyectos").WithParameterValidation();
+
+#region Entry Points Proyectos
+
+// Crear proyecto
+proyectosGroup.MapPost("/", async (StaticalyContext context, Proyectos proyecto) =>
+{
+  context.Proyectos.Add(proyecto);
+  await context.SaveChangesAsync();
+  return Results.Created($"/proyectos/{proyecto.ProyectoID}", proyecto);
+}).Produces<Proyectos>();
+
+// Obtener proyectos por Equipo
+proyectosGroup.MapGet("/byEquipo/{id}", async (StaticalyContext context, int id) =>
+{
+  var proyectos = await context.Proyectos
+                              .Include(p => p.Usuario)
+                              .AsNoTracking()
+                              .Where(p => p.EquipoID == id)
+                              .ToListAsync();
+
+  return Results.Ok(proyectos);
+});
+
+// Obtener proyecto por ID
+proyectosGroup.MapGet("/{id}", async (StaticalyContext context, int id) =>
+{
+  var proyecto = await context.Proyectos
+                              .Include(p => p.Usuario)
+                              .AsNoTracking()
+                              .FirstOrDefaultAsync(p => p.ProyectoID == id);
+
+  return proyecto != null ? Results.Ok(proyecto) : Results.NotFound();
+}).Produces<Proyectos>();
+
+// Editar proyecto
+proyectosGroup.MapPut("/{id}", async (StaticalyContext context, int id, Proyectos proyecto) =>
+{
+  var proyectoToUpdate = await context.Proyectos.FindAsync(id);
+  if (proyectoToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  proyectoToUpdate.Titulo = proyecto.Titulo;
+  proyectoToUpdate.Descripcion = proyecto.Descripcion;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+}).Produces<Proyectos>();
+
+// Eliminar proyecto
+proyectosGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+{
+  var proyecto = await context.Proyectos.FindAsync(id);
+  if (proyecto == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.Proyectos.Remove(proyecto);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+#endregion
+
+var SubProyectosGroup = app.MapGroup("/SubProyectos").WithParameterValidation();
+
+#region Entry Points SubProyectos
+
+// Crear subproyecto
+SubProyectosGroup.MapPost("/", async (StaticalyContext context, SubProyectos subproyecto) =>
+{
+  context.SubProyectos.Add(subproyecto);
+  await context.SaveChangesAsync();
+  return Results.Created($"/SubProyectos/{subproyecto.SubproyectoID}", subproyecto);
+}).Produces<SubProyectos>();
+
+// Obtener SubProyectos por proyecto
+SubProyectosGroup.MapGet("/byProyecto/{id}", async (StaticalyContext context, int id) =>
+{
+  var SubProyectos = await context.SubProyectos
+                              .Include(sp => sp.Proyecto)
+                              .AsNoTracking()
+                              .Where(sp => sp.ProyectoID == id)
+                              .ToListAsync();
+
+  return Results.Ok(SubProyectos);
+});
+
+// Editar subproyecto
+SubProyectosGroup.MapPut("/{id}", async (StaticalyContext context, int id, SubProyectos subproyecto) =>
+{
+  var subproyectoToUpdate = await context.SubProyectos.FindAsync(id);
+  if (subproyectoToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  subproyectoToUpdate.Titulo = subproyecto.Titulo;
+  subproyectoToUpdate.Descripcion = subproyecto.Descripcion;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+}).Produces<SubProyectos>();
+
+// Eliminar subproyecto
+SubProyectosGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+{
+  var subproyecto = await context.SubProyectos.FindAsync(id);
+  if (subproyecto == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.SubProyectos.Remove(subproyecto);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+// Cambiar estado de Edicion de subproyecto
+SubProyectosGroup.MapPut("/editado/{id}/{editando}/{usuarioid}", async (StaticalyContext context, int id, bool editando, int usuarioID) =>
+{
+  var subproyectoToUpdate = await context.SubProyectos.FindAsync(id);
+  if (subproyectoToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  subproyectoToUpdate.Editando = editando;
+  subproyectoToUpdate.UsuarioID = usuarioID;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+#endregion
+
+var datosSubproyectoGroup = app.MapGroup("/datossubproyecto").WithParameterValidation();
+
+#region Entry Points DatosSubProyectos
+
+// Crear dato de subproyecto
+datosSubproyectoGroup.MapPost("/", async (StaticalyContext context, DatosSubProyecto dato) =>
+{
+  context.DatosSubProyecto.Add(dato);
+  await context.SaveChangesAsync();
+  return Results.Created($"/datosSubProyectos/{dato.DatosSubProyectoID}", dato);
+}).Produces<DatosSubProyecto>();
+
+// Obtener datos de subproyecto por subproyecto
+datosSubproyectoGroup.MapGet("/bySubproyecto/{id}", async (StaticalyContext context, int id) =>
+{
+  var datos = await context.DatosSubProyecto
+                      .Include(d => d.Subproyecto)
+                      .AsNoTracking()
+                      .Where(d => d.SubproyectoID == id)
+                      .ToListAsync();
+
+  return Results.Ok(datos);
+});
+
+// Editar dato de subproyecto
+datosSubproyectoGroup.MapPut("/{id}", async (StaticalyContext context, int id, DatosSubProyecto dato) =>
+{
+  var datoToUpdate = await context.DatosSubProyecto.FindAsync(id);
+  if (datoToUpdate == null)
+  {
+    return Results.NotFound();
+  }
+
+  datoToUpdate.Nombre = dato.Nombre;
+  datoToUpdate.Cantidad = dato.Cantidad;
+
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+}).Produces<DatosSubProyecto>();
+
+// Eliminar dato de subproyecto
+datosSubproyectoGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
+{
+  var dato = await context.DatosSubProyecto.FindAsync(id);
+  if (dato == null)
+  {
+    return Results.NotFound();
+  }
+
+  context.DatosSubProyecto.Remove(dato);
+  await context.SaveChangesAsync();
+
+  return Results.NoContent();
+});
+
+#endregion
+
 app.Run();

@@ -132,6 +132,32 @@ namespace Staticaly.Server.ModelsMigrations
                     b.ToTable("Cuestionarios");
                 });
 
+            modelBuilder.Entity("Staticaly.Server.Models.DatosSubProyecto", b =>
+                {
+                    b.Property<int>("DatosSubProyectoID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DatosSubProyectoID"));
+
+                    b.Property<int?>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("SubproyectoID")
+                        .HasColumnType("int");
+
+                    b.HasKey("DatosSubProyectoID");
+
+                    b.HasIndex("SubproyectoID");
+
+                    b.ToTable("DatosSubProyecto");
+                });
+
             modelBuilder.Entity("Staticaly.Server.Models.Ejercicios", b =>
                 {
                     b.Property<int>("EjerciciosID")
@@ -420,6 +446,38 @@ namespace Staticaly.Server.ModelsMigrations
                     b.ToTable("Preguntas");
                 });
 
+            modelBuilder.Entity("Staticaly.Server.Models.Proyectos", b =>
+                {
+                    b.Property<int>("ProyectoID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProyectoID"));
+
+                    b.Property<string>("Descripcion")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("EquipoID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("UsuarioID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProyectoID");
+
+                    b.HasIndex("EquipoID");
+
+                    b.HasIndex("UsuarioID");
+
+                    b.ToTable("Proyectos");
+                });
+
             modelBuilder.Entity("Staticaly.Server.Models.Publicaciones", b =>
                 {
                     b.Property<int>("PublicacionID")
@@ -566,28 +624,19 @@ namespace Staticaly.Server.ModelsMigrations
                     b.Property<int>("ComentarioID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ComentariosComentarioID")
-                        .HasColumnType("int");
-
                     b.Property<int>("PublicacionID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserUsuarioID")
                         .HasColumnType("int");
 
                     b.Property<int>("UsuarioID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("publicacionesPublicacionID")
-                        .HasColumnType("int");
-
                     b.HasKey("ReportesID");
 
-                    b.HasIndex("ComentariosComentarioID");
+                    b.HasIndex("ComentarioID");
 
-                    b.HasIndex("UserUsuarioID");
+                    b.HasIndex("PublicacionID");
 
-                    b.HasIndex("publicacionesPublicacionID");
+                    b.HasIndex("UsuarioID");
 
                     b.ToTable("Reportes");
                 });
@@ -652,6 +701,41 @@ namespace Staticaly.Server.ModelsMigrations
                             RolID = 3,
                             RolName = "Docente"
                         });
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.Subproyectos", b =>
+                {
+                    b.Property<int>("SubproyectoID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubproyectoID"));
+
+                    b.Property<string>("Descripcion")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool?>("Editando")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProyectoID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("UsuarioID")
+                        .HasColumnType("int");
+
+                    b.HasKey("SubproyectoID");
+
+                    b.HasIndex("ProyectoID");
+
+                    b.HasIndex("UsuarioID");
+
+                    b.ToTable("Subproyectos");
                 });
 
             modelBuilder.Entity("Staticaly.Server.Models.TiposEquipos", b =>
@@ -846,6 +930,17 @@ namespace Staticaly.Server.ModelsMigrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("Staticaly.Server.Models.DatosSubProyecto", b =>
+                {
+                    b.HasOne("Staticaly.Server.Models.Subproyectos", "Subproyecto")
+                        .WithMany()
+                        .HasForeignKey("SubproyectoID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Subproyecto");
+                });
+
             modelBuilder.Entity("Staticaly.Server.Models.Ejercicios", b =>
                 {
                     b.HasOne("Staticaly.Server.Models.User", "User")
@@ -920,6 +1015,25 @@ namespace Staticaly.Server.ModelsMigrations
                     b.Navigation("Cuestionario");
                 });
 
+            modelBuilder.Entity("Staticaly.Server.Models.Proyectos", b =>
+                {
+                    b.HasOne("Staticaly.Server.Models.Equipos", "Equipo")
+                        .WithMany()
+                        .HasForeignKey("EquipoID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Staticaly.Server.Models.User", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Equipo");
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("Staticaly.Server.Models.Publicaciones", b =>
                 {
                     b.HasOne("Staticaly.Server.Models.User", "Usuario")
@@ -935,15 +1049,21 @@ namespace Staticaly.Server.ModelsMigrations
                 {
                     b.HasOne("Staticaly.Server.Models.Comentarios", "Comentarios")
                         .WithMany()
-                        .HasForeignKey("ComentariosComentarioID");
-
-                    b.HasOne("Staticaly.Server.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserUsuarioID");
+                        .HasForeignKey("ComentarioID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Staticaly.Server.Models.Publicaciones", "publicaciones")
                         .WithMany()
-                        .HasForeignKey("publicacionesPublicacionID");
+                        .HasForeignKey("PublicacionID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Staticaly.Server.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UsuarioID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Comentarios");
 
@@ -961,6 +1081,25 @@ namespace Staticaly.Server.ModelsMigrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Staticaly.Server.Models.Subproyectos", b =>
+                {
+                    b.HasOne("Staticaly.Server.Models.Proyectos", "Proyecto")
+                        .WithMany()
+                        .HasForeignKey("ProyectoID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Staticaly.Server.Models.User", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Proyecto");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Staticaly.Server.Models.User", b =>
