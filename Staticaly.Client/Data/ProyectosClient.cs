@@ -26,7 +26,7 @@ namespace Staticaly.Client.Data
       //Get Proyecto por ID
       public async Task<Proyectos> GetProyectoAsync(int id)
       {
-          return await _httpClient.GetFromJsonAsync<Proyectos>($"proyectos/{id}");
+          return await _httpClient.GetFromJsonAsync<Proyectos>($"proyectos/{id}") ?? new Proyectos();
       }
 
       //Create Proyecto

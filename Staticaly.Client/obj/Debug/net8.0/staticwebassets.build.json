@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ng7kbOC6QmhJgNv3uIOy5JxBrDfW3tF80QUNxL87xms=",
+  "Hash": "N7Z6PFkkRPVULCIo0g5ZYRioR6sySw6pvkUauP3h7Vc=",
   "Source": "Staticaly.Client",
   "BasePath": "/",
   "Mode": "Root",
@@ -8339,6 +8339,25 @@
       "OriginalItemSpec": "wwwroot\\Images\\heart.svg"
     },
     {
+      "Identity": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\import.svg",
+      "SourceId": "Staticaly.Client",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "Images/import.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\import.svg"
+    },
+    {
       "Identity": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\info.svg",
       "SourceId": "Staticaly.Client",
       "SourceType": "Discovered",
@@ -8584,6 +8603,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\index.html"
+    },
+    {
+      "Identity": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Js\\ChartComponent.js",
+      "SourceId": "Staticaly.Client",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "Js/ChartComponent.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Js\\ChartComponent.js"
     }
   ]
 }

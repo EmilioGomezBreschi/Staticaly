@@ -25,5 +25,8 @@ builder.Services.AddScoped<EjerciciosClient>();
 builder.Services.AddScoped<EjerciciosRespuestasClient>();
 builder.Services.AddScoped<EjerciciosPreguntasClient>();
 builder.Services.AddScoped<ReportesClient>();
+builder.Services.AddScoped<ProyectosClient>();
+builder.Services.AddScoped<SubProyectosClient>();
+builder.Services.AddScoped<DatosSubProyectosClient>();
 
 await builder.Build().RunAsync();

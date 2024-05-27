@@ -1472,6 +1472,17 @@ SubProyectosGroup.MapGet("/byProyecto/{id}", async (StaticalyContext context, in
   return Results.Ok(SubProyectos);
 });
 
+// Obtener SubProyecto por ID
+SubProyectosGroup.MapGet("/{id}", async (StaticalyContext context, int id) =>
+{
+  var subproyecto = await context.SubProyectos
+                              .Include(sp => sp.Proyecto)
+                              .AsNoTracking()
+                              .FirstOrDefaultAsync(sp => sp.SubproyectoID == id);
+
+  return subproyecto != null ? Results.Ok(subproyecto) : Results.NotFound();
+}).Produces<SubProyectos>();
+
 // Editar subproyecto
 SubProyectosGroup.MapPut("/{id}", async (StaticalyContext context, int id, SubProyectos subproyecto) =>
 {

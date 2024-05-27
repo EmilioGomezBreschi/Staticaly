@@ -73,6 +73,10 @@
       "PackagePath": "staticwebassets\\Images\\heart.svg"
     },
     {
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\import.svg",
+      "PackagePath": "staticwebassets\\Images\\import.svg"
+    },
+    {
       "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\info.svg",
       "PackagePath": "staticwebassets\\Images\\info.svg"
     },
@@ -115,6 +119,10 @@
     {
       "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\usuario.svg",
       "PackagePath": "staticwebassets\\Images\\usuario.svg"
+    },
+    {
+      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Js\\ChartComponent.js",
+      "PackagePath": "staticwebassets\\Js\\ChartComponent.js"
     },
     {
       "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\css\\app.css",

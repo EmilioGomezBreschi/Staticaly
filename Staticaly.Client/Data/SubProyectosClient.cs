@@ -23,6 +23,12 @@ namespace Staticaly.Client.Data
       return await _httpClient.GetFromJsonAsync<SubProyectos[]>($"subproyectos/byProyecto/{id}") ?? Array.Empty<SubProyectos>();
     }
 
+    //Get SubProyecto por Id
+    public async Task<SubProyectos> GetSubProyectoAsync(int id)
+    {
+      return await _httpClient.GetFromJsonAsync<SubProyectos>($"subproyectos/{id}") ?? new SubProyectos();
+    }
+
     //Create SubProyecto
     public async Task<HttpResponseMessage> CreateSubProyectoAsync(SubProyectos subproyecto)
     {

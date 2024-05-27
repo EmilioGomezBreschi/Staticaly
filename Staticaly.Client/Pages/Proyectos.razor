@@ -1,0 +1,117 @@
+@page "/estadisticas/{Id}/{Equipo}"
+@page "/estadisticas/{Id}"
+@page "/estadisticas"
+@using Staticaly.Client.Data
+@using Staticaly.Client.Models
+@inject NavigationManager NavigationManager
+@inject EquiposClient equiposClient
+@inject UsuariosClient usuariosClient
+@inject ProyectosClient proyectosClient
+
+<PageTitle>Proyectos - Staticaly</PageTitle>
+<div class="z-40 fixed top-0 w-full">
+  <NavBar Id="@Id" Equipo="@Equipo" />
+</div>
+
+<div
+  class="pt-11 pl-0 lg:pl-20 lg:pt-0 text-white flex flex-col justify-center md:justify-normal text-center items-center">
+  @if (string.IsNullOrEmpty(Id))
+  {
+    <div class="h-full absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-20">
+      <div class="flex flex-col items-center bg-red-600 p-6 rounded-lg">
+        <img src="/images/prohibido.svg" alt="Acceso denegado" class="w-32 h-32" />
+        <h2 class="text-xl font-bold">Para acceder a esta pagina debes estar registrado</h2>
+        <button
+          class="bg-white hover:bg-gray-300 transition duration-300 text-red-600 font-bold py-2 px-4 rounded-lg mt-4"
+          @onclick='() => NavigationManager.NavigateTo("/registro")'>Registrarse</button>
+      </div>
+    </div>
+  }
+  else if (Equipoid == 0 || Equipoid == 1)
+  {
+    <div class="h-full absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 z-20">
+      <div class="flex flex-col items-center bg-red-600 p-6 rounded-lg">
+        <img src="/images/prohibido.svg" alt="Acceso denegado" class="w-32 h-32" />
+        <h2 class="text-xl font-bold">Necesitas estar en un grupo para acceder a esta seccion</h2>
+        <button
+          class="bg-white hover:bg-gray-300 transition duration-300 text-red-600 font-bold py-2 px-4 rounded-lg mt-4"
+          @onclick='() => NavigationManager.NavigateTo($"/grupos/{Id}")'>Ir a Grupos</button>
+      </div>
+    </div>
+  }
+  else
+  {
+
+    <div class="h-full flex flex-col justify-center items-center text-primary-50">
+      <h1 class="text-4xl font-bold mt-3">Estadistica</h1>
+      @if (ProyectosGrupo.Count == 0)
+      {
+        <div class="mt-4">
+          <h2 class="text-2xl font-bold">Este grupo no cuenta con ningun proyecto</h2>
+          <p>Crea un proyecto para visualizarlo aqui</p>
+        </div>
+      }
+      @foreach (var proyecto in ProyectosGrupo)
+      {
+        <div class="w-64 md:w-[500px] flex flex-col items-center bg-primary-400 p-6 rounded-lg m-4">
+          <h2 class="text-2xl font-bold">@proyecto.Titulo</h2>
+          <p>@proyecto.Descripcion</p>
+          <button class="bg-primary-500 hover:bg-primary-600 font-bold py-2 px-4 rounded-lg mt-2 transition duration-300"
+            @onclick='() => NavigationManager.NavigateTo($"subproyectos/{Userid}/{Equipo}/{proyecto.ProyectoID}", forceLoad:true)'>Entrar
+            al
+            proyecto</button>
+          @if (proyecto.UsuarioID == Userid)
+          {
+            <button class="bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg mt-2 transition duration-300"
+              @onclick='() => EliminarProyecto(proyecto.ProyectoID)'>Eliminar proyecto</button>
+          }
+        </div>
+      }
+      @if (ProyectosGrupo.Count < 5)
+      {
+        <div class="fixed bottom-0 right-0 mr-4 mb-4">
+          <button @onclick='() => NavigationManager.NavigateTo($"/crear-proyecto/{Userid}/{Equipoid}")'
+            class="bg-primary-500 inline-flex items-center justify-center hover:bg-primary-700 text-white font-bold py-2 px-2 rounded-full md:rounded-md transition duration-300 text-center">
+            <img src="Images/plus.svg" alt="Crear Publicación" class="h-6 w-6 inline-block" />
+            <span class="ml-2 md:inline hidden">Crear Proyecto</span>
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@code {
+  [Parameter] public string? Id { get; set; }
+  [Parameter] public string? Equipo { get; set; }
+  int Userid;
+  int Equipoid;
+  private List<Models.Proyectos> ProyectosGrupo { get; set; } = new List<Models.Proyectos>();
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (!string.IsNullOrEmpty(Equipo) && !string.IsNullOrEmpty(Id))
+    {
+      Userid = int.Parse(Id);
+      Equipoid = int.Parse(Equipo);
+      await LoadProyectos();
+    }
+  }
+
+  private async Task LoadProyectos()
+  {
+    var proyectos = await proyectosClient.GetProyectosAsync(Equipoid);
+    ProyectosGrupo = proyectos.ToList();
+  }
+
+  private async Task EliminarProyecto(int proyectoId)
+  {
+
+    var result = await proyectosClient.DeleteProyectoAsync(proyectoId);
+    if (result != null)
+    {
+      await LoadProyectos();
+    }
+
+  }
+}

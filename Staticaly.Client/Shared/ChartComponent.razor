@@ -1,0 +1,23 @@
+@using Microsoft.AspNetCore.Components
+@using Microsoft.JSInterop
+
+<canvas id="@canvasId"></canvas>
+
+@code {
+  [Parameter] public string ChartId { get; set; } = "myChart";
+  [Parameter] public string ChartType { get; set; } = "bar"; // or 'line', 'pie', etc.
+  [Parameter] public List<string> Labels { get; set; } = new List<string>();
+  [Parameter] public List<int> Data { get; set; } = new List<int>();
+
+  [Inject] private IJSRuntime JSRuntime { get; set; } = default!;
+
+  private string canvasId => ChartId + "_canvas";
+
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (firstRender)
+    {
+      await JSRuntime.InvokeVoidAsync("renderChart", canvasId, ChartType, Labels, Data);
+    }
+  }
+}

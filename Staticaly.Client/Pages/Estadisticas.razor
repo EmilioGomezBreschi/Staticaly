@@ -1,0 +1,416 @@
+@page "/Procesamiento/{Id}/{Equipo}/{SubProyecto}"
+
+@using Staticaly.Client.Data
+@using Staticaly.Client.Models
+@inject NavigationManager NavigationManager
+@inject SubProyectosClient subProyectosClient
+@inject DatosSubProyectosClient datosSubProyectosClient
+
+<PageTitle>Procesamiento de datos - Staticaly</PageTitle>
+
+<div class="z-40 fixed top-0 w-full bg-white shadow-md">
+  <NavBar Id="@Id" Equipo="@Equipo" />
+</div>
+
+<div class="pt-11 pl-0 lg:pl-20 lg:pt-0 text-white flex flex-col justify-center md:justify-normal text-center items-center">
+  <h3 class="text-3xl font-bold text-center my-4">Procesamiento de Datos</h3>
+
+  @if (SubProyectoModel != null)
+  {
+    <div class="text-center mb-6">
+      <h4 class="text-2xl font-semibold">@SubProyectoModel.Titulo</h4>
+      <p class="text-md">@SubProyectoModel.Descripcion</p>
+    </div>
+  }
+
+  <div class="pt-16 container mx-auto flex flex-wrap lg:flex-nowrap">
+    <div class="w-full lg:w-1/2 p-4 text-gray-900">
+      <div class="text-center mb-6">
+        <button class="bg-primary-700 text-white font-bold py-2 px-4 rounded transition hover:bg-primary-800"
+          @onclick="MostrarFormularioAgregar">Agregar Dato</button>
+      </div>
+
+      @if (DatosSubProyectoModel != null && DatosSubProyectoModel.Count > 0)
+      {
+        <table class="min-w-full bg-primary-200 border rounded-md shadow-md">
+          <thead>
+            <tr class="w-full bg-primary-300 text-primary-50 uppercase text-sm leading-normal">
+              <th class="py-3 px-6 text-left">Nombre</th>
+              <th class="py-3 px-6 text-left">Cantidad</th>
+              <th class="py-3 px-6 text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="text-primary-950 text-sm font-semibold">
+            @foreach (var dato in DatosSubProyectoModel)
+            {
+              <tr class="border-b border-primary-350 hover:bg-primary-250">
+                <td class="py-3 px-6 text-left whitespace-nowrap">@dato.Nombre</td>
+                <td class="py-3 px-6 text-left">@dato.Cantidad</td>
+                <td class="py-3 px-6 text-center">
+                  <button class="bg-yellow-500 text-white font-bold py-1 px-2 rounded mr-2"
+                    @onclick="() => EditarDato(dato)">Editar</button>
+                  <button class="bg-red-600 text-white font-bold py-1 px-2 rounded"
+                    @onclick="() => EliminarDato(dato.DatosSubProyectoID)">Eliminar</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+      @if (mostrandoFormulario)
+      {
+        <div class="bg-white p-6 rounded shadow-md w-full md:w-1/2 mx-auto mt-6">
+          <EditForm Model="@nuevoDato" OnValidSubmit="GuardarDato">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-red-500" />
+            <div class="mb-4">
+              <label class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
+              <InputText @bind-Value="nuevoDato.Nombre"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+            <div class="mb-4">
+              <label class="block text-gray-700 text-sm font-bold mb-2">Cantidad:</label>
+              <InputNumber @bind-Value="nuevoDato.Cantidad"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+            <div class="flex items-center justify-between">
+              <button type="submit"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Guardar</button>
+              <button type="button" @onclick="CancelarEdicion"
+                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cancelar</button>
+            </div>
+          </EditForm>
+        </div>
+      }
+    </div>
+
+    <div class="w-full lg:w-1/2 p-4">
+      <h3 class="text-3xl font-bold text-center my-4">Gráfico de Datos</h3>
+      @if (DatosSubProyectoModel != null && DatosSubProyectoModel.Count > 0)
+      {
+        <div class="flex justify-center mb-4">
+          <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded mr-4"
+            @onclick='() => CambiarTipoGrafico("bar")'>Gráfico de Barras</button>
+          <button class="bg-green-500 text-white font-bold py-2 px-4 rounded"
+            @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Lineas</button>
+        </div>
+        <ChartComponent @key="Guid.NewGuid()" ChartId="datosChart" ChartType="@TipoGrafico" Labels="@Labels"
+          Data="@Data" />
+      }
+      else
+      {
+        <p class="text-center text-gray-700">No hay datos para mostrar</p>
+      }
+    </div>
+  </div>
+
+  <div class="w-full p-4 bg-primary-200 border">
+    <h3 class="text-2xl font-bold text-center my-4">Estadísticas de Datos</h3>
+    @if (DatosSubProyectoModel != null && DatosSubProyectoModel.Count > 0)
+    {
+      <div class="text-center">
+        <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("media")'>Media Aritmética</button>
+        <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("mediana")'>Mediana</button>
+        <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("moda")'>Moda</button>
+        <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("varianza")'>Varianza</button>
+        <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("desviacion")'>Desviación Estándar</button>
+        <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("percentil25")'>Percentil 25</button>
+        <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("percentil75")'>Percentil 75</button>
+
+        @if (!string.IsNullOrEmpty(EstadisticaSeleccionada))
+        {
+          <div class="mt-4 flex justify-center">
+            <div class="bg-white text-primary-800 p-6 rounded shadow-md w-full lg:w-2/3 grid grid-cols-1 lg:grid-cols-4 gap-4">
+              <div>
+                <h4 class="text-xl font-semibold">Fórmula</h4>
+                @if (EstadisticaSeleccionada == "media")
+                {
+                  <p>\(\bar{x} = \frac{\sum x_i}{n}\)</p>
+                }
+                else if (EstadisticaSeleccionada == "mediana")
+                {
+                  <p>Mediana: \(x_{(n+1)/2}\)</p>
+                }
+                else if (EstadisticaSeleccionada == "moda")
+                {
+                  <p>Moda: \(x_{\text{moda}}\)</p>
+                }
+                else if (EstadisticaSeleccionada == "varianza")
+                {
+                  <p>\(\sigma^2 = \frac{\sum (x_i - \bar{x})^2}{n}\)</p>
+                }
+                else if (EstadisticaSeleccionada == "desviacion")
+                {
+                  <p>\(\sigma = \sqrt{\frac{\sum (x_i - \bar{x})^2}{n}}\)</p>
+                }
+                else if (EstadisticaSeleccionada == "percentil25")
+                {
+                  <p>Percentil 25: \(P_{25} = x_{(n+1) \times 0.25}\)</p>
+                }
+                else if (EstadisticaSeleccionada == "percentil75")
+                {
+                  <p>Percentil 75: \(P_{75} = x_{(n+1) \times 0.75}\)</p>
+                }
+              </div>
+              <div>
+                <h4 class="text-xl font-semibold">Sustitución</h4>
+                @if (EstadisticaSeleccionada == "media")
+                {
+                  <p>@string.Join(" + ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0)) / @DatosSubProyectoModel.Count</p>
+                }
+                else if (EstadisticaSeleccionada == "mediana")
+                {
+                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</p>
+                }
+                else if (EstadisticaSeleccionada == "moda")
+                {
+                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0))</p>
+                }
+                else if (EstadisticaSeleccionada == "varianza" || EstadisticaSeleccionada == "desviacion")
+                {
+                  <p>\(\bar{x} = @MediaAritmetica\)</p>
+                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => $"({d.Cantidad ?? 0} - {MediaAritmetica})^2"))</p>
+                }
+                else if (EstadisticaSeleccionada == "percentil25")
+                {
+                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</p>
+                }
+                else if (EstadisticaSeleccionada == "percentil75")
+                {
+                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</p>
+                }
+              </div>
+              <div>
+                <h4 class="text-xl font-semibold">Procedimiento</h4>
+                @if (EstadisticaSeleccionada == "media")
+                {
+                  <p>Suma: @Suma</p>
+                  <p>División: @Suma / @DatosSubProyectoModel.Count</p>
+                }
+                else if (EstadisticaSeleccionada == "mediana")
+                {
+                  <p>Ordenar: @string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</p>
+                  <p>Mediana: @Mediana</p>
+                }
+                else if (EstadisticaSeleccionada == "moda")
+                {
+                  <p>Moda: @Moda</p>
+                }
+                else if (EstadisticaSeleccionada == "varianza")
+                {
+                  <p>Varianza: @Varianza</p>
+                }
+                else if (EstadisticaSeleccionada == "desviacion")
+                {
+                  <p>Varianza: @Varianza</p>
+                  <p>Raíz cuadrada de la varianza: @DesviacionEstandar</p>
+                }
+                else if (EstadisticaSeleccionada == "percentil25")
+                {
+                  <p>Percentil 25: @Percentil25</p>
+                }
+                else if (EstadisticaSeleccionada == "percentil75")
+                {
+                  <p>Percentil 75: @Percentil75</p>
+                }
+              </div>
+              <div>
+                <h4 class="text-xl font-semibold">Resultado</h4>
+                @if (EstadisticaSeleccionada == "media")
+                {
+                  <p>Media Aritmética: @MediaAritmetica</p>
+                }
+                else if (EstadisticaSeleccionada == "mediana")
+                {
+                  <p>Mediana: @Mediana</p>
+                }
+                else if (EstadisticaSeleccionada == "moda")
+                {
+                  <p>Moda: @Moda</p>
+                }
+                else if (EstadisticaSeleccionada == "varianza")
+                {
+                  <p>Varianza: @Varianza</p>
+                }
+                else if (EstadisticaSeleccionada == "desviacion")
+                {
+                  <p>Desviación Estándar: @DesviacionEstandar</p>
+                }
+                else if (EstadisticaSeleccionada == "percentil25")
+                {
+                  <p>Percentil 25: @Percentil25</p>
+                }
+                else if (EstadisticaSeleccionada == "percentil75")
+                {
+                  <p>Percentil 75: @Percentil75</p>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+@code {
+  [Parameter] public string? Id { get; set; }
+  [Parameter] public string? Equipo { get; set; }
+  [Parameter] public string? SubProyecto { get; set; }
+
+  private SubProyectos SubProyectoModel { get; set; } = new SubProyectos();
+  private List<DatosSubProyecto> DatosSubProyectoModel { get; set; } = new List<DatosSubProyecto>();
+  private DatosSubProyecto nuevoDato = new DatosSubProyecto();
+  private bool mostrandoFormulario = false;
+  private string? EstadisticaSeleccionada { get; set; }
+  private string EstadisticaSeleccionadaNombre { get; set; } = "";
+
+  // Propiedades para el gráfico
+  private List<string?> Labels => DatosSubProyectoModel.Select(d => d.Nombre).ToList();
+  private List<int> Data => DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).ToList();
+  private string TipoGrafico { get; set; } = "bar"; // Tipo de gráfico predeterminado
+
+  private void CambiarTipoGrafico(string tipo)
+  {
+    TipoGrafico = tipo;
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (!string.IsNullOrEmpty(SubProyecto))
+    {
+      await CargarDatosSubProyecto();
+    }
+  }
+
+  private async Task CargarDatosSubProyecto()
+  {
+    if (SubProyecto != null)
+    {
+      SubProyectoModel = await subProyectosClient.GetSubProyectoAsync(int.Parse(SubProyecto));
+      await ActualizarDatosSubProyecto();
+    }
+  }
+
+  private async Task ActualizarDatosSubProyecto()
+  {
+    DatosSubProyectoModel = (await datosSubProyectosClient.GetDatosSubProyectosAsync(SubProyectoModel.SubproyectoID)).ToList();
+    StateHasChanged(); // Actualiza la vista después de cambiar los datos
+  }
+
+  private void MostrarFormularioAgregar()
+  {
+    nuevoDato = new DatosSubProyecto { SubproyectoID = SubProyectoModel.SubproyectoID };
+    mostrandoFormulario = true;
+  }
+
+  private void EditarDato(DatosSubProyecto dato)
+  {
+    nuevoDato = dato;
+    mostrandoFormulario = true;
+  }
+
+  private async Task GuardarDato()
+  {
+    if (nuevoDato.DatosSubProyectoID == 0)
+    {
+      await datosSubProyectosClient.CreateDatosSubProyectoAsync(nuevoDato);
+    }
+    else
+    {
+      await datosSubProyectosClient.EditDatosSubProyectoAsync(nuevoDato);
+    }
+    await ActualizarDatosSubProyecto(); // Actualiza los datos después de guardar
+    mostrandoFormulario = false;
+  }
+
+  private async Task EliminarDato(int id)
+  {
+    await datosSubProyectosClient.DeleteDatosSubProyectoAsync(id);
+    await ActualizarDatosSubProyecto(); // Actualiza los datos después de eliminar
+  }
+
+  private void CancelarEdicion()
+  {
+    mostrandoFormulario = false;
+  }
+
+  private void CalcularEstadistica(string estadistica)
+  {
+    EstadisticaSeleccionada = estadistica;
+    EstadisticaSeleccionadaNombre = estadistica switch
+    {
+      "media" => "Media Aritmética",
+      "mediana" => "Mediana",
+      "moda" => "Moda",
+      "varianza" => "Varianza",
+      "desviacion" => "Desviación Estándar",
+      "percentil25" => "Percentil 25",
+      "percentil75" => "Percentil 75",
+      _ => ""
+    };
+  }
+
+  // Métodos para calcular estadísticas
+  private int Suma => DatosSubProyectoModel.Sum(d => d.Cantidad ?? 0);
+
+  private double? MediaAritmetica => DatosSubProyectoModel.Count > 0 ? (double?)DatosSubProyectoModel.Average(d => d.Cantidad ?? 0) : null;
+
+  private double? Mediana
+  {
+    get
+    {
+      if (DatosSubProyectoModel.Count == 0) return null;
+      var sortedData = DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d).ToList();
+      int count = sortedData.Count;
+      if (count % 2 == 0)
+      {
+        return (sortedData[count / 2 - 1] + sortedData[count / 2]) / 2.0;
+      }
+      else
+      {
+        return sortedData[count / 2];
+      }
+    }
+  }
+
+  private int? Moda => DatosSubProyectoModel.Count > 0
+    ? DatosSubProyectoModel.GroupBy(d => d.Cantidad)
+      .OrderByDescending(g => g.Count())
+      .First().Key
+    : null;
+
+  private double? Varianza
+  {
+    get
+    {
+      if (DatosSubProyectoModel.Count == 0) return null;
+      double media = MediaAritmetica ?? 0;
+      return DatosSubProyectoModel.Average(d => Math.Pow((d.Cantidad ?? 0) - media, 2));
+    }
+  }
+
+  private double? DesviacionEstandar => Varianza.HasValue ? Math.Sqrt(Varianza.Value) : (double?)null;
+
+  private double? Percentil(int percentil)
+  {
+    if (DatosSubProyectoModel.Count == 0) return null;
+    var sortedData = DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d).ToList();
+    double position = (sortedData.Count + 1) * percentil / 100.0;
+    int index = (int)position;
+    double fraction = position - index;
+    if (index >= sortedData.Count)
+    {
+      return sortedData.Last();
+    }
+    if (index == 0)
+    {
+      return sortedData.First();
+    }
+    return sortedData[index - 1] + fraction * (sortedData[index] - sortedData[index - 1]);
+  }
+
+  private double? Percentil25 => Percentil(25);
+  private double? Percentil75 => Percentil(75);
+}
