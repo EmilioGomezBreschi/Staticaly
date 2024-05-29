@@ -1,139 +1,139 @@
 {
   "Files": [
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\bin\\Debug\\net8.0\\wwwroot\\_framework\\blazor.webassembly.js",
       "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\jybdd6kme9.gz",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\compressed\\jybdd6kme9.gz",
       "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js.gz"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Staticaly.Client.styles.css",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\Debug\\net8.0\\scopedcss\\bundle\\Staticaly.Client.styles.css",
       "PackagePath": "staticwebassets\\Staticaly.Client.styles.css"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Gifs\\CorreoMandado.gif",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Gifs\\CorreoMandado.gif",
       "PackagePath": "staticwebassets\\Gifs\\CorreoMandado.gif"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Gifs\\Success.gif",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Gifs\\Success.gif",
       "PackagePath": "staticwebassets\\Gifs\\Success.gif"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Gifs\\UnSuccess.gif",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Gifs\\UnSuccess.gif",
       "PackagePath": "staticwebassets\\Gifs\\UnSuccess.gif"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Gifs\\ajustes.gif",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Gifs\\ajustes.gif",
       "PackagePath": "staticwebassets\\Gifs\\ajustes.gif"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\Semestre.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\Semestre.svg",
       "PackagePath": "staticwebassets\\Images\\Semestre.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\amigos.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\amigos.svg",
       "PackagePath": "staticwebassets\\Images\\amigos.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\camera.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\camera.svg",
       "PackagePath": "staticwebassets\\Images\\camera.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\ejercicios.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\ejercicios.svg",
       "PackagePath": "staticwebassets\\Images\\ejercicios.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\email.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\email.svg",
       "PackagePath": "staticwebassets\\Images\\email.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\encuesta.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\encuesta.svg",
       "PackagePath": "staticwebassets\\Images\\encuesta.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\estadisticas.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\estadisticas.svg",
       "PackagePath": "staticwebassets\\Images\\estadisticas.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\flag.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\flag.svg",
       "PackagePath": "staticwebassets\\Images\\flag.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\foro.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\foro.svg",
       "PackagePath": "staticwebassets\\Images\\foro.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\grupos.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\grupos.svg",
       "PackagePath": "staticwebassets\\Images\\grupos.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\heart.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\heart.svg",
       "PackagePath": "staticwebassets\\Images\\heart.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\import.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\import.svg",
       "PackagePath": "staticwebassets\\Images\\import.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\info.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\info.svg",
       "PackagePath": "staticwebassets\\Images\\info.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\llave.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\llave.svg",
       "PackagePath": "staticwebassets\\Images\\llave.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\lupa.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\lupa.svg",
       "PackagePath": "staticwebassets\\Images\\lupa.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\ojo-abierto.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\ojo-abierto.svg",
       "PackagePath": "staticwebassets\\Images\\ojo-abierto.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\ojo-cerrado.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\ojo-cerrado.svg",
       "PackagePath": "staticwebassets\\Images\\ojo-cerrado.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\perfil.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\perfil.svg",
       "PackagePath": "staticwebassets\\Images\\perfil.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\plus.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\plus.svg",
       "PackagePath": "staticwebassets\\Images\\plus.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\prohibido.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\prohibido.svg",
       "PackagePath": "staticwebassets\\Images\\prohibido.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\redflag.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\redflag.svg",
       "PackagePath": "staticwebassets\\Images\\redflag.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\school.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\school.svg",
       "PackagePath": "staticwebassets\\Images\\school.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\usuario.svg",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Images\\usuario.svg",
       "PackagePath": "staticwebassets\\Images\\usuario.svg"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\Js\\ChartComponent.js",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\Js\\ChartComponent.js",
       "PackagePath": "staticwebassets\\Js\\ChartComponent.js"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\css\\app.css",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\css\\app.css",
       "PackagePath": "staticwebassets\\css\\app.css"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\css\\app.min.css",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\css\\app.min.css",
       "PackagePath": "staticwebassets\\css\\app.min.css"
     },
     {
-      "Id": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\wwwroot\\index.html",
+      "Id": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\wwwroot\\index.html",
       "PackagePath": "staticwebassets\\index.html"
     },
     {

@@ -30,9 +30,10 @@ namespace Staticaly.Client.Data
     }
 
     //Create SubProyecto
-    public async Task<HttpResponseMessage> CreateSubProyectoAsync(SubProyectos subproyecto)
+    public async Task<SubProyectos?> CreateSubProyectoAsync(SubProyectos subproyecto)
     {
-      return await _httpClient.PostAsJsonAsync("subproyectos", subproyecto);
+      var response = await _httpClient.PostAsJsonAsync("subproyectos", subproyecto);
+      return await response.Content.ReadFromJsonAsync<SubProyectos>();
     }
 
     //Edit SubProyecto

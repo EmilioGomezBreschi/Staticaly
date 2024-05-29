@@ -89,14 +89,66 @@
       <h3 class="text-3xl font-bold text-center my-4">Gráfico de Datos</h3>
       @if (DatosSubProyectoModel != null && DatosSubProyectoModel.Count > 0)
       {
-        <div class="flex justify-center mb-4">
-          <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded mr-4"
-            @onclick='() => CambiarTipoGrafico("bar")'>Gráfico de Barras</button>
-          <button class="bg-green-500 text-white font-bold py-2 px-4 rounded"
-            @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Lineas</button>
-        </div>
-        <ChartComponent @key="Guid.NewGuid()" ChartId="datosChart" ChartType="@TipoGrafico" Labels="@Labels"
-          Data="@Data" />
+        @if (!string.IsNullOrEmpty(EstadisticaSeleccionada))
+        {
+            <div class="mt-4 flex justify-center">
+                @if (EstadisticaSeleccionada == "media")
+                {
+                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("bar")'>Gráfico de Barras</button>
+                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
+                    <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
+                }
+                else if (EstadisticaSeleccionada == "mediana")
+                {
+                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
+                    <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
+                }
+                else if (EstadisticaSeleccionada == "moda")
+                {
+                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CambiarTipoGrafico("bar")'>Gráfico de Barras</button>
+                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("pie")'>Gráfico de Sectores</button>
+                }
+                else if (EstadisticaSeleccionada == "varianza")
+                {
+                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
+                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("bar")'>Histograma</button>
+                }
+                else if (EstadisticaSeleccionada == "desviacion")
+                {
+                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
+                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("bar")'>Histograma</button>
+                }
+                else if (EstadisticaSeleccionada == "correlacion")
+                {
+                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
+                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
+                    <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("bubble")'>Gráfico de Burbujas</button>
+                }
+                else if (EstadisticaSeleccionada == "percentil25" || EstadisticaSeleccionada == "percentil75")
+                {
+                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
+                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("bar")'>Gráfico de Barras</button>
+                }
+                else if (EstadisticaSeleccionada == "rango")
+                {
+                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("bar")'>Gráfico de Barras</button>
+                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
+                    <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
+                }
+                else if (EstadisticaSeleccionada == "cuartiles")
+                {
+                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
+                    <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("bar")'>Gráfico de Barras</button>
+                }
+                else if (EstadisticaSeleccionada == "covarianza")
+                {
+                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
+                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("bubble")'>Gráfico de Burbujas</button>
+                    <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
+                }
+            </div>
+            <ChartComponent @key="Guid.NewGuid()" ChartId="datosChart" ChartType="@TipoGrafico" Labels="@Labels" Data="@Data" />
+        }
       }
       else
       {
@@ -115,8 +167,12 @@
         <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("moda")'>Moda</button>
         <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("varianza")'>Varianza</button>
         <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("desviacion")'>Desviación Estándar</button>
+        <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("correlacion")'>Coeficiente de Correlación</button>
         <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("percentil25")'>Percentil 25</button>
         <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("percentil75")'>Percentil 75</button>
+        <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("rango")'>Rango</button>
+        <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("cuartiles")'>Cuartiles</button>
+        <button class="bg-primary-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CalcularEstadistica("covarianza")'>Covarianza</button>
 
         @if (!string.IsNullOrEmpty(EstadisticaSeleccionada))
         {
@@ -152,6 +208,24 @@
                 {
                   <p>Percentil 75: \(P_{75} = x_{(n+1) \times 0.75}\)</p>
                 }
+                else if (EstadisticaSeleccionada == "rango")
+                {
+                  <p>Rango: \(x_{\text{máximo}} - x_{\text{mínimo}}\)</p>
+                }
+                else if (EstadisticaSeleccionada == "cuartiles")
+                {
+                  <p>Q1: \(x_{(n+1) \times 0.25}\)</p>
+                  <p>Q2: \(x_{(n+1) \times 0.5}\)</p>
+                  <p>Q3: \(x_{(n+1) \times 0.75}\)</p>
+                }
+                else if (EstadisticaSeleccionada == "covarianza")
+                {
+                  <p>Covarianza: \(\frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{n}\)</p>
+                }
+                else if (EstadisticaSeleccionada == "correlacion")
+                {
+                  <p>Coeficiente de Correlación: \(\frac{\text{Covarianza}}{\sigma_x \times \sigma_y}\)</p>
+                }
               </div>
               <div>
                 <h4 class="text-xl font-semibold">Sustitución</h4>
@@ -179,6 +253,22 @@
                 else if (EstadisticaSeleccionada == "percentil75")
                 {
                   <p>@string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</p>
+                }
+                else if (EstadisticaSeleccionada == "rango")
+                {
+                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</p>
+                }
+                else if (EstadisticaSeleccionada == "cuartiles")
+                {
+                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</p>
+                }
+                else if (EstadisticaSeleccionada == "covarianza")
+                {
+                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => $"({d.Cantidad ?? 0} - {MediaAritmetica})({d.Cantidad ?? 0} - {MediaAritmetica})"))</p>
+                }
+                else if (EstadisticaSeleccionada == "correlacion")
+                {
+                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => $"({d.Cantidad ?? 0} - {MediaAritmetica})({d.Cantidad ?? 0} - {MediaAritmetica})"))</p>
                 }
               </div>
               <div>
@@ -214,6 +304,24 @@
                 {
                   <p>Percentil 75: @Percentil75</p>
                 }
+                else if (EstadisticaSeleccionada == "rango")
+                {
+                  <p>Rango: @DatosSubProyectoModel.Max(d => d.Cantidad ?? 0) - @DatosSubProyectoModel.Min(d => d.Cantidad ?? 0)</p>
+                }
+                else if (EstadisticaSeleccionada == "cuartiles")
+                {
+                  <p>Q1: @Percentil(25)</p>
+                  <p>Q2: @Percentil(50)</p>
+                  <p>Q3: @Percentil(75)</p>
+                }
+                else if (EstadisticaSeleccionada == "covarianza")
+                {
+                  <p>Covarianza: @DatosSubProyectoModel.Sum(d => (d.Cantidad ?? 0 - MediaAritmetica) * (d.Cantidad ?? 0 - MediaAritmetica)) / @DatosSubProyectoModel.Count</p>
+                }
+                else if (EstadisticaSeleccionada == "correlacion")
+                {
+                  <p>Coeficiente de Correlación: @CoeficienteCorrelacion</p>
+                }
               </div>
               <div>
                 <h4 class="text-xl font-semibold">Resultado</h4>
@@ -244,6 +352,24 @@
                 else if (EstadisticaSeleccionada == "percentil75")
                 {
                   <p>Percentil 75: @Percentil75</p>
+                }
+                else if (EstadisticaSeleccionada == "rango")
+                {
+                  <p>Rango: @DatosSubProyectoModel.Max(d => d.Cantidad ?? 0) - @DatosSubProyectoModel.Min(d => d.Cantidad ?? 0)</p>
+                }
+                else if (EstadisticaSeleccionada == "cuartiles")
+                {
+                  <p>Q1: @Percentil(25)</p>
+                  <p>Q2: @Percentil(50)</p>
+                  <p>Q3: @Percentil(75)</p>
+                }
+                else if (EstadisticaSeleccionada == "covarianza")
+                {
+                  <p>Covarianza: @DatosSubProyectoModel.Sum(d => (d.Cantidad ?? 0 - MediaAritmetica) * (d.Cantidad ?? 0 - MediaAritmetica)) / @DatosSubProyectoModel.Count</p>
+                }
+                else if (EstadisticaSeleccionada == "correlacion")
+                {
+                  <p>Coeficiente de Correlación: @CoeficienteCorrelacion</p>
                 }
               </div>
             </div>
@@ -348,6 +474,9 @@
       "desviacion" => "Desviación Estándar",
       "percentil25" => "Percentil 25",
       "percentil75" => "Percentil 75",
+      "rango" => "Rango",
+      "cuartiles" => "Cuartiles",
+      "covarianza" => "Covarianza",
       _ => ""
     };
   }
@@ -413,4 +542,55 @@
 
   private double? Percentil25 => Percentil(25);
   private double? Percentil75 => Percentil(75);
+
+  // Cálculo del Coeficiente de Correlación
+  private double? CoeficienteCorrelacion
+  {
+      get
+      {
+          if (DatosSubProyectoModel.Count == 0) return null;
+          double mediaX = MediaAritmetica ?? 0;
+          double mediaY = MediaAritmetica ?? 0; // Modificar según corresponda
+          double covarianza = DatosSubProyectoModel.Sum(d => ((d.Cantidad ?? 0) - mediaX) * ((d.Cantidad ?? 0) - mediaY)) / DatosSubProyectoModel.Count;
+          double desviacionX = DesviacionEstandar ?? 0;
+          double desviacionY = DesviacionEstandar ?? 0; // Modificar según corresponda
+          return covarianza / (desviacionX * desviacionY);
+      }
+  }
+
+  // Cálculo del Rango
+  private int? Rango
+  {
+      get
+      {
+          if (DatosSubProyectoModel.Count == 0) return null;
+          var sortedData = DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d).ToList();
+          return sortedData.Last() - sortedData.First();
+      }
+  }
+
+  // Cálculo de Cuartiles
+  private (double? Q1, double? Q3)? Cuartiles
+  {
+      get
+      {
+          if (DatosSubProyectoModel.Count == 0) return null;
+          var sortedData = DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d).ToList();
+          return (Percentil(25), Percentil(75));
+      }
+  }
+
+  // Cálculo de Covarianza
+  private double? Covarianza
+  {
+      get
+      {
+          if (DatosSubProyectoModel.Count == 0) return null;
+          double mediaX = MediaAritmetica ?? 0;
+          double mediaY = MediaAritmetica ?? 0; // Modificar según corresponda
+          return DatosSubProyectoModel.Sum(d => ((d.Cantidad ?? 0) - mediaX) * ((d.Cantidad ?? 0) - mediaY)) / DatosSubProyectoModel.Count;
+      }
+  }
+
+
 }

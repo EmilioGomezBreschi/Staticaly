@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj": {}
+    "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj": {
+    "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj",
+        "projectUniqueName": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj",
         "projectName": "Staticaly.Client",
-        "projectPath": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj",
+        "projectPath": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\Staticaly.Client.csproj",
         "packagesPath": "C:\\Users\\lime1\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Client\\obj\\",
+        "outputPath": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Client\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\lime1\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -63,14 +63,18 @@
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.4, )",
+              "version": "[8.0.5, )",
               "autoReferenced": true
             },
             "Microsoft.NET.Sdk.WebAssembly.Pack": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.4, )",
+              "version": "[8.0.5, )",
               "autoReferenced": true
+            },
+            "NPOI": {
+              "target": "Package",
+              "version": "[2.7.0, )"
             },
             "SixLabors.ImageSharp": {
               "target": "Package",
@@ -91,7 +95,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-              "version": "[8.0.4, 8.0.4]"
+              "version": "[8.0.5, 8.0.5]"
             }
           ],
           "frameworkReferences": {
@@ -99,7 +103,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205/PortableRuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {

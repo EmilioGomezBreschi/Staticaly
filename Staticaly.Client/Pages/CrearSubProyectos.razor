@@ -2,9 +2,14 @@
 @using Models;
 @using Data;
 @using System.Text.Json;
+@using System.Data;
+@using System.IO;
+@using NPOI.XSSF.UserModel;
+@using NPOI.SS.UserModel;
 @inject NavigationManager NavigationManager
 @inject UsuariosClient UsuariosClient
 @inject SubProyectosClient subProyectosClient
+@inject DatosSubProyectosClient datosSubProyectosClient
 
 <PageTitle>Crear SubProyecto - Staticaly</PageTitle>
 
@@ -55,6 +60,36 @@
           class="bg-primary-500 text-white font-bold text-lg rounded-md h-20 md:h-16 w-32 mx-1 hover:bg-primary-600 transition duration-300">Crear</button>
       </div>
     </EditForm>
+    <InputFile OnChange="@ImportExcelFile" class="mt-4" />
+
+    <table class="table-auto w-full">
+      <thead>
+        <tr>
+          @foreach (DataColumn column in dt.Columns)
+          {
+            <th class="border px-4 py-2">@column.ColumnName</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (DataRow row in dt.Rows)
+        {
+          <tr>
+            @foreach (DataColumn column in dt.Columns)
+            {
+              <td class="border px-4 py-2">@row[column]</td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    @foreach (var nombre in Nombres)
+    {
+      <p>@nombre</p>
+
+      <br />
+    }
   </div>
 </div>
 
@@ -66,8 +101,11 @@
   private User usuario = new User();
   int idUsuario;
   int IdProyecto;
+  int SubproyectoID; // Nuevo campo para almacenar el ID del subproyecto
   private bool isLoading = false;
   private string errorMessage = "";
+  DataTable dt = new DataTable();
+  public static List<string> Nombres = new List<string>();
   private void SetErrorMessage(string message)
   {
     errorMessage = message;
@@ -113,16 +151,98 @@
         UsuarioID = idUsuario,
         ProyectoID = IdProyecto
       };
+
+    // Crear el subproyecto y obtener el SubproyectoID
     var result = await subProyectosClient.CreateSubProyectoAsync(SubProyecto);
 
     if (result != null)
     {
-      NavigationManager.NavigateTo($"/subproyectos/{idUsuario}/{IdProyecto}");
+      // Obtener el SubproyectoID
+      SubproyectoID = result.SubproyectoID;
+
+      // Llamar al método para importar el archivo de Excel
+      await ImportExcelFile();
     }
     else
     {
       SetErrorMessage("Error al crear el proyecto");
+      isLoading = false;
     }
   }
 
+  private async Task GuardarDatosEnBaseDeDatos(List<DatosSubProyecto> datosSubProyectos)
+  {
+    foreach (var datosSubProyecto in datosSubProyectos)
+    {
+      // Asignar el SubproyectoID antes de guardar los datos
+      datosSubProyecto.SubproyectoID = SubproyectoID;
+
+      var response = await datosSubProyectosClient.CreateDatosSubProyectoAsync(datosSubProyecto);
+      if (!response.IsSuccessStatusCode)
+      {
+        SetErrorMessage("Error al guardar los datos en la base de datos");
+      }
+    }
+  }
+
+  async Task ImportExcelFile(InputFileChangeEventArgs e)
+  {
+    var fileStream = e.File.OpenReadStream();
+    var ms = new MemoryStream();
+    await fileStream.CopyToAsync(ms);
+    fileStream.Close();
+    ms.Position = 0;
+
+    ISheet sheet;
+    var xsswb = new XSSFWorkbook(ms);
+
+    sheet = xsswb.GetSheetAt(0);
+    IRow hr = sheet.GetRow(0);
+    var rl = new List<string>();
+
+    int cc = hr.LastCellNum;
+    for (var j = 0; j < cc; j++)
+    {
+      ICell cell = hr.GetCell(j);
+      dt.Columns.Add(cell.ToString());
+    }
+
+    for (var j = (sheet.FirstRowNum + 1); j <= sheet.LastRowNum; j++)
+    {
+      var r = sheet.GetRow(j);
+      for (var i = r.FirstCellNum; i < cc; i++)
+      {
+        rl.Add(r.GetCell(i).ToString());
+      }
+      if (rl.Count > 0)
+      {
+        dt.Rows.Add(rl.ToArray());
+      }
+      rl.Clear();
+    }
+
+    var datosSubProyectos = new List<DatosSubProyecto>();
+
+    foreach (DataRow row in dt.Rows)
+    {
+      var datosSubProyecto = new DatosSubProyecto();
+
+      foreach (DataColumn col in dt.Columns)
+      {
+        var celda = row[col.ColumnName];
+        var columna = col.ColumnName;
+        columna = columna.ToString();
+
+        if (columna == "Nombre")
+        {
+          datosSubProyecto.Nombre = celda.ToString();
+        }
+        // Aquí puedes agregar más condiciones para mapear otras propiedades de DatosSubProyecto
+      }
+
+      datosSubProyectos.Add(datosSubProyecto);
+    }
+
+    await GuardarDatosEnBaseDeDatos(datosSubProyectos);
+  }
 }

@@ -7,12 +7,13 @@ window.renderChart = (canvasId, chartType, labels, data) => {
             datasets: [{
                 label: 'Datos',
                 data: data,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: '#df9ea754',
+                borderColor: '#87493f',
                 borderWidth: 1
             }]
         },
         options: {
+          responsive: true,
             scales: {
                 y: {
                     beginAtZero: true
