@@ -1362,6 +1362,58 @@ ejerciciosRespuestasGroup.MapGet("/byUsuario/{id}", async (StaticalyContext cont
   return Results.Ok(respuestas);
 });
 
+// Obtener respuestas de ejercicio por pregunta
+ejerciciosRespuestasGroup.MapGet("/byPregunta/{id}", async (StaticalyContext context, int id) =>
+{
+  var respuestas = await context.EjerciciosRespuestas
+                              .Include(r => r.User)
+                              .Include(r => r.EjerciciosPreguntas)
+                              .AsNoTracking()
+                              .Where(r => r.EjercicioPreguntaID == id)
+                              .ToListAsync();
+
+  return Results.Ok(respuestas);
+});
+
+// Obtener respuestas de ejercicio por ejercicio
+ejerciciosRespuestasGroup.MapGet("/byEjercicio/{id}", async (StaticalyContext context, int id) =>
+{
+  var respuestas = await context.EjerciciosRespuestas
+                              .Include(r => r.User)
+                              .Include(r => r.EjerciciosPreguntas)
+                              .AsNoTracking()
+                              .Where(r => r.EjercicioID == id)
+                              .ToListAsync();
+
+  return Results.Ok(respuestas);
+});
+
+// Obtener respuestas de ejercicio por usuario y pregunta
+ejerciciosRespuestasGroup.MapGet("/byUsuarioPregunta/{usuarioID}/{preguntaID}", async (StaticalyContext context, int usuarioID, int preguntaID) =>
+{
+  var respuestas = await context.EjerciciosRespuestas
+                              .Include(r => r.User)
+                              .Include(r => r.EjerciciosPreguntas)
+                              .AsNoTracking()
+                              .Where(r => r.UsuarioID == usuarioID && r.EjercicioPreguntaID == preguntaID)
+                              .ToListAsync();
+
+  return Results.Ok(respuestas);
+});
+
+// Obtener respuestas de ejercicio por usuario y por Ejercicio y Usuario
+ejerciciosRespuestasGroup.MapGet("/byUsuarioEjercicio/{usuarioID}/{ejercicioID}", async (StaticalyContext context, int usuarioID, int ejercicioID) =>
+{
+  var respuestas = await context.EjerciciosRespuestas
+                              .Include(r => r.User)
+                              .Include(r => r.EjerciciosPreguntas)
+                              .AsNoTracking()
+                              .Where(r => r.UsuarioID == usuarioID && r.EjercicioID == ejercicioID)
+                              .ToListAsync();
+
+  return Results.Ok(respuestas);
+});
+
 // Eliminar respuesta de ejercicio
 ejerciciosRespuestasGroup.MapDelete("/{id}", async (StaticalyContext context, int id) =>
 {

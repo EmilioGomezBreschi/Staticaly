@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using OfficeOpenXml;
 using Staticaly.Client;
 using Staticaly.Client.Data;
 using Staticaly.Client.Models;
@@ -7,6 +8,7 @@ using Staticaly.Client.Models;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5233") });

@@ -29,5 +29,29 @@ namespace Staticaly.Client.Data
         return await _httpClient.GetFromJsonAsync<List<EjerciciosRespuestas>>($"ejerciciosRespuestas/byUsuario/{usuarioID}") ?? new List<EjerciciosRespuestas>();
       }
 
+      //Obtener Ejercicios Respuestas por pregunta
+      public async Task<List<EjerciciosRespuestas>> ObtenerEjerciciosRespuestasPorPreguntaAsync(int preguntaID)
+      {
+        return await _httpClient.GetFromJsonAsync<List<EjerciciosRespuestas>>($"ejerciciosRespuestas/byPregunta/{preguntaID}") ?? new List<EjerciciosRespuestas>();
+      }
+
+      //Obtener Ejercicios Respuestas por Ejercicio
+      public async Task<List<EjerciciosRespuestas>> ObtenerEjerciciosRespuestasPorEjercicioAsync(int ejercicioID)
+      {
+        return await _httpClient.GetFromJsonAsync<List<EjerciciosRespuestas>>($"ejerciciosRespuestas/byEjercicio/{ejercicioID}") ?? new List<EjerciciosRespuestas>();
+      }
+
+      //Obtener Ejercicios Respuestas por Usuario y Ejercicio
+      public async Task<List<EjerciciosRespuestas>> ObtenerEjerciciosRespuestasPorUsuarioYEjercicioAsync(int usuarioID, int ejercicioID)
+      {
+        return await _httpClient.GetFromJsonAsync<List<EjerciciosRespuestas>>($"ejerciciosRespuestas/byUsuarioEjercicio/{usuarioID}/{ejercicioID}") ?? new List<EjerciciosRespuestas>();
+      }
+
+      //Obtener Ejercicios Respuestas por Usuario y Pregunta
+      public async Task<List<EjerciciosRespuestas>> ObtenerEjerciciosRespuestasPorUsuarioYPreguntaAsync(int usuarioID, int preguntaID)
+      {
+        return await _httpClient.GetFromJsonAsync<List<EjerciciosRespuestas>>($"ejerciciosRespuestas/byUsuarioPregunta/{usuarioID}/{preguntaID}") ?? new List<EjerciciosRespuestas>();
+      }
+
     }
 }
