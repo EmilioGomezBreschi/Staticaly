@@ -431,23 +431,24 @@
     mostrandoFormulario = true;
   }
 
-  private void EditarDato(DatosSubProyecto dato)
+    private void CancelarEdicion()
   {
-    nuevoDato = dato;
-    mostrandoFormulario = true;
+    mostrandoFormulario = false;
   }
 
   private async Task GuardarDato()
   {
     if (nuevoDato.DatosSubProyectoID == 0)
     {
+      // Agregar nuevo dato
       await datosSubProyectosClient.CreateDatosSubProyectoAsync(nuevoDato);
     }
     else
     {
+      // Editar dato existente
       await datosSubProyectosClient.EditDatosSubProyectoAsync(nuevoDato);
     }
-    await ActualizarDatosSubProyecto(); // Actualiza los datos después de guardar
+    DatosSubProyectoModel = (await datosSubProyectosClient.GetDatosSubProyectosAsync(int.Parse(SubProyecto))).ToList();
     mostrandoFormulario = false;
   }
 
@@ -457,9 +458,16 @@
     await ActualizarDatosSubProyecto(); // Actualiza los datos después de eliminar
   }
 
-  private void CancelarEdicion()
+  private void EditarDato(DatosSubProyecto dato)
   {
-    mostrandoFormulario = false;
+    nuevoDato = new DatosSubProyecto
+      {
+        DatosSubProyectoID = dato.DatosSubProyectoID,
+        Nombre = dato.Nombre,
+        Cantidad = dato.Cantidad,
+        SubproyectoID = dato.SubproyectoID
+      };
+    mostrandoFormulario = true;
   }
 
   private void CalcularEstadistica(string estadistica)

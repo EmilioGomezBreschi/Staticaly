@@ -83,13 +83,6 @@
         }
       </tbody>
     </table>
-
-    @foreach (var nombre in Nombres)
-    {
-      <p>@nombre</p>
-
-      <br />
-    }
   </div>
 </div>
 
@@ -106,6 +99,8 @@
   private string errorMessage = "";
   DataTable dt = new DataTable();
   public static List<string> Nombres = new List<string>();
+  public static List<string> Valores = new List<string>(); // Nueva lista para valores
+
   private void SetErrorMessage(string message)
   {
     errorMessage = message;
@@ -137,7 +132,7 @@
     }
     if (Proyectoid == null)
     {
-      SetErrorMessage("Error al obtener el equipo");
+      SetErrorMessage("Error al obtener el proyecto");
       isLoading = false;
       return;
     }
@@ -160,27 +155,38 @@
       // Obtener el SubproyectoID
       SubproyectoID = result.SubproyectoID;
 
-      // Llamar al método para importar el archivo de Excel
-      await ImportExcelFile();
+      // Guardar datos en la base de datos
+      await GuardarDatosEnBaseDeDatos(Nombres, Valores);
     }
     else
     {
-      SetErrorMessage("Error al crear el proyecto");
+      SetErrorMessage("Error al crear el subproyecto");
       isLoading = false;
     }
   }
 
-  private async Task GuardarDatosEnBaseDeDatos(List<DatosSubProyecto> datosSubProyectos)
+  private async Task GuardarDatosEnBaseDeDatos(List<string> nombres, List<string> valores)
   {
-    foreach (var datosSubProyecto in datosSubProyectos)
+    if (nombres.Count != valores.Count)
     {
-      // Asignar el SubproyectoID antes de guardar los datos
-      datosSubProyecto.SubproyectoID = SubproyectoID;
+      SetErrorMessage("La cantidad de nombres y valores no coincide");
+      return;
+    }
+
+    for (int i = 0; i < nombres.Count; i++)
+    {
+      var datosSubProyecto = new DatosSubProyecto
+        {
+          Nombre = nombres[i],
+          Cantidad = int.Parse(Valores[i]), // Asegúrate de que DatosSubProyecto tenga una propiedad "Valor"
+          SubproyectoID = SubproyectoID
+        };
 
       var response = await datosSubProyectosClient.CreateDatosSubProyectoAsync(datosSubProyecto);
       if (!response.IsSuccessStatusCode)
       {
         SetErrorMessage("Error al guardar los datos en la base de datos");
+        return;
       }
     }
   }
@@ -221,28 +227,25 @@
       rl.Clear();
     }
 
-    var datosSubProyectos = new List<DatosSubProyecto>();
+    Nombres.Clear();
+    Valores.Clear();
 
     foreach (DataRow row in dt.Rows)
     {
-      var datosSubProyecto = new DatosSubProyecto();
-
       foreach (DataColumn col in dt.Columns)
       {
         var celda = row[col.ColumnName];
         var columna = col.ColumnName;
-        columna = columna.ToString();
 
         if (columna == "Nombre")
         {
-          datosSubProyecto.Nombre = celda.ToString();
+          Nombres.Add(celda.ToString());
         }
-        // Aquí puedes agregar más condiciones para mapear otras propiedades de DatosSubProyecto
+        else
+        {
+          Valores.Add(celda.ToString());
+        }
       }
-
-      datosSubProyectos.Add(datosSubProyecto);
     }
-
-    await GuardarDatosEnBaseDeDatos(datosSubProyectos);
   }
 }
