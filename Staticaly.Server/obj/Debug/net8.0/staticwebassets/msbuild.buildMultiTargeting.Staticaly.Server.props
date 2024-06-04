@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\Staticaly.Server.props" />
-</Project>
