@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "GYUhW4wkqiH5KInF5kpkrK9G55mcvGp0BGf9wsYQ8D2yjzGHzIO/3bbyqdELGErr/BG5k5BAnOrVFoGfzDKcjg==",
+  "dgSpecHash": "+7qaBjcwt9U=",
   "success": true,
-  "projectFilePath": "C:\\Users\\lime1\\OneDrive\\Documentos\\Staticaly\\Staticaly.Server\\Staticaly.Server.csproj",
+  "projectFilePath": "C:\\Users\\lime1\\Documents\\Staticaly\\Staticaly.Server\\Staticaly.Server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lime1\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\lime1\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
