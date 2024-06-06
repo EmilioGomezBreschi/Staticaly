@@ -17,7 +17,7 @@ namespace Staticaly.Server.ModelsMigrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -703,7 +703,7 @@ namespace Staticaly.Server.ModelsMigrations
                         });
                 });
 
-            modelBuilder.Entity("Staticaly.Server.Models.Subproyectos", b =>
+            modelBuilder.Entity("Staticaly.Server.Models.SubProyectos", b =>
                 {
                     b.Property<int>("SubproyectoID")
                         .ValueGeneratedOnAdd()
@@ -735,7 +735,7 @@ namespace Staticaly.Server.ModelsMigrations
 
                     b.HasIndex("UsuarioID");
 
-                    b.ToTable("Subproyectos");
+                    b.ToTable("SubProyectos");
                 });
 
             modelBuilder.Entity("Staticaly.Server.Models.TiposEquipos", b =>
@@ -932,7 +932,7 @@ namespace Staticaly.Server.ModelsMigrations
 
             modelBuilder.Entity("Staticaly.Server.Models.DatosSubProyecto", b =>
                 {
-                    b.HasOne("Staticaly.Server.Models.Subproyectos", "Subproyecto")
+                    b.HasOne("Staticaly.Server.Models.SubProyectos", "Subproyecto")
                         .WithMany()
                         .HasForeignKey("SubproyectoID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1083,7 +1083,7 @@ namespace Staticaly.Server.ModelsMigrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Staticaly.Server.Models.Subproyectos", b =>
+            modelBuilder.Entity("Staticaly.Server.Models.SubProyectos", b =>
                 {
                     b.HasOne("Staticaly.Server.Models.Proyectos", "Proyecto")
                         .WithMany()

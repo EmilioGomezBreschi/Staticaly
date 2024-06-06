@@ -84,70 +84,41 @@
         </div>
       }
     </div>
-
     <div class="w-full lg:w-1/2 p-4">
       <h3 class="text-3xl font-bold text-center my-4">Gráfico de Datos</h3>
       @if (DatosSubProyectoModel != null && DatosSubProyectoModel.Count > 0)
       {
-        @if (!string.IsNullOrEmpty(EstadisticaSeleccionada))
+        <div class="mt-4 flex justify-center">
+          @if (EstadisticaSeleccionada == "media" || EstadisticaSeleccionada == "moda" || EstadisticaSeleccionada == "rango")
+          {
+            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("bar")'>Gráfico de Barras</button>
+            <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
+          }
+          else if (EstadisticaSeleccionada == "varianza" || EstadisticaSeleccionada == "desviacion")
+          {
+            <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("histogram")'>Histograma</button>
+          }
+          else if (EstadisticaSeleccionada == "correlacion" || EstadisticaSeleccionada == "covarianza")
+          {
+            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
+          }
+          else if (EstadisticaSeleccionada == "percentil25" || EstadisticaSeleccionada == "percentil75" || EstadisticaSeleccionada == "cuartiles")
+          {
+            <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
+            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("bar")'>Gráfico de Barras</button>
+          }
+        </div>
+        @if (TipoGrafico == "scatter")
         {
-            <div class="mt-4 flex justify-center">
-                @if (EstadisticaSeleccionada == "media")
-                {
-                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("bar")'>Gráfico de Barras</button>
-                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
-                    <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
-                }
-                else if (EstadisticaSeleccionada == "mediana")
-                {
-                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
-                    <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
-                }
-                else if (EstadisticaSeleccionada == "moda")
-                {
-                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded mr-4" @onclick='() => CambiarTipoGrafico("bar")'>Gráfico de Barras</button>
-                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("pie")'>Gráfico de Sectores</button>
-                }
-                else if (EstadisticaSeleccionada == "varianza")
-                {
-                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
-                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("bar")'>Histograma</button>
-                }
-                else if (EstadisticaSeleccionada == "desviacion")
-                {
-                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
-                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("bar")'>Histograma</button>
-                }
-                else if (EstadisticaSeleccionada == "correlacion")
-                {
-                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
-                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
-                    <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("bubble")'>Gráfico de Burbujas</button>
-                }
-                else if (EstadisticaSeleccionada == "percentil25" || EstadisticaSeleccionada == "percentil75")
-                {
-                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
-                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("bar")'>Gráfico de Barras</button>
-                }
-                else if (EstadisticaSeleccionada == "rango")
-                {
-                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("bar")'>Gráfico de Barras</button>
-                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
-                    <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
-                }
-                else if (EstadisticaSeleccionada == "cuartiles")
-                {
-                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
-                    <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("bar")'>Gráfico de Barras</button>
-                }
-                else if (EstadisticaSeleccionada == "covarianza")
-                {
-                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("scatter")'>Gráfico de Dispersión</button>
-                    <button class="bg-green-500 text-white font-bold py-2 px-4 rounded mx-4" @onclick='() => CambiarTipoGrafico("bubble")'>Gráfico de Burbujas</button>
-                    <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded" @onclick='() => CambiarTipoGrafico("line")'>Gráfico de Línea</button>
-                }
-            </div>
-            <ChartComponent @key="Guid.NewGuid()" ChartId="datosChart" ChartType="@TipoGrafico" Labels="@Labels" Data="@Data" />
+          <ChartComponent @key="Guid.NewGuid()" ChartId="datosChart" ChartType="@TipoGrafico" Labels="@Labels" ScatterData="@ScatterData" />
+        }
+        else if (TipoGrafico == "histogram")
+        {
+          <ChartComponent @key="Guid.NewGuid()" ChartId="datosChart" ChartType="@TipoGrafico" Labels="@Labels" Data="@BarData" LineData="@LineData" />
+        }
+        else
+        {
+          <ChartComponent @key="Guid.NewGuid()" ChartId="datosChart" ChartType="@TipoGrafico" Labels="@Labels" Data="@BarData" />
         }
       }
       else
@@ -176,204 +147,642 @@
 
         @if (!string.IsNullOrEmpty(EstadisticaSeleccionada))
         {
-          <div class="mt-4 flex justify-center">
-            <div class="bg-white text-primary-800 p-6 rounded shadow-md w-full lg:w-2/3 grid grid-cols-1 lg:grid-cols-4 gap-4">
-              <div>
-                <h4 class="text-xl font-semibold">Fórmula</h4>
-                @if (EstadisticaSeleccionada == "media")
-                {
-                  <p>\(\bar{x} = \frac{\sum x_i}{n}\)</p>
-                }
-                else if (EstadisticaSeleccionada == "mediana")
-                {
-                  <p>Mediana: \(x_{(n+1)/2}\)</p>
-                }
-                else if (EstadisticaSeleccionada == "moda")
-                {
-                  <p>Moda: \(x_{\text{moda}}\)</p>
-                }
-                else if (EstadisticaSeleccionada == "varianza")
-                {
-                  <p>\(\sigma^2 = \frac{\sum (x_i - \bar{x})^2}{n}\)</p>
-                }
-                else if (EstadisticaSeleccionada == "desviacion")
-                {
-                  <p>\(\sigma = \sqrt{\frac{\sum (x_i - \bar{x})^2}{n}}\)</p>
-                }
-                else if (EstadisticaSeleccionada == "percentil25")
-                {
-                  <p>Percentil 25: \(P_{25} = x_{(n+1) \times 0.25}\)</p>
-                }
-                else if (EstadisticaSeleccionada == "percentil75")
-                {
-                  <p>Percentil 75: \(P_{75} = x_{(n+1) \times 0.75}\)</p>
-                }
-                else if (EstadisticaSeleccionada == "rango")
-                {
-                  <p>Rango: \(x_{\text{máximo}} - x_{\text{mínimo}}\)</p>
-                }
-                else if (EstadisticaSeleccionada == "cuartiles")
-                {
-                  <p>Q1: \(x_{(n+1) \times 0.25}\)</p>
-                  <p>Q2: \(x_{(n+1) \times 0.5}\)</p>
-                  <p>Q3: \(x_{(n+1) \times 0.75}\)</p>
-                }
-                else if (EstadisticaSeleccionada == "covarianza")
-                {
-                  <p>Covarianza: \(\frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{n}\)</p>
-                }
-                else if (EstadisticaSeleccionada == "correlacion")
-                {
-                  <p>Coeficiente de Correlación: \(\frac{\text{Covarianza}}{\sigma_x \times \sigma_y}\)</p>
-                }
-              </div>
-              <div>
-                <h4 class="text-xl font-semibold">Sustitución</h4>
-                @if (EstadisticaSeleccionada == "media")
-                {
-                  <p>@string.Join(" + ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0)) / @DatosSubProyectoModel.Count</p>
-                }
-                else if (EstadisticaSeleccionada == "mediana")
-                {
-                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</p>
-                }
-                else if (EstadisticaSeleccionada == "moda")
-                {
-                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0))</p>
-                }
-                else if (EstadisticaSeleccionada == "varianza" || EstadisticaSeleccionada == "desviacion")
-                {
-                  <p>\(\bar{x} = @MediaAritmetica\)</p>
-                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => $"({d.Cantidad ?? 0} - {MediaAritmetica})^2"))</p>
-                }
-                else if (EstadisticaSeleccionada == "percentil25")
-                {
-                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</p>
-                }
-                else if (EstadisticaSeleccionada == "percentil75")
-                {
-                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</p>
-                }
-                else if (EstadisticaSeleccionada == "rango")
-                {
-                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</p>
-                }
-                else if (EstadisticaSeleccionada == "cuartiles")
-                {
-                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</p>
-                }
-                else if (EstadisticaSeleccionada == "covarianza")
-                {
-                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => $"({d.Cantidad ?? 0} - {MediaAritmetica})({d.Cantidad ?? 0} - {MediaAritmetica})"))</p>
-                }
-                else if (EstadisticaSeleccionada == "correlacion")
-                {
-                  <p>@string.Join(", ", DatosSubProyectoModel.Select(d => $"({d.Cantidad ?? 0} - {MediaAritmetica})({d.Cantidad ?? 0} - {MediaAritmetica})"))</p>
-                }
-              </div>
-              <div>
-                <h4 class="text-xl font-semibold">Procedimiento</h4>
-                @if (EstadisticaSeleccionada == "media")
-                {
-                  <p>Suma: @Suma</p>
-                  <p>División: @Suma / @DatosSubProyectoModel.Count</p>
-                }
-                else if (EstadisticaSeleccionada == "mediana")
-                {
-                  <p>Ordenar: @string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</p>
-                  <p>Mediana: @Mediana</p>
-                }
-                else if (EstadisticaSeleccionada == "moda")
-                {
-                  <p>Moda: @Moda</p>
-                }
-                else if (EstadisticaSeleccionada == "varianza")
-                {
-                  <p>Varianza: @Varianza</p>
-                }
-                else if (EstadisticaSeleccionada == "desviacion")
-                {
-                  <p>Varianza: @Varianza</p>
-                  <p>Raíz cuadrada de la varianza: @DesviacionEstandar</p>
-                }
-                else if (EstadisticaSeleccionada == "percentil25")
-                {
-                  <p>Percentil 25: @Percentil25</p>
-                }
-                else if (EstadisticaSeleccionada == "percentil75")
-                {
-                  <p>Percentil 75: @Percentil75</p>
-                }
-                else if (EstadisticaSeleccionada == "rango")
-                {
-                  <p>Rango: @DatosSubProyectoModel.Max(d => d.Cantidad ?? 0) - @DatosSubProyectoModel.Min(d => d.Cantidad ?? 0)</p>
-                }
-                else if (EstadisticaSeleccionada == "cuartiles")
-                {
-                  <p>Q1: @Percentil(25)</p>
-                  <p>Q2: @Percentil(50)</p>
-                  <p>Q3: @Percentil(75)</p>
-                }
-                else if (EstadisticaSeleccionada == "covarianza")
-                {
-                  <p>Covarianza: @DatosSubProyectoModel.Sum(d => (d.Cantidad ?? 0 - MediaAritmetica) * (d.Cantidad ?? 0 - MediaAritmetica)) / @DatosSubProyectoModel.Count</p>
-                }
-                else if (EstadisticaSeleccionada == "correlacion")
-                {
-                  <p>Coeficiente de Correlación: @CoeficienteCorrelacion</p>
-                }
-              </div>
-              <div>
-                <h4 class="text-xl font-semibold">Resultado</h4>
-                @if (EstadisticaSeleccionada == "media")
-                {
-                  <p>Media Aritmética: @MediaAritmetica</p>
-                }
-                else if (EstadisticaSeleccionada == "mediana")
-                {
-                  <p>Mediana: @Mediana</p>
-                }
-                else if (EstadisticaSeleccionada == "moda")
-                {
-                  <p>Moda: @Moda</p>
-                }
-                else if (EstadisticaSeleccionada == "varianza")
-                {
-                  <p>Varianza: @Varianza</p>
-                }
-                else if (EstadisticaSeleccionada == "desviacion")
-                {
-                  <p>Desviación Estándar: @DesviacionEstandar</p>
-                }
-                else if (EstadisticaSeleccionada == "percentil25")
-                {
-                  <p>Percentil 25: @Percentil25</p>
-                }
-                else if (EstadisticaSeleccionada == "percentil75")
-                {
-                  <p>Percentil 75: @Percentil75</p>
-                }
-                else if (EstadisticaSeleccionada == "rango")
-                {
-                  <p>Rango: @DatosSubProyectoModel.Max(d => d.Cantidad ?? 0) - @DatosSubProyectoModel.Min(d => d.Cantidad ?? 0)</p>
-                }
-                else if (EstadisticaSeleccionada == "cuartiles")
-                {
-                  <p>Q1: @Percentil(25)</p>
-                  <p>Q2: @Percentil(50)</p>
-                  <p>Q3: @Percentil(75)</p>
-                }
-                else if (EstadisticaSeleccionada == "covarianza")
-                {
-                  <p>Covarianza: @DatosSubProyectoModel.Sum(d => (d.Cantidad ?? 0 - MediaAritmetica) * (d.Cantidad ?? 0 - MediaAritmetica)) / @DatosSubProyectoModel.Count</p>
-                }
-                else if (EstadisticaSeleccionada == "correlacion")
-                {
-                  <p>Coeficiente de Correlación: @CoeficienteCorrelacion</p>
-                }
-              </div>
+        <div class="mt-4 flex justify-center">
+            <div class="bg-white text-primary-800 p-6 rounded shadow-md w-full lg:w-2/3">
+                <div class="flex justify-around mb-4 border-b">
+                    <button class="px-4 py-2 focus:outline-none @(pestanaSeleccionada == "formula" ? "border-b-2 border-blue-500 text-blue-500" : "")"
+                            @onclick='() => SeleccionarPestana("formula")'>Fórmula</button>
+                    <button class="px-4 py-2 focus:outline-none @(pestanaSeleccionada == "sustitucion" ? "border-b-2 border-blue-500 text-blue-500" : "")"
+                            @onclick='() => SeleccionarPestana("sustitucion")'>Sustitución</button>
+                    <button class="px-4 py-2 focus:outline-none @(pestanaSeleccionada == "procedimiento" ? "border-b-2 border-blue-500 text-blue-500" : "")"
+                            @onclick='() => SeleccionarPestana("procedimiento")'>Procedimiento</button>
+                    <button class="px-4 py-2 focus:outline-none @(pestanaSeleccionada == "resultado" ? "border-b-2 border-blue-500 text-blue-500" : "")"
+                            @onclick='() => SeleccionarPestana("resultado")'>Resultado</button>
+                </div>
+                <div class="tab-content">
+                    @if (pestanaSeleccionada == "formula")
+                    {
+                    <div>
+                        <h4 class="text-xl font-semibold">Fórmula</h4>
+                        @if (EstadisticaSeleccionada == "media")
+                        {
+                            <p>
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <mrow>
+                                        <mi>x&#773;</mi>
+                                        <mo>=</mo>
+                                        <mfrac>
+                                            <mrow>
+                                                <mo>&#8721;</mo>
+                                                <msub>
+                                                    <mi>x</mi>
+                                                    <mi>i</mi>
+                                                </msub>
+                                            </mrow>
+                                            <mi>n</mi>
+                                        </mfrac>
+                                    </mrow>
+                                </math>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "mediana")
+                        {
+                            <p>
+                                Mediana:
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <msub>
+                                      <mfrac>
+                                        <mi>x</mi>
+                                          <mrow>
+                                            <mfrac>
+                                                <mrow>
+                                                  <mi>n</mi>
+                                                  <mo>+</mo>
+                                                  <mn>1</mn>
+                                                </mrow>
+                                            </mfrac>
+                                          </mrow>
+                                        <mn>2</mn>
+                                      </mfrac>
+                                    </msub>
+                                </math>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "moda")
+                        {
+                            <p>
+                                Moda:
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <msub>
+                                        <mi>x</mi>
+                                        <mi>moda</mi>
+                                    </msub>
+                                </math>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "varianza")
+                        {
+                            <p>
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <mrow>
+                                        <msup>
+                                            <mi>&#963;</mi>
+                                            <mn>2</mn>
+                                        </msup>
+                                        <mo>=</mo>
+                                        <mfrac>
+                                            <mrow>
+                                                <mo>&#8721;</mo>
+                                                <msup>
+                                                    <mrow>
+                                                        <msub>
+                                                            <mi>x</mi>
+                                                            <mi>i</mi>
+                                                        </msub>
+                                                        <mo>-</mo>
+                                                        <mi>x&#773;</mi>
+                                                    </mrow>
+                                                    <mn>2</mn>
+                                                </msup>
+                                            </mrow>
+                                            <mi>n</mi>
+                                        </mfrac>
+                                    </mrow>
+                                </math>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "desviacion")
+                        {
+                            <p>
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <mrow>
+                                        <mi>&#963;</mi>
+                                        <mo>=</mo>
+                                        <msqrt>
+                                            <mfrac>
+                                                <mrow>
+                                                    <mo>&#8721;</mo>
+                                                    <msup>
+                                                        <mrow>
+                                                            <msub>
+                                                                <mi>x</mi>
+                                                                <mi>i</mi>
+                                                            </msub>
+                                                            <mo>-</mo>
+                                                            <mi>x&#773;</mi>
+                                                        </mrow>
+                                                        <mn>2</mn>
+                                                    </msup>
+                                                </mrow>
+                                                <mi>n</mi>
+                                            </mfrac>
+                                        </msqrt>
+                                    </mrow>
+                                </math>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "percentil25")
+                        {
+                            <p>
+                                Percentil 25:
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <msub>
+                                        <mi>P</mi>
+                                        <mn>25</mn>
+                                    </msub>
+                                    <mo>=</mo>
+                                    <msub>
+                                        <mi>x</mi>
+                                        <mrow>
+                                            <mrow>
+                                                <mo>(</mo>
+                                                <mi>n</mi>
+                                                <mo>+</mo>
+                                                <mn>1</mn>
+                                                <mo>)</mo>
+                                            </mrow>
+                                            <mo>&#215;</mo>
+                                            <mn>0.25</mn>
+                                        </mrow>
+                                    </msub>
+                                </math>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "percentil75")
+                        {
+                            <p>
+                                Percentil 75:
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <msub>
+                                        <mi>P</mi>
+                                        <mn>75</mn>
+                                    </msub>
+                                    <mo>=</mo>
+                                    <msub>
+                                        <mi>x</mi>
+                                        <mrow>
+                                            <mrow>
+                                                <mo>(</mo>
+                                                <mi>n</mi>
+                                                <mo>+</mo>
+                                                <mn>1</mn>
+                                                <mo>)</mo>
+                                            </mrow>
+                                            <mo>&#215;</mo>
+                                            <mn>0.75</mn>
+                                        </mrow>
+                                    </msub>
+                                </math>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "rango")
+                        {
+                            <p>
+                                Rango:
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <mrow>
+                                        <mi>x</mi>
+                                        <msub>
+                                            <mo>máximo</mo>
+                                        </msub>
+                                        <mo>-</mo>
+                                        <mi>x</mi>
+                                        <msub>
+                                            <mo>mínimo</mo>
+                                        </msub>
+                                    </mrow>
+                                </math>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "cuartiles")
+                        {
+                            <p>
+                                Q1:
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <msub>
+                                        <mi>x</mi>
+                                        <mrow>
+                                            <mrow>
+                                                <mo>(</mo>
+                                                <mi>n</mi>
+                                                <mo>+</mo>
+                                                <mn>1</mn>
+                                                <mo>)</mo>
+                                            </mrow>
+                                            <mo>&#215;</mo>
+                                            <mn>0.25</mn>
+                                        </mrow>
+                                    </msub>
+                                </math>
+                            </p>
+                            <p>
+                                Q2:
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <msub>
+                                        <mi>x</mi>
+                                        <mrow>
+                                            <mrow>
+                                                <mo>(</mo>
+                                                <mi>n</mi>
+                                                <mo>+</mo>
+                                                <mn>1</mn>
+                                                <mo>)</mo>
+                                            </mrow>
+                                            <mo>&#215;</mo>
+                                            <mn>0.50</mn>
+                                        </mrow>
+                                    </msub>
+                                </math>
+                            </p>
+                            <p>
+                                Q3:
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <msub>
+                                        <mi>x</mi>
+                                        <mrow>
+                                            <mrow>
+                                                <mo>(</mo>
+                                                <mi>n</mi>
+                                                <mo>+</mo>
+                                                <mn>1</mn>
+                                                <mo>)</mo>
+                                            </mrow>
+                                            <mo>&#215;</mo>
+                                            <mn>0.75</mn>
+                                        </mrow>
+                                    </msub>
+                                </math>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "covarianza")
+                        {
+                            <p>
+                                Covarianza:
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <mrow>
+                                        <mfrac>
+                                            <mrow>
+                                                <mo>&#8721;</mo>
+                                                <mo>(</mo>
+                                                <msub>
+                                                    <mi>x</mi>
+                                                    <mi>i</mi>
+                                                </msub>
+                                                <mo>-</mo>
+                                                <mi>x&#773;</mi>
+                                                <mo>)(</mo>
+                                                <msub>
+                                                    <mi>y</mi>
+                                                    <mi>i</mi>
+                                                </msub>
+                                                <mo>-</mo>
+                                                <mi>y&#773;</mi>
+                                                <mo>)</mo>
+                                            </mrow>
+                                            <mi>n</mi>
+                                        </mfrac>
+                                    </mrow>
+                                </math>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "correlacion")
+                        {
+                            <p>
+                                Coeficiente de Correlación:
+                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                    <mfrac>
+                                        <mi>Covarianza</mi>
+                                        <mrow>
+                                            <msub>
+                                                <mi>&#963;</mi>
+                                                <mi>x</mi>
+                                            </msub>
+                                            <mo>&#215;</mo>
+                                            <msub>
+                                                <mi>&#963;</mi>
+                                                <mi>y</mi>
+                                            </msub>
+                                        </mrow>
+                                    </mfrac>
+                                </math>
+                            </p>
+                        }
+                    </div>
+                    }
+                    else if (pestanaSeleccionada == "sustitucion")
+                    {
+                    <div>
+                        <h4 class="text-xl font-semibold">Sustitución</h4>
+                                  @if (EstadisticaSeleccionada == "media")
+                                  {
+                              <p>
+                                  <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                      <mrow>
+                                          <mfrac>
+                                              <mrow>
+                                              @foreach (var cantidad in DatosSubProyectoModel.Select(d => d.Cantidad ?? 0))
+                                              {
+                                                        <msub>
+                                                            <mi>x</mi>
+                                                            <mi>i</mi>
+                                                        </msub>
+                                                        <mo>+</mo>
+                                              }
+                                                  <mo>...</mo>
+                                              </mrow>
+                                              <mi>@DatosSubProyectoModel.Count</mi>
+                                          </mfrac>
+                                      </mrow>
+                                  </math>
+                              </p>
+                                  }
+                                  else if (EstadisticaSeleccionada == "mediana")
+                                  {
+                              <p>
+                                  <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                      <mrow>
+                                          <mo>{</mo>
+                                          @foreach (var cantidad in DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))
+                                          {
+                                                <msub>
+                                                    <mi>x</mi>
+                                                    <mi>i</mi>
+                                                </msub>
+                                                <mo>,</mo>
+                                          }
+                                          <mo>...</mo>
+                                          <mo>}</mo>
+                                      </mrow>
+                                  </math>
+                              </p>
+                                  }
+                                  else if (EstadisticaSeleccionada == "moda")
+                                  {
+                              <p>
+                                      @foreach (var cantidad in DatosSubProyectoModel.Select(d => d.Cantidad ?? 0))
+                                      {
+                                        <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                            <msub>
+                                                <mi>x</mi>
+                                                <mi>i</mi>
+                                            </msub>
+                                            <mo>,</mo>
+                                        </math>
+                                      }
+                                  <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                      <mo>...</mo>
+                                  </math>
+                              </p>
+                                  }
+                                  else if (EstadisticaSeleccionada == "varianza" || EstadisticaSeleccionada == "desviacion")
+                                  {
+                              <p>
+                                  \(\bar{x} = @MediaAritmetica\)
+                              </p>
+                              <p>
+                                  <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                        @foreach (var cantidad in DatosSubProyectoModel.Select(d => d.Cantidad ?? 0))
+                                        {
+                                            <mrow>
+                                                <mo>(</mo>
+                                                <msub>
+                                                    <mi>x</mi>
+                                                    <mi>i</mi>
+                                                </msub>
+                                                <mo>-</mo>
+                                                <mi>@MediaAritmetica</mi>
+                                                <mo>)^2,</mo>
+                                            </mrow>
+                                        }
+                                      <mo>...</mo>
+                                  </math>
+                              </p>
+                                  }
+                                  else if (EstadisticaSeleccionada == "percentil25" || EstadisticaSeleccionada == "percentil75" || EstadisticaSeleccionada == "cuartiles" || EstadisticaSeleccionada == "rango")
+                                  {
+                              <p>
+                                  <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                      <mrow>
+                                          <mo>{</mo>
+                                          @foreach (var cantidad in DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))
+                                          {
+                                                <msub>
+                                                    <mi>x</mi>
+                                                    <mi>i</mi>
+                                                </msub>
+                                                <mo>,</mo>
+                                          }
+                                          <mo>...</mo>
+                                          <mo>}</mo>
+                                      </mrow>
+                                  </math>
+                              </p>
+                                  }
+                                  else if (EstadisticaSeleccionada == "covarianza")
+                                  {
+                              <p>
+                                  <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                        @foreach (var cantidad in DatosSubProyectoModel.Select(d => d.Cantidad ?? 0))
+                                        {
+                                            <mrow>
+                                                <mo>(</mo>
+                                                <msub>
+                                                    <mi>x</mi>
+                                                    <mi>i</mi>
+                                                </msub>
+                                                <mo>-</mo>
+                                                <mi>@MediaAritmetica</mi>
+                                                <mo>)(</mo>
+                                                <msub>
+                                                    <mi>y</mi>
+                                                    <mi>i</mi>
+                                                </msub>
+                                                <mo>-</mo>
+                                                <mi>@MediaAritmetica</mi>
+                                                <mo>),</mo>
+                                            </mrow>
+                                        }
+                                      <mo>...</mo>
+                                  </math>
+                              </p>
+                                  }
+                                  else if (EstadisticaSeleccionada == "correlacion")
+                                  {
+                              <p>
+                                  <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                        @foreach (var cantidad in DatosSubProyectoModel.Select(d => d.Cantidad ?? 0))
+                                        {
+                                            <mrow>
+                                                <mo>(</mo>
+                                                <msub>
+                                                    <mi>x</mi>
+                                                    <mi>i</mi>
+                                                </msub>
+                                                <mo>-</mo>
+                                                <mi>@MediaAritmetica</mi>
+                                                <mo>)(</mo>
+                                                <msub>
+                                                    <mi>y</mi>
+                                                    <mi>i</mi>
+                                                </msub>
+                                                <mo>-</mo>
+                                                <mi>@MediaAritmetica</mi>
+                                                <mo>),</mo>
+                                            </mrow>
+                                        }
+                                      <mo>...</mo>
+                                  </math>
+                              </p>
+                                  }
+                    </div>
+                    }
+                    else if (pestanaSeleccionada == "procedimiento")
+                    {
+                    <div>
+                        <h4 class="text-xl font-semibold">Procedimiento</h4>
+                        @if (EstadisticaSeleccionada == "media")
+                        {
+                            <p class="flex flex-col">
+                                <span>Paso 1: Sumar los datos: @string.Join(" + ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0)) = @Suma</span> &#x2192;
+                                <span>Paso 2: Dividir la suma entre el número de datos: @Suma / @DatosSubProyectoModel.Count = @MediaAritmetica</span>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "mediana")
+                        {
+                            <p class="flex flex-col">
+                                <span>Paso 1: Ordenar los datos: @string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</span> &#x2192;
+                                <span>Paso 2: Encontrar el valor en el medio: @Mediana</span>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "moda")
+                        {
+                            <p class="flex flex-col">
+                                <span>Paso 1: Contar la frecuencia de cada valor: @string.Join(", ", DatosSubProyectoModel.GroupBy(d => d.Cantidad).Select(g => $"({g.Key}, {g.Count()})"))</span> &#x2192;
+                                <span>Paso 2: Encontrar el valor con la frecuencia más alta: @Moda</span>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "varianza")
+                        {
+                            <p class="flex flex-col">
+                                <span>Paso 1: Calcular la media: @MediaAritmetica</span> &#x2192;
+                                <span>Paso 2: Calcular las diferencias al cuadrado: @string.Join(", ", DatosSubProyectoModel.Select(d => $"({d.Cantidad ?? 0} - {MediaAritmetica})^2"))</span> &#x2192;
+                                <span>Paso 3: Sumar las diferencias al cuadrado: @DatosSubProyectoModel.Sum(d => Math.Pow((d.Cantidad ?? 0) - (MediaAritmetica ?? 0), 2))</span> &#x2192;
+                                <span>Paso 4: Dividir la suma entre el número de datos: @Varianza</span>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "desviacion")
+                        {
+                            <p class="flex flex-col">
+                                <span>Paso 1: Calcular la varianza: @Varianza</span> &#x2192;
+                                <span>Paso 2: Calcular la raíz cuadrada de la varianza: @DesviacionEstandar</span>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "percentil25")
+                        {
+                            <p class="flex flex-col">
+                                <span>Paso 1: Ordenar los datos: @string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</span> &#x2192;
+                                <span>Paso 2: Calcular la posición del percentil 25: @Percentil25</span>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "percentil75")
+                        {
+                            <p class="flex flex-col">
+                                <span>Paso 1: Ordenar los datos: @string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</span> &#x2192;
+                                <span>Paso 2: Calcular la posición del percentil 75: @Percentil75</span>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "rango")
+                        {
+                            <p class="flex flex-col">
+                                <span>Paso 1: Encontrar el valor máximo: @DatosSubProyectoModel.Max(d => d.Cantidad ?? 0)</span> &#x2192;
+                                <span>Paso 2: Encontrar el valor mínimo: @DatosSubProyectoModel.Min(d => d.Cantidad ?? 0)</span> &#x2192;
+                                <span>Paso 3: Calcular la diferencia entre el máximo y el mínimo: @DatosSubProyectoModel.Max(d => d.Cantidad ?? 0) - @DatosSubProyectoModel.Min(d => d.Cantidad ?? 0) = @Rango</span>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "cuartiles")
+                        {
+                            <p class="flex flex-col">
+                                <span>Paso 1: Ordenar los datos: @string.Join(", ", DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d))</span> &#x2192;
+                                <span>Paso 2: Calcular Q1: @Percentil(25)</span> &#x2192;
+                                <span>Paso 3: Calcular Q2 (mediana): @Percentil(50)</span> &#x2192;
+                                <span>Paso 4: Calcular Q3: @Percentil(75)</span>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "covarianza")
+                        {
+                            <p class="flex flex-col">
+                                <span>Paso 1: Calcular la media: @MediaAritmetica</span> &#x2192;
+                                <span>Paso 2: Calcular las diferencias: @string.Join(", ", DatosSubProyectoModel.Select(d => $"({d.Cantidad ?? 0} - {MediaAritmetica})({d.Cantidad ?? 0} - {MediaAritmetica})"))</span> &#x2192;
+                                <span>Paso 3: Sumar las diferencias: @DatosSubProyectoModel.Sum(d => (d.Cantidad ?? 0 - MediaAritmetica) * (d.Cantidad ?? 0 - MediaAritmetica))</span> &#x2192;
+                                <span>Paso 4: Dividir la suma entre el número de datos: @Covarianza</span>
+                            </p>
+                        }
+                        else if (EstadisticaSeleccionada == "correlacion")
+                        {
+                            <p class="flex flex-col">
+                                <span>Paso 1: Calcular la covarianza: @Covarianza</span> &#x2192;
+                                <span>Paso 2: Calcular la desviación estándar de X: @DesviacionEstandar</span> &#x2192;
+                                <span>Paso 3: Calcular la desviación estándar de Y: @DesviacionEstandar</span> &#x2192;
+                                <span>Paso 4: Dividir la covarianza por el producto de las desviaciones estándar: @CoeficienteCorrelacion</span>
+                            </p>
+                        }
+                    </div>
+                    }
+                    else if (pestanaSeleccionada == "resultado")
+                    {
+                        <div>
+                            <h4 class="text-xl font-semibold mb-4">Resultado</h4>
+                            @if (EstadisticaSeleccionada == "media")
+                            {
+                                <p>Media Aritmética: @MediaAritmetica</p>
+                            }
+                            else if (EstadisticaSeleccionada == "mediana")
+                            {
+                                <p>Mediana: @Mediana</p>
+                            }
+                            else if (EstadisticaSeleccionada == "moda")
+                            {
+                                <p>Moda: @Moda</p>
+                            }
+                            else if (EstadisticaSeleccionada == "varianza")
+                            {
+                                <p>Varianza: @Varianza</p>
+                            }
+                            else if (EstadisticaSeleccionada == "desviacion")
+                            {
+                                <p>Desviación Estándar: @DesviacionEstandar</p>
+                            }
+                            else if (EstadisticaSeleccionada == "percentil25")
+                            {
+                                <p>Percentil 25: @Percentil25</p>
+                            }
+                            else if (EstadisticaSeleccionada == "percentil75")
+                            {
+                                <p>Percentil 75: @Percentil75</p>
+                            }
+                            else if (EstadisticaSeleccionada == "rango")
+                            {
+                                <p>Rango: @Rango</p>
+                            }
+                            else if (EstadisticaSeleccionada == "cuartiles")
+                            {
+                                <p>Q1: @Percentil(25)</p>
+                                <p>Q2: @Percentil(50)</p>
+                                <p>Q3: @Percentil(75)</p>
+                            }
+                            else if (EstadisticaSeleccionada == "covarianza")
+                            {
+                                <p>Covarianza: @Covarianza</p>
+                            }
+                            else if (EstadisticaSeleccionada == "correlacion")
+                            {
+                                <p>Coeficiente de Correlación: @CoeficienteCorrelacion</p>
+                            }
+                        </div>
+                    }
+                </div>
             </div>
-          </div>
+        </div>
         }
       </div>
     }
@@ -391,12 +800,14 @@
   private bool mostrandoFormulario = false;
   private string? EstadisticaSeleccionada { get; set; }
   private string EstadisticaSeleccionadaNombre { get; set; } = "";
+  private string pestanaSeleccionada = "formula";
 
   // Propiedades para el gráfico
   private List<string?> Labels => DatosSubProyectoModel.Select(d => d.Nombre).ToList();
-  private List<int> Data => DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).ToList();
+  private List<int> BarData => DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).ToList();
+  private List<int> LineData => DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).ToList();
+  private List<ScatterData> ScatterData => DatosSubProyectoModel.Select(d => new ScatterData { x = d.Cantidad ?? 0, y = d.Cantidad ?? 0 }).Cast<ScatterData>().ToList();
   private string TipoGrafico { get; set; } = "bar"; // Tipo de gráfico predeterminado
-
   private void CambiarTipoGrafico(string tipo)
   {
     TipoGrafico = tipo;
@@ -431,7 +842,11 @@
     mostrandoFormulario = true;
   }
 
-    private void CancelarEdicion()
+  private void SeleccionarPestana(string pestana)
+  {
+      pestanaSeleccionada = pestana;
+  }
+  private void CancelarEdicion()
   {
     mostrandoFormulario = false;
   }
@@ -512,11 +927,17 @@
     }
   }
 
-  private int? Moda => DatosSubProyectoModel.Count > 0
-    ? DatosSubProyectoModel.GroupBy(d => d.Cantidad)
-      .OrderByDescending(g => g.Count())
-      .First().Key
-    : null;
+  private int? Moda
+  {
+      get
+      {
+          if (DatosSubProyectoModel.Count == 0) return null;
+          var grupos = DatosSubProyectoModel.GroupBy(d => d.Cantidad)
+                        .OrderByDescending(g => g.Count())
+                        .FirstOrDefault();
+          return grupos?.Key;
+      }
+  }
 
   private double? Varianza
   {
@@ -534,18 +955,16 @@
   {
     if (DatosSubProyectoModel.Count == 0) return null;
     var sortedData = DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d).ToList();
-    double position = (sortedData.Count + 1) * percentil / 100.0;
-    int index = (int)position;
-    double fraction = position - index;
-    if (index >= sortedData.Count)
+    int N = sortedData.Count;
+    double n = (N - 1) * percentil / 100.0 + 1;
+    if (n == 1d) return sortedData[0];
+    else if (n == N) return sortedData[N - 1];
+    else
     {
-      return sortedData.Last();
+      int k = (int)n;
+      double d = n - k;
+      return sortedData[k - 1] + d * (sortedData[k] - sortedData[k - 1]);
     }
-    if (index == 0)
-    {
-      return sortedData.First();
-    }
-    return sortedData[index - 1] + fraction * (sortedData[index] - sortedData[index - 1]);
   }
 
   private double? Percentil25 => Percentil(25);
@@ -554,51 +973,50 @@
   // Cálculo del Coeficiente de Correlación
   private double? CoeficienteCorrelacion
   {
-      get
-      {
-          if (DatosSubProyectoModel.Count == 0) return null;
-          double mediaX = MediaAritmetica ?? 0;
-          double mediaY = MediaAritmetica ?? 0; // Modificar según corresponda
-          double covarianza = DatosSubProyectoModel.Sum(d => ((d.Cantidad ?? 0) - mediaX) * ((d.Cantidad ?? 0) - mediaY)) / DatosSubProyectoModel.Count;
-          double desviacionX = DesviacionEstandar ?? 0;
-          double desviacionY = DesviacionEstandar ?? 0; // Modificar según corresponda
-          return covarianza / (desviacionX * desviacionY);
-      }
+    get
+    {
+      if (DatosSubProyectoModel == null || DatosSubProyectoModel.Count == 0) return null;
+      double mediaX = MediaAritmetica ?? 0;
+      double mediaY = MediaAritmetica ?? 0; // Modificar según corresponda
+      double covarianza = DatosSubProyectoModel.Sum(d => ((d.Cantidad ?? 0) - mediaX) * ((d.Cantidad ?? 0) - mediaY)) / DatosSubProyectoModel.Count;
+      double desviacionX = DesviacionEstandar ?? 0;
+      double desviacionY = DesviacionEstandar ?? 0; // Modificar según corresponda
+      return covarianza / (desviacionX * desviacionY);
+    }
   }
 
   // Cálculo del Rango
   private int? Rango
   {
-      get
-      {
-          if (DatosSubProyectoModel.Count == 0) return null;
-          var sortedData = DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d).ToList();
-          return sortedData.Last() - sortedData.First();
-      }
+    get
+    {
+      if (DatosSubProyectoModel.Count == 0) return null;
+      var sortedData = DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d).ToList();
+      return sortedData.Last() - sortedData.First();
+    }
   }
 
   // Cálculo de Cuartiles
   private (double? Q1, double? Q3)? Cuartiles
   {
-      get
-      {
-          if (DatosSubProyectoModel.Count == 0) return null;
-          var sortedData = DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d).ToList();
-          return (Percentil(25), Percentil(75));
-      }
+    get
+    {
+      if (DatosSubProyectoModel.Count == 0) return null;
+      var sortedData = DatosSubProyectoModel.Select(d => d.Cantidad ?? 0).OrderBy(d => d).ToList();
+      return (Percentil(25), Percentil(75));
+    }
   }
 
   // Cálculo de Covarianza
   private double? Covarianza
   {
-      get
-      {
-          if (DatosSubProyectoModel.Count == 0) return null;
-          double mediaX = MediaAritmetica ?? 0;
-          double mediaY = MediaAritmetica ?? 0; // Modificar según corresponda
-          return DatosSubProyectoModel.Sum(d => ((d.Cantidad ?? 0) - mediaX) * ((d.Cantidad ?? 0) - mediaY)) / DatosSubProyectoModel.Count;
-      }
+    get
+    {
+      if (DatosSubProyectoModel.Count == 0) return null;
+      double mediaX = MediaAritmetica ?? 0;
+      double mediaY = MediaAritmetica ?? 0; // Modificar según corresponda
+      return DatosSubProyectoModel.Sum(d => ((d.Cantidad ?? 0) - mediaX) * ((d.Cantidad ?? 0) - mediaY)) / DatosSubProyectoModel.Count;
+    }
   }
-
 
 }

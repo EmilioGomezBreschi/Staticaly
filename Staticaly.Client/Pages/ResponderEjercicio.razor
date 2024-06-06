@@ -38,7 +38,7 @@
     else
     {
       <div class="mt-4 flex flex-col bg-primary-500 rounded-lg w-full lg:w-96 p-3 items-center">
-        <h2 class="text-lg font-bold mt-4">Puntaje Actual: @timer?.Interval</h2>
+        <h2 class="text-lg font-bold mt-4">Puntaje Actual: @tiempoRestante</h2>
       </div>
     }
     @if (Preguntas != null && Preguntas.Any())
@@ -72,6 +72,7 @@
   private string RespuestaActual = "";
   private Timer? timer;
   private bool TodasLasPreguntasContestadas = false;
+  private int tiempoRestante; // Variable para almacenar el tiempo restante en segundos
 
   protected override async Task OnInitializedAsync()
   {
@@ -90,9 +91,8 @@
     // Configurar el temporizador para que disminuya el puntaje cada segundo
     if (Ejercicio.Timer != 0)
     {
-      timer = new System.Timers.Timer();
+      timer = new Timer(1000); // Intervalo en milisegundos (1 segundo)
       timer.Elapsed += TimerElapsed;
-      timer.Interval = (double)Ejercicio.Timer; // Intervalo en milisegundos
       timer.AutoReset = true;
       timer.Enabled = true;
     }
@@ -134,7 +134,8 @@
     // Establecer el puntaje inicial
     if (timer != null && PreguntaActual != null)
     {
-      timer.Interval = PreguntaActual.Puntos;
+      tiempoRestante = PreguntaActual.Puntos; // Inicializar el tiempo restante en segundos
+      timer.Start();
     }
 
     // Verificar si todas las preguntas ya han sido contestadas
@@ -146,20 +147,22 @@
 
   private void TimerElapsed(object? sender, ElapsedEventArgs e)
   {
-    if (timer == null)
+    if (timer == null || Ejercicio == null)
     {
       return;
     }
-    if (timer.Interval > Ejercicio.PuntosMin)
+
+    if (tiempoRestante > Ejercicio.PuntosMin)
     {
-      timer.Interval--; // Disminuir el puntaje cada segundo
-      StateHasChanged(); // Actualizar la interfaz de usuario
+      tiempoRestante--; // Disminuir el tiempo restante cada segundo
+      InvokeAsync(StateHasChanged); // Actualizar la interfaz de usuario
     }
     else
     {
-      timer?.Dispose(); // Detener el temporizador si el puntaje es 0
+      timer.Stop(); // Detener el temporizador si el puntaje es mínimo
     }
   }
+
   private async Task<Models.Ejercicios> ObtenerEjercicio(string ejercicioID)
   {
     return await EjerciciosClient.ObtenerEjercicioPorIDAsync(int.Parse(ejercicioID));
@@ -180,16 +183,15 @@
     // Verificar si la respuesta es correcta
     bool respuestaCorrecta = RespuestaActual == PreguntaActual.Respuesta;
 
-    // Si el ejercicio no tiene contador de tiempo, calcular los puntos manualmente
     if (Ejercicio.Timer == 0)
     {
       if (Ejercicio.permitirMasDeUnaRespuesta == false)
       {
-        // Establecer los puntos como 0 si la respuesta es incorrecta
-        int puntos = respuestaCorrecta ? PreguntaActual.Puntos : 0;
-
         // Guardar la respuesta en la base de datos
-        await GuardarRespuestaEnBaseDeDatos(RespuestaActual, respuestaCorrecta, puntos);
+        await GuardarRespuestaEnBaseDeDatos(RespuestaActual, respuestaCorrecta, respuestaCorrecta ? PreguntaActual.Puntos : 0);
+
+        // Mostrar la siguiente pregunta
+        await MostrarSiguientePregunta();
       }
       else
       {
@@ -197,7 +199,7 @@
         {
           if (PreguntaActual.Puntos > Ejercicio.PuntosMin)
           {
-            PreguntaActual.Puntos = PreguntaActual.Puntos - Ejercicio.PuntosAquitar; // Disminuir el puntaje si la respuesta es incorrecta
+            PreguntaActual.Puntos -= Ejercicio.PuntosAquitar;
           }
           else
           {
@@ -207,8 +209,6 @@
         else
         {
           await GuardarRespuestaEnBaseDeDatos(RespuestaActual, respuestaCorrecta, PreguntaActual.Puntos);
-
-          // Mostrar la siguiente pregunta
           await MostrarSiguientePregunta();
         }
       }
@@ -219,41 +219,38 @@
       {
         return;
       }
-      timer.Stop(); // Detener el temporizador
+
+      timer.Stop();
+
       if (Ejercicio.permitirMasDeUnaRespuesta == false)
       {
-        // Establecer los puntos como 0 si la respuesta es incorrecta
-        int puntos = respuestaCorrecta ? (int)timer.Interval : 0;
-
         // Guardar la respuesta en la base de datos
-        await GuardarRespuestaEnBaseDeDatos(RespuestaActual, respuestaCorrecta, puntos);
+        await GuardarRespuestaEnBaseDeDatos(RespuestaActual, respuestaCorrecta, respuestaCorrecta ? tiempoRestante : 0);
+        await MostrarSiguientePregunta();
       }
       else
       {
         if (!respuestaCorrecta)
         {
-          if (timer.Interval > Ejercicio.PuntosMin)
+          if (tiempoRestante > Ejercicio.PuntosMin)
           {
-            timer.Interval = timer.Interval - Ejercicio.PuntosAquitar; // Disminuir el puntaje si la respuesta es incorrecta
+            tiempoRestante -= Ejercicio.PuntosAquitar;
           }
           else
           {
-            timer.Interval = Ejercicio.PuntosMin;
+            tiempoRestante = Ejercicio.PuntosMin;
           }
-          timer.Start(); // Iniciar el temporizador nuevamente
+          timer.Start();
         }
         else
         {
-          await GuardarRespuestaEnBaseDeDatos(RespuestaActual, respuestaCorrecta, (int)timer.Interval);
-
-          timer.Start(); // Iniciar el temporizador nuevamente
-                         // Mostrar la siguiente pregunta
+          await GuardarRespuestaEnBaseDeDatos(RespuestaActual, respuestaCorrecta, tiempoRestante);
           await MostrarSiguientePregunta();
         }
       }
     }
 
-    StateHasChanged(); // Actualizar la interfaz de usuario
+    StateHasChanged();
   }
 
   private async Task GuardarRespuestaEnBaseDeDatos(string respuesta, bool respuestaCorrecta, int puntos)
@@ -274,7 +271,7 @@
       });
   }
 
-  private Task MostrarSiguientePregunta()
+  private async Task MostrarSiguientePregunta()
   {
     IndicePreguntaDeUsuario++;
     if (IndicePreguntaDeUsuario < Preguntas.Count)
@@ -283,16 +280,16 @@
       RespuestaActual = ""; // Reinicia la respuesta actual
       if (timer != null)
       {
-        timer.Interval = PreguntaActual.Puntos; // Actualiza el puntaje máximo disponible
+        tiempoRestante = PreguntaActual.Puntos; // Actualiza el tiempo restante
+        timer.Start();
       }
     }
     else
     {
       MostrarMensajeTodasLasPreguntasContestadas();
-      NavigationManager.NavigateTo($"/ejercicios/{UsuarioID}/{EquipoID}");
     }
 
-    return Task.CompletedTask;
+    StateHasChanged();
   }
 
   private void MostrarMensajeTodasLasPreguntasContestadas()

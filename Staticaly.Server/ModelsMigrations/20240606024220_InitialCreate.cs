@@ -366,7 +366,7 @@ namespace Staticaly.Server.ModelsMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Subproyectos",
+                name: "SubProyectos",
                 columns: table => new
                 {
                     SubproyectoID = table.Column<int>(type: "int", nullable: false)
@@ -379,15 +379,15 @@ namespace Staticaly.Server.ModelsMigrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Subproyectos", x => x.SubproyectoID);
+                    table.PrimaryKey("PK_SubProyectos", x => x.SubproyectoID);
                     table.ForeignKey(
-                        name: "FK_Subproyectos_Proyectos_ProyectoID",
+                        name: "FK_SubProyectos_Proyectos_ProyectoID",
                         column: x => x.ProyectoID,
                         principalTable: "Proyectos",
                         principalColumn: "ProyectoID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Subproyectos_Usuarios_UsuarioID",
+                        name: "FK_SubProyectos_Usuarios_UsuarioID",
                         column: x => x.UsuarioID,
                         principalTable: "Usuarios",
                         principalColumn: "UsuarioID",
@@ -518,9 +518,9 @@ namespace Staticaly.Server.ModelsMigrations
                 {
                     table.PrimaryKey("PK_DatosSubProyecto", x => x.DatosSubProyectoID);
                     table.ForeignKey(
-                        name: "FK_DatosSubProyecto_Subproyectos_SubproyectoID",
+                        name: "FK_DatosSubProyecto_SubProyectos_SubproyectoID",
                         column: x => x.SubproyectoID,
-                        principalTable: "Subproyectos",
+                        principalTable: "SubProyectos",
                         principalColumn: "SubproyectoID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -705,13 +705,13 @@ namespace Staticaly.Server.ModelsMigrations
                 column: "UsuarioID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subproyectos_ProyectoID",
-                table: "Subproyectos",
+                name: "IX_SubProyectos_ProyectoID",
+                table: "SubProyectos",
                 column: "ProyectoID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subproyectos_UsuarioID",
-                table: "Subproyectos",
+                name: "IX_SubProyectos_UsuarioID",
+                table: "SubProyectos",
                 column: "UsuarioID");
 
             migrationBuilder.CreateIndex(
@@ -765,7 +765,7 @@ namespace Staticaly.Server.ModelsMigrations
                 name: "UsuariosEquipos");
 
             migrationBuilder.DropTable(
-                name: "Subproyectos");
+                name: "SubProyectos");
 
             migrationBuilder.DropTable(
                 name: "EjerciciosPreguntas");

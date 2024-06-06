@@ -8,6 +8,8 @@
   [Parameter] public string ChartType { get; set; } = "bar"; // or 'line', 'pie', etc.
   [Parameter] public List<string> Labels { get; set; } = new List<string>();
   [Parameter] public List<int> Data { get; set; } = new List<int>();
+  [Parameter] public List<int> LineData { get; set; } = new List<int>(); // Agrega esto para la línea del histograma
+  [Parameter] public List<ScatterData> ScatterData { get; set; } = new List<ScatterData>();
 
   [Inject] private IJSRuntime JSRuntime { get; set; } = default!;
 
@@ -17,7 +19,18 @@
   {
     if (firstRender)
     {
-      await JSRuntime.InvokeVoidAsync("renderChart", canvasId, ChartType, Labels, Data);
+      if (ChartType == "histogram")
+      {
+        await JSRuntime.InvokeVoidAsync("renderHistogram", canvasId, Labels, Data, LineData);
+      }
+      else if (ChartType == "scatter")
+      {
+        await JSRuntime.InvokeVoidAsync("renderScatterChart", canvasId, Labels, ScatterData);
+      }
+      else
+      {
+        await JSRuntime.InvokeVoidAsync("renderChart", canvasId, ChartType, Labels, Data);
+      }
     }
   }
 }

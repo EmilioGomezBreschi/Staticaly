@@ -11,6 +11,7 @@
 @inject NavigationManager NavigationManager
 @inject CuestionarioClient CuestionarioClient
 @inject RespuestasCuestionarioClient RespuestasClient
+@inject EquiposClient EquiposClient
 
 <PageTitle>Cuestionarios - Staticaly</PageTitle>
 
@@ -46,7 +47,7 @@
 
       @if (BotonActivo == 1)
       {
-        <h1 class="text-4xl font-bold mt-3">Cuestionarios</h1>
+        <h1 class="text-4xl font-bold mt-3">Cuestionarios: @equipo.Nombre</h1>
         @if (CuestionariosDelGrupo.Count == 0)
         {
           <div class="mt-4">
@@ -137,6 +138,7 @@
   [Parameter] public string? Id { get; set; }
   [Parameter] public string? Equipo { get; set; }
   public int EquipoId;
+  public Equipos? equipo { get; set; }
   public List<Cuestionarios> CuestionariosDelGrupo = new List<Cuestionarios>();
   public List<int> cuestionariosRespondidos = new List<int>();
   public int BotonActivo = 1; // Variable para almacenar el estado del botón activo
@@ -157,6 +159,7 @@
       {
         EquipoId = int.Parse(Equipo);
       }
+      equipo = await EquiposClient.GetEquipoByIdAsync(EquipoId);
       await CargarCuestionariosGrupo();
     }
   }

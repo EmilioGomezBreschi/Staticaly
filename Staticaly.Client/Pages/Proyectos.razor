@@ -43,7 +43,7 @@
   {
 
     <div class="h-full flex flex-col justify-center items-center text-primary-50">
-      <h1 class="text-4xl font-bold mt-3">Estadistica</h1>
+      <h1 class="text-4xl font-bold mt-3">Estadistica: @equipo.Nombre</h1>
       @if (ProyectosGrupo.Count == 0)
       {
         <div class="mt-4">
@@ -84,6 +84,7 @@
 @code {
   [Parameter] public string? Id { get; set; }
   [Parameter] public string? Equipo { get; set; }
+  private Equipos? equipo { get; set; }
   int Userid;
   int Equipoid;
   private List<Models.Proyectos> ProyectosGrupo { get; set; } = new List<Models.Proyectos>();
@@ -94,6 +95,7 @@
     {
       Userid = int.Parse(Id);
       Equipoid = int.Parse(Equipo);
+      equipo = await equiposClient.GetEquipoByIdAsync(Equipoid);
       await LoadProyectos();
     }
   }
